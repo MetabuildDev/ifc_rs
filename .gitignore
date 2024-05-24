@@ -19,3 +19,4 @@ Cargo.lock
 result
 result-*
 
+.direnv
