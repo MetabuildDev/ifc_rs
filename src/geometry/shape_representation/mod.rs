@@ -1,4 +1,10 @@
-use crate::id::{Id, IdOr};
+pub mod deserialize;
+pub mod serialize;
+
+use crate::{
+    id::{Id, IdOr},
+    parser::label::Label,
+};
 
 /// The IfcShapeRepresentation represents the concept of a particular geometric representation of a
 /// product or a product component within a specific geometric representation context. The
@@ -13,15 +19,17 @@ use crate::id::{Id, IdOr};
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcshaperepresentation.htm
 pub struct ShapeRepresentation {
+    // All fields from IfcRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrepresentation.htm
+    //
     /// Definition of the representation context for which the different subtypes of representation are valid.
-    context_of_items: IdOr<()>,
+    context_of_items: Id,
     /// The optional identifier of the representation as used within a project.
-    representation_identifier: IdOr<()>,
+    representation_identifier: IdOr<Label>,
     /// The description of the type of a representation context. The representation type defines
     /// the type of geometry or topology used for representing the product representation. More
     /// information is given at the subtypes IfcShapeRepresentation and IfcTopologyRepresentation.
     /// The supported values for context type are to be specified by implementers agreements.
-    representation_type: IdOr<()>,
+    representation_type: IdOr<Label>,
     /// Set of geometric representation items that are defined for this representation.
     items: Vec<Id>,
 }
