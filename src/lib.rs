@@ -1,14 +1,10 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+#![allow(dead_code)]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub mod geometry;
+pub mod helper;
+pub mod id;
+pub mod meta;
+pub mod objects;
+pub mod parser;
+pub mod relations;
+pub mod units;
