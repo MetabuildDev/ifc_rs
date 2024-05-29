@@ -17,6 +17,7 @@ pub struct AngleUnit {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::optional::IFCParse;
     use crate::units::angle::AngleUnit;
 
     #[test]

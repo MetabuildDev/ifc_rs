@@ -1,11 +1,10 @@
 use super::AngleUnit;
 use crate::id::Id;
-use crate::parser::optional::OptionalParameter;
+use crate::parser::optional::{IFCParse, OptionalParameter};
 use crate::parser::*;
-use crate::units::optional::IFCParse;
 
-impl AngleUnit {
-    pub(crate) fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for AngleUnit {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
                 _: (p_space_or_comment(), "IFCCONVERSIONBASEDUNIT(", p_space_or_comment()),

@@ -12,6 +12,7 @@ pub struct AreaUnit {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::optional::IFCParse;
     use crate::units::area::AreaUnit;
 
     #[test]
