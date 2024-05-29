@@ -1,4 +1,6 @@
 pub mod geometry;
+pub mod ifc_float;
+pub mod label;
 pub mod optional;
 pub mod place_holder;
 
@@ -6,8 +8,6 @@ use winnow::ascii::*;
 use winnow::combinator::*;
 use winnow::token::*;
 use winnow::{error::ErrorKind, Parser};
-
-use crate::id::Id;
 
 use self::optional::IFCParse;
 
@@ -21,8 +21,12 @@ pub(crate) fn p_ident<'a>() -> impl IFCParser<'a, String> {
     .map(|x: &str| x.to_owned())
 }
 
-pub(crate) fn p_id_array<'a>() -> impl IFCParser<'a, Vec<Id>> {
-    delimited("(", separated(1.., Id::parse(), ","), ")")
+pub(crate) fn p_list_of<'a, T: IFCParse>() -> impl IFCParser<'a, Vec<T>> {
+    let p_t_opt_comma = terminated(T::parse(), p_space_or_comment_surrounded(opt(",")));
+    preceded(
+        "(",
+        repeat_till(.., p_t_opt_comma, ")").map(|(v, _): (Vec<_>, _)| v),
+    )
 }
 
 pub(crate) fn p_word_until<'a>(end: char) -> impl IFCParser<'a, String> {

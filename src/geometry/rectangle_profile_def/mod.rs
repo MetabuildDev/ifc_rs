@@ -1,6 +1,8 @@
 mod deserialize;
 mod serialize;
 
+use crate::parser::ifc_float::IfcFloat;
+use crate::parser::label::Label;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
 use super::profile_type::ProfileType;
@@ -12,9 +14,10 @@ use super::profile_type::ProfileType;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcrectangleprofiledef.htm
 pub struct RectangleProfileDef {
     profile_type: ProfileType,
+    profile_name: OptionalParameter<Label>,
     position: OptionalParameter<Id>,
-    x_dim: f64,
-    y_dim: f64,
+    x_dim: IfcFloat,
+    y_dim: IfcFloat,
 }
 
 #[cfg(test)]
@@ -26,7 +29,8 @@ mod test {
 
     #[test]
     fn rectangle_profile_def_round_trip() {
-        let example = "IFCRECTANGLEPROFILEDEF(.AREA.,$,#250,7.99999999999995,3.95);";
+        let example =
+            "IFCRECTANGLEPROFILEDEF(.AREA.,$,#250,7.99999999999995E0,3.95000000000000E0);";
 
         let rectangle_profile_def: RectangleProfileDef =
             RectangleProfileDef::parse().parse(example).unwrap();

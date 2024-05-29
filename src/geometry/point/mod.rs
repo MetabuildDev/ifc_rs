@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use glam::{DVec2, DVec3};
+use crate::parser::ifc_float::{IfcDVec2, IfcDVec3};
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
@@ -13,7 +13,7 @@ use glam::{DVec2, DVec3};
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Point2D(DVec2);
+pub struct Point2D(IfcDVec2);
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
@@ -25,4 +25,4 @@ pub struct Point2D(DVec2);
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Point3D(DVec3);
+pub struct Point3D(IfcDVec3);

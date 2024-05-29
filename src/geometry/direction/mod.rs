@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use glam::{DVec2, DVec3};
+use crate::parser::ifc_float::{IfcDVec2, IfcDVec3};
 
 /// The IfcDirection provides a direction in two or three dimensional space depending on the number
 /// of DirectionRatio's provided. The IfcDirection does not imply a vector length, and the
@@ -11,7 +11,7 @@ use glam::{DVec2, DVec3};
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcdirection.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Direction2D(DVec2);
+pub struct Direction2D(IfcDVec2);
 
 /// The IfcDirection provides a direction in two or three dimensional space depending on the number
 /// of DirectionRatio's provided. The IfcDirection does not imply a vector length, and the
@@ -22,4 +22,4 @@ pub struct Direction2D(DVec2);
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcdirection.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Direction3D(DVec3);
+pub struct Direction3D(IfcDVec3);
