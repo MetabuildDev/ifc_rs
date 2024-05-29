@@ -1,4 +1,5 @@
 use crate::geometry::profile_type::ProfileType;
+use crate::parser::comma::Comma;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::optional::{IFCParse, OptionalParameter};
 use crate::parser::*;
@@ -12,13 +13,13 @@ impl IFCParse for RectangleProfileDef {
                 _: p_space_or_comment_surrounded("IFCRECTANGLEPROFILEDEF("),
 
                 profile_type: ProfileType::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 profile_name: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 position: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 x_dim: IfcFloat::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 y_dim: IfcFloat::parse(),
 
                 _: p_space_or_comment_surrounded(");"),

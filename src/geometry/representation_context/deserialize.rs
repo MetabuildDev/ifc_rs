@@ -4,8 +4,9 @@ use super::GeometricRepresentationContext;
 use crate::{
     id::Id,
     parser::{
+        comma::Comma,
         optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded, IFCParser,
+        IFCParser,
     },
 };
 
@@ -15,15 +16,15 @@ impl GeometricRepresentationContext {
             "IFCGEOMETRICREPRESENTATIONCONTEXT(",
             (
                 OptionalParameter::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 OptionalParameter::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 dec_uint,
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 OptionalParameter::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 Id::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 OptionalParameter::parse(),
             ),
             ");",

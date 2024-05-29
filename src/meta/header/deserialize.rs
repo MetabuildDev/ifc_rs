@@ -13,6 +13,8 @@ use super::details::{FileDetails, FileName};
 use super::schema::{FileSchema, FileSchemas};
 use super::version::Version;
 use super::Header;
+use crate::parser::comma::Comma;
+use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 fn p_header<'a>() -> impl IFCParser<'a, Header> {
@@ -49,7 +51,7 @@ fn p_header_description<'a>() -> impl IFCParser<'a, FileDescription> {
         FileDescription {
             _: p_space_or_comment_surrounded(("FILE_DESCRIPTION", p_space_or_comment(), "(")),
             descriptions: p_header_desc_desc(),
-            _: p_space_or_comment_surrounded(","),
+            _: Comma::parse(),
             implementation_level: delimited("'", p_header_desc_level(), "'"),
             _: p_space_or_comment_surrounded((")", p_space_or_comment(), ";"))
         }
@@ -116,24 +118,21 @@ fn p_header_name<'a>() -> impl IFCParser<'a, FileDetails> {
         ),
         ")",
     );
-    fn p_spaced_comma<'a>() -> impl IFCParser<'a, ()> {
-        p_space_or_comment_surrounded(",").map(drop)
-    }
     winnow::seq! {
         FileDetails {
             _: p_space_or_comment_surrounded(("FILE_NAME", p_space_or_comment(), "(")),
             name: p_name,
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             timestamp: p_time,
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             author: p_author,
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             organization: p_org,
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             preprocessor_version: p_quote_word().map(PreprocessorVersion),
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             originating_system: p_quote_word().map(OriginatingSystem),
-            _: p_spaced_comma(),
+            _: Comma::parse(),
             authorization: p_quote_word().map(Authorization),
             _: p_space_or_comment_surrounded((")", p_space_or_comment(), ";"))
         }

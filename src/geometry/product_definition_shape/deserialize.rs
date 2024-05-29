@@ -1,4 +1,5 @@
 use crate::parser::{
+    comma::Comma,
     list::IfcList,
     optional::{IFCParse, OptionalParameter},
     p_space_or_comment_surrounded,
@@ -15,9 +16,9 @@ impl IFCParse for ProductDefinitionShape {
             Self {
                 _: p_space_or_comment_surrounded("IFCPRODUCTDEFINITIONSHAPE("),
                 name: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 description: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 representations: IfcList::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }

@@ -7,8 +7,9 @@ use super::{Axis2D, Axis3D};
 use crate::{
     id::Id,
     parser::{
+        comma::Comma,
         optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded, IFCParser,
+        IFCParser,
     },
 };
 
@@ -16,11 +17,7 @@ impl Axis2D {
     pub fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAXIS2PLACEMENT2D(",
-            separated_pair(
-                Id::parse(),
-                p_space_or_comment_surrounded(","),
-                OptionalParameter::parse(),
-            ),
+            separated_pair(Id::parse(), Comma::parse(), OptionalParameter::parse()),
             ");",
         )
         .map(|(location, local_x)| Self { location, local_x })
@@ -33,9 +30,9 @@ impl Axis3D {
             "IFCAXIS2PLACEMENT3D(",
             (
                 Id::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 OptionalParameter::parse(),
-                p_space_or_comment_surrounded(","),
+                Comma::parse(),
                 OptionalParameter::parse(),
             ),
             ");",
