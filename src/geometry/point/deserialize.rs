@@ -35,7 +35,7 @@ fn parse_point_2d_works() {
 
 #[test]
 fn parse_point_3d_works() {
-    let data = "IFCCARTESIANPOINT((0.,0.,-0.199999999999868));";
+    let data = "IFCCARTESIANPOINT((0.,0.,-1.99999999999868E-1));";
     let p = Point3D::parse().parse(data).unwrap();
     println!("{p:?}");
     assert_eq!(p.to_string(), data);
