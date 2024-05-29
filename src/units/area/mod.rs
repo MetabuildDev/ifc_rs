@@ -1,10 +1,10 @@
 mod deserialize;
 mod serialize;
 
-use super::{name::IfcUnitName, prefix::IfcPrefix};
+use super::{name::IfcUnitName, optional::OptionalParameter, prefix::IfcPrefix};
 
 pub struct AreaUnit {
-    pub prefix: Option<IfcPrefix>,
+    pub prefix: OptionalParameter<IfcPrefix>,
     pub name: IfcUnitName,
 }
 
