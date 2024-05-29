@@ -1,10 +1,14 @@
 mod deserialize;
 mod serialize;
 
-use super::{name::IfcUnitName, prefix::IfcPrefix};
+use super::{name::IfcUnitName, optional::OptionalParameter, prefix::IfcPrefix};
 
+/// The IfcSIUnit covers both standard base SI units such as meter and second,
+/// and derived SI units such as Pascal, square meter and cubic meter.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiunit.htm
 pub struct AreaUnit {
-    pub prefix: Option<IfcPrefix>,
+    pub prefix: OptionalParameter<IfcPrefix>,
     pub name: IfcUnitName,
 }
 
@@ -12,6 +16,7 @@ pub struct AreaUnit {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::optional::IFCParse;
     use crate::units::area::AreaUnit;
 
     #[test]
