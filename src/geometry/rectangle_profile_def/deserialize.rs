@@ -1,9 +1,11 @@
 use winnow::ascii::float;
 
 use crate::geometry::profile_type::ProfileType;
-use crate::parser::optional::{IFCParse, OptionalParameter};
-use crate::parser::place_holder::PlaceHolder;
 use crate::parser::*;
+use crate::parser::{
+    optional::{IFCParse, OptionalParameter},
+    place_holder::Omitted,
+};
 
 use super::RectangleProfileDef;
 
@@ -14,7 +16,7 @@ impl IFCParse for RectangleProfileDef {
                 _: (p_space_or_comment(), "IFCRECTANGLEPROFILEDEF(", p_space_or_comment()),
                 profile_type: ProfileType::parse(),
                 _: (p_space_or_comment(), ",", p_space_or_comment()),
-                _: PlaceHolder::parse(),
+                _: Omitted::parse(),
                 _: (p_space_or_comment(), ",", p_space_or_comment()),
                 position: OptionalParameter::parse(),
                 _: (p_space_or_comment(), ",", p_space_or_comment()),
