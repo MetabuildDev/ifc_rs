@@ -10,21 +10,20 @@ impl IFCParse for AreaUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
-                _: (p_space_or_comment(), "IFCSIUNIT(",
-                    p_space_or_comment(), alt(
+                _: (p_space_or_comment_surrounded("IFCSIUNIT("),
+                    alt(
                         (
                             Omitted::parse().map(drop),
                             Inherited::parse().map(drop)
                         )
                     ),
-                    p_space_or_comment(), ",",
-                    p_space_or_comment(), ".AREAUNIT.",
-                    p_space_or_comment(), ",",
-                    p_space_or_comment()),
+                    p_space_or_comment_surrounded(","),
+                    ".AREAUNIT.",
+                    p_space_or_comment_surrounded(",")),
                 prefix: OptionalParameter::parse(),
-                _: (p_space_or_comment(), ",", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(","),
                 name: IfcUnitName::parse(),
-                _: (p_space_or_comment(), ");", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(");"),
             }
         }
     }

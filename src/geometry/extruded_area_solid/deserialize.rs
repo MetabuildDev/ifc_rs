@@ -8,17 +8,17 @@ impl IFCParse for ExtrudedAreaSolid {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
-                _: (p_space_or_comment(), "IFCEXTRUDEDAREASOLID(", p_space_or_comment()),
+                _: p_space_or_comment_surrounded("IFCEXTRUDEDAREASOLID("),
 
                 swept_area: Id::parse(),
-                _: (p_space_or_comment(), ",", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(","),
                 position: Id::parse(),
-                _: (p_space_or_comment(), ",", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(","),
                 extruded_direction: Id::parse(),
-                _: (p_space_or_comment(), ",", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(","),
                 depth: IfcFloat::parse(),
 
-                _: (p_space_or_comment(), ");", p_space_or_comment()),
+                _: p_space_or_comment_surrounded(");"),
             }
         }
     }
