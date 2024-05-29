@@ -1,10 +1,9 @@
 mod deserialize;
 mod serialize;
 
-use crate::geometry::direction::Direction3D;
 use crate::id::Id;
-use crate::parser::optional::{OptionalParameter, OptionalParse};
-use crate::parser::IFCParser;
+use crate::parser::label::Label;
+use crate::parser::optional::OptionalParameter;
 
 /// The IfcGeometricRepresentationContext defines the context that applies to several shape
 /// representations of products within a project. It defines the type of the context in which the
@@ -19,19 +18,17 @@ pub struct GeometricRepresentationContext {
     // NOTE: from IfcRepresentationContext
     //
     /// The optional identifier of the representation context as used within a project.
-    pub context_identifier: OptionalParameter<String>,
+    pub context_identifier: OptionalParameter<Label>,
     /// The description of the type of a representation context.
     /// The supported values for context type are to be specified by implementers agreements.
-    pub context_type: OptionalParameter<String>,
+    pub context_type: OptionalParameter<Label>,
 
     /// The integer dimension count of the coordinate space modeled in a geometric representation context.
     pub coord_space_dimension: usize,
     /// Value of the model precision for geometric models. It is a double value (REAL), typically in 1E-5 to 1E-8 range,
     /// that indicates the tolerance under which two given points are still assumed to be identical.
     /// The value can be used e.g. to sets the maximum distance from an edge curve to the underlying face surface in brep models.
-    //
-    // pub precision: OptionalParameter<f64>,  // TODO:
-    pub precision: f64,
+    pub precision: OptionalParameter<f64>,
     /// Establishment of the engineering coordinate system (often referred to as the world coordinate
     /// system in CAD) for all representation contexts used by the project.
     pub world_coord_system: Id,

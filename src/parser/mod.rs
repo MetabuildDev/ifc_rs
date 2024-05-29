@@ -1,4 +1,5 @@
 pub mod geometry;
+pub mod label;
 pub mod optional;
 pub mod place_holder;
 
