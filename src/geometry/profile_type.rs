@@ -7,6 +7,10 @@ use winnow::Parser;
 use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
+/// The enumeration defines whether the definition of a profile shape shall be
+/// geometrically resolved into a curve or into a surface.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcprofiletypeenum.htm
 #[derive(EnumString, VariantNames, Display, Clone, Copy)]
 pub enum ProfileType {
     #[strum(to_string = ".CURVE.")]
