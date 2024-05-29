@@ -33,6 +33,7 @@
         pkgs.wayland
         pkgs.libxkbcommon
         pkgs.openssl
+        pkgs.cargo-nextest
       ];
       nightlyPkgs = [ ];
 
