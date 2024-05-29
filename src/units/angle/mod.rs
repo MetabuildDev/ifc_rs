@@ -7,6 +7,11 @@ use crate::{
     parser::optional::OptionalParameter,
 };
 
+/// An IfcConversionBasedUnit is used to define a unit that has a conversion rate to a base unit.
+/// To identify some commonly used conversion based units, the standard designations
+/// (case insensitive) for the Name attribute are indicated in Table 697.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcconversionbasedunit.htm
 pub struct AngleUnit {
     pub dimensional_exponents_id: Id,
     pub parameter_1: OptionalParameter<IdOr<ConversionUnit>>,

@@ -4,7 +4,12 @@ mod serialize;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
 use super::profile_type::ProfileType;
-
+/// IfcRectangleProfileDef defines a rectangle as the profile definition used by the swept surface
+/// geometry or the swept area solid. It is given by its X extent and its Y extent, and placed within
+/// the 2D position coordinate system, established by the Position attribute. It is placed centric
+/// within the position coordinate system.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcrectangleprofiledef.htm
 pub struct RectangleProfileDef {
     profile_type: ProfileType,
     position: OptionalParameter<Id>,
