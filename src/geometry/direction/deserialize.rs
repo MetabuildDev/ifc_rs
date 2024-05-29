@@ -2,7 +2,7 @@ use winnow::{combinator::delimited, Parser};
 
 use super::{Direction2D, Direction3D};
 use crate::parser::{
-    geometry::{p_vec2, p_vec3},
+    ifc_float::{IfcDVec2, IfcDVec3},
     optional::IFCParse,
     IFCParser,
 };
@@ -12,7 +12,7 @@ impl IFCParse for Direction2D {
     where
         Self: Sized,
     {
-        delimited("IFCDIRECTION(", p_vec2().map(Self), ");")
+        delimited("IFCDIRECTION(", IfcDVec2::parse().map(Self), ");")
     }
 }
 
@@ -21,7 +21,7 @@ impl IFCParse for Direction3D {
     where
         Self: Sized,
     {
-        delimited("IFCDIRECTION(", p_vec3().map(Self), ");")
+        delimited("IFCDIRECTION(", IfcDVec3::parse().map(Self), ");")
     }
 }
 

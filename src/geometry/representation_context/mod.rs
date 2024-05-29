@@ -2,6 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::id::Id;
+use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
 
@@ -28,7 +29,7 @@ pub struct GeometricRepresentationContext {
     /// Value of the model precision for geometric models. It is a double value (REAL), typically in 1E-5 to 1E-8 range,
     /// that indicates the tolerance under which two given points are still assumed to be identical.
     /// The value can be used e.g. to sets the maximum distance from an edge curve to the underlying face surface in brep models.
-    pub precision: OptionalParameter<f64>, // TODO: !wrapper for f64
+    pub precision: OptionalParameter<IfcFloat>,
     /// Establishment of the engineering coordinate system (often referred to as the world coordinate
     /// system in CAD) for all representation contexts used by the project.
     pub world_coord_system: Id,
