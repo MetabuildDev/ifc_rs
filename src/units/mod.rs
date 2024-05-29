@@ -10,7 +10,7 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::OptionalParse;
+use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 // TODO: there are a lot more (mostly imperial units)
@@ -32,8 +32,8 @@ pub enum ConversionUnit {
     Day,
 }
 
-impl OptionalParse for ConversionUnit {
-    fn opt_parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for ConversionUnit {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         let variants: [&str; Self::VARIANTS.len()] =
             Self::VARIANTS.try_into().expect("statically known");
 

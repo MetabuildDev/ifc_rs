@@ -4,7 +4,7 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::OptionalParse;
+use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 #[derive(EnumString, VariantNames, Display, Clone, Copy)]
@@ -100,8 +100,8 @@ pub enum IfcUnitName {
     Weber,
 }
 
-impl OptionalParse for IfcUnitName {
-    fn opt_parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for IfcUnitName {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         let variants: [&str; Self::VARIANTS.len()] =
             Self::VARIANTS.try_into().expect("statically known");
 

@@ -2,12 +2,15 @@ mod deserialize;
 mod serialize;
 
 use super::ConversionUnit;
-use crate::{id::Id, parser::optional::OptionalParameter};
+use crate::{
+    id::{Id, IdOr},
+    parser::optional::OptionalParameter,
+};
 
 pub struct AngleUnit {
     pub dimensional_exponents_id: Id,
-    pub parameter_1: OptionalParameter<ConversionUnit>,
-    pub parameter_2: OptionalParameter<ConversionUnit>,
+    pub parameter_1: OptionalParameter<IdOr<ConversionUnit>>,
+    pub parameter_2: OptionalParameter<IdOr<ConversionUnit>>,
 }
 
 #[cfg(test)]

@@ -9,7 +9,7 @@ impl Display for PolyLine {
             "IFCPOLYLINE(({}));",
             self.points
                 .iter()
-                .map(|p| format!("#{p}"))
+                .map(|p| format!("{p}"))
                 .collect::<Vec<String>>()
                 .join(",")
         )

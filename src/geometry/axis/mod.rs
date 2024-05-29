@@ -1,7 +1,6 @@
 mod deserialize;
 mod serialize;
 
-use super::direction::{Direction2D, Direction3D};
 use crate::{id::Id, parser::optional::OptionalParameter};
 
 /// The IfcAxis2Placement2D provides location and orientation to place items in a two-dimensional
@@ -18,7 +17,7 @@ pub struct Axis2D {
     pub location: Id,
     ///	The direction used to determine the direction of the local X axis. If a value is omited
     ///	that it defaults to [1.0, 0.0].
-    pub local_x: OptionalParameter<Direction2D>,
+    pub local_x: OptionalParameter<Id>,
 }
 
 /// The IfcAxis2Placement3D provides location and orientations to place items in a
@@ -35,9 +34,9 @@ pub struct Axis3D {
     /// be located.
     pub location: Id,
     ///	The exact direction of the local Z Axis. If a value is omited that it defaults to [0.0, 0.0, 0.1]
-    pub local_z: OptionalParameter<Direction3D>,
+    pub local_z: OptionalParameter<Id>,
     /// The direction used to determine the direction of the local X Axis. If necessary an
     /// adjustment is made to maintain orthogonality to the Axis direction. If Axis and/or
     /// RefDirection is omitted, these directions are taken from the geometric coordinate system.
-    pub local_x: OptionalParameter<Direction3D>,
+    pub local_x: OptionalParameter<Id>,
 }
