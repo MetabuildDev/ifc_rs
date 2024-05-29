@@ -1,13 +1,13 @@
 use winnow::combinator::alt;
 
 use super::AreaUnit;
-use crate::parser::*;
+use crate::parser::{optional::IFCParse, *};
 use crate::units::name::IfcUnitName;
-use crate::units::optional::{IFCParse, OptionalParameter};
+use crate::units::optional::OptionalParameter;
 use crate::units::place_holder::{Inherited, Omitted};
 
-impl AreaUnit {
-    pub(crate) fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for AreaUnit {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
                 _: (p_space_or_comment(), "IFCSIUNIT(",

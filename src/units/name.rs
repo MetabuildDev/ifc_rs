@@ -7,6 +7,7 @@ use winnow::Parser;
 use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiunitname.htm
 #[derive(EnumString, VariantNames, Display, Clone, Copy)]
 pub enum IfcUnitName {
     #[strum(to_string = ".AMPERE.")]
