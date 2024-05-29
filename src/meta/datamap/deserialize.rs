@@ -8,12 +8,12 @@ use winnow::{
 };
 
 use super::{DataMap, DataValue};
-use crate::parser::{p_space_or_comment, p_space_or_comment_surrounded, IFCParser};
+use crate::parser::{p_space_or_comment_surrounded, IFCParser};
 
 fn p_index_map<'a>() -> impl IFCParser<'a, DataMap> {
     let p_obj = repeat_till(.., any, newline).map(|(s, _): (String, _)| DataValue::Any { s });
     let p_id = preceded("#", dec_uint);
-    let p_line = separated_pair(p_id, p_space_or_comment(), p_obj);
+    let p_line = separated_pair(p_id, p_space_or_comment_surrounded("="), p_obj);
     let p_line_spaced = p_space_or_comment_surrounded(p_line);
     let p_lines =
         repeat_till(.., p_line_spaced, "ENDSEC;").map(|(v, _): (BTreeMap<usize, DataValue>, _)| v);
@@ -103,4 +103,6 @@ ENDSEC;
     let map = p_index_map().parse(data).unwrap();
 
     println!("{map}");
+
+    assert_eq!(format!("{map}").trim(), data.trim());
 }
