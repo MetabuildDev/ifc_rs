@@ -1,7 +1,5 @@
 use std::fmt::Display;
 
-use crate::helper::format_double;
-
 use super::ExtrudedAreaSolid;
 
 impl Display for ExtrudedAreaSolid {
@@ -9,10 +7,7 @@ impl Display for ExtrudedAreaSolid {
         write!(
             f,
             "IFCEXTRUDEDAREASOLID({},{},{},{});",
-            self.swept_area,
-            self.position,
-            self.extruded_direction,
-            format_double(self.depth)
+            self.swept_area, self.position, self.extruded_direction, self.depth
         )
     }
 }

@@ -1,4 +1,4 @@
-use crate::id::Id;
+use crate::{id::Id, parser::ifc_float::IfcFloat};
 
 mod deserialize;
 mod serialize;
@@ -7,7 +7,7 @@ pub struct ExtrudedAreaSolid {
     pub swept_area: Id,
     pub position: Id,
     pub extruded_direction: Id,
-    pub depth: f64,
+    pub depth: IfcFloat,
 }
 
 #[cfg(test)]

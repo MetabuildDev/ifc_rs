@@ -1,6 +1,5 @@
-use winnow::ascii::float;
-
 use crate::id::Id;
+use crate::parser::ifc_float::IfcFloat;
 use crate::parser::{optional::IFCParse, *};
 
 use super::ExtrudedAreaSolid;
@@ -17,7 +16,7 @@ impl IFCParse for ExtrudedAreaSolid {
                 _: (p_space_or_comment(), ",", p_space_or_comment()),
                 extruded_direction: Id::parse(),
                 _: (p_space_or_comment(), ",", p_space_or_comment()),
-                depth: float,
+                depth: IfcFloat::parse(),
 
                 _: (p_space_or_comment(), ");", p_space_or_comment()),
             }
