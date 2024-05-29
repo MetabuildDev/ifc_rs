@@ -12,7 +12,7 @@ impl Display for ShapeRepresentation {
             id = self.context_of_items,
             name = self.representation_identifier,
             _type = self.representation_type,
-            items = self.items.iter().map(|id| format!("{id}")).join(",")
+            items = self.items.iter().map(ToString::to_string).join(",")
         )
     }
 }

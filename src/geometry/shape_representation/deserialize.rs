@@ -1,8 +1,6 @@
-use winnow::combinator::{preceded, repeat_till};
-
 use crate::{
     id::{Id, IdOr},
-    parser::{optional::IFCParse, p_space_or_comment_surrounded},
+    parser::{optional::IFCParse, p_list_of, p_space_or_comment_surrounded},
 };
 
 use super::ShapeRepresentation;
@@ -21,7 +19,7 @@ impl IFCParse for ShapeRepresentation {
                 _: p_space_or_comment_surrounded(","),
                 representation_type: IdOr::parse(),
                 _: p_space_or_comment_surrounded(","),
-                items: preceded("(", repeat_till(.., Id::parse(), ")")).map(|(v, _): (Vec<_>, _)| v),
+                items: p_list_of::<Id>(),
                 _: p_space_or_comment_surrounded(");"),
             }
         }
