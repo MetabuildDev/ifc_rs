@@ -1,6 +1,7 @@
 pub mod geometry;
 pub mod ifc_float;
 pub mod label;
+pub mod list;
 pub mod optional;
 pub mod place_holder;
 
@@ -8,8 +9,6 @@ use winnow::ascii::*;
 use winnow::combinator::*;
 use winnow::token::*;
 use winnow::{error::ErrorKind, Parser};
-
-use self::optional::IFCParse;
 
 pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
 impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}
@@ -19,14 +18,6 @@ pub(crate) fn p_ident<'a>() -> impl IFCParser<'a, String> {
         c.is_alphanumeric() || ['_', '-', '.', ':'].contains(&c)
     })
     .map(|x: &str| x.to_owned())
-}
-
-pub(crate) fn p_list_of<'a, T: IFCParse>() -> impl IFCParser<'a, Vec<T>> {
-    let p_t_opt_comma = terminated(T::parse(), p_space_or_comment_surrounded(opt(",")));
-    preceded(
-        "(",
-        repeat_till(.., p_t_opt_comma, ")").map(|(v, _): (Vec<_>, _)| v),
-    )
 }
 
 pub(crate) fn p_word_until<'a>(end: char) -> impl IFCParser<'a, String> {

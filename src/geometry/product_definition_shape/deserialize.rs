@@ -1,9 +1,7 @@
-use crate::{
-    id::Id,
-    parser::{
-        optional::{IFCParse, OptionalParameter},
-        p_list_of, p_space_or_comment_surrounded,
-    },
+use crate::parser::{
+    list::IfcList,
+    optional::{IFCParse, OptionalParameter},
+    p_space_or_comment_surrounded,
 };
 
 use super::ProductDefinitionShape;
@@ -20,7 +18,7 @@ impl IFCParse for ProductDefinitionShape {
                 _: p_space_or_comment_surrounded(","),
                 description: OptionalParameter::parse(),
                 _: p_space_or_comment_surrounded(","),
-                representations: p_list_of::<Id>(),
+                representations: IfcList::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }
         }

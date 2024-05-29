@@ -1,8 +1,9 @@
 use crate::{
     id::Id,
     parser::{
+        list::IfcList,
         optional::{IFCParse, OptionalParameter},
-        p_list_of, p_space_or_comment_surrounded,
+        p_space_or_comment_surrounded,
     },
 };
 
@@ -22,7 +23,7 @@ impl IFCParse for ShapeRepresentation {
                 _: p_space_or_comment_surrounded(","),
                 representation_type: OptionalParameter::parse(),
                 _: p_space_or_comment_surrounded(","),
-                items: p_list_of::<Id>(),
+                items: IfcList::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }
         }

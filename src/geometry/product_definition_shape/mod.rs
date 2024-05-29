@@ -3,7 +3,7 @@ pub mod serialize;
 
 use crate::{
     id::Id,
-    parser::{label::Label, optional::OptionalParameter},
+    parser::{label::Label, list::IfcList, optional::OptionalParameter},
 };
 
 /// The IfcProductDefinitionShape defines all shape relevant information about an IfcProduct. It
@@ -28,5 +28,5 @@ pub struct ProductDefinitionShape {
     description: OptionalParameter<Label>,
     /// Contained list of representations (including shape representations). Each member defines a
     /// valid representation of a particular type within a particular representation context.
-    representations: Vec<Id>,
+    representations: IfcList<Id>,
 }
