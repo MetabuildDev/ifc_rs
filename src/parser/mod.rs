@@ -9,6 +9,8 @@ use winnow::{error::ErrorKind, Parser};
 
 use crate::id::Id;
 
+use self::optional::IFCParse;
+
 pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
 impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}
 
@@ -19,12 +21,8 @@ pub(crate) fn p_ident<'a>() -> impl IFCParser<'a, String> {
     .map(|x: &str| x.to_owned())
 }
 
-pub(crate) fn p_id<'a>() -> impl IFCParser<'a, Id> {
-    preceded("#", dec_uint)
-}
-
 pub(crate) fn p_id_array<'a>() -> impl IFCParser<'a, Vec<Id>> {
-    delimited("(", separated(1.., p_id(), ","), ")")
+    delimited("(", separated(1.., Id::parse(), ","), ")")
 }
 
 pub(crate) fn p_word_until<'a>(end: char) -> impl IFCParser<'a, String> {

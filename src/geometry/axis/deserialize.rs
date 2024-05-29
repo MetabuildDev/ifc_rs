@@ -4,16 +4,22 @@ use winnow::{
 };
 
 use super::{Axis2D, Axis3D};
-use crate::parser::{optional::OptionalParameter, p_id, p_space_or_comment_surrounded, IFCParser};
+use crate::{
+    id::Id,
+    parser::{
+        optional::{IFCParse, OptionalParameter},
+        p_space_or_comment_surrounded, IFCParser,
+    },
+};
 
 impl Axis2D {
     pub fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAXIS2PLACEMENT2D(",
             separated_pair(
-                p_id(),
+                Id::parse(),
                 p_space_or_comment_surrounded(","),
-                OptionalParameter::opt_parse(),
+                OptionalParameter::parse(),
             ),
             ");",
         )
@@ -26,11 +32,11 @@ impl Axis3D {
         delimited(
             "IFCAXIS2PLACEMENT3D(",
             (
-                p_id(),
+                Id::parse(),
                 p_space_or_comment_surrounded(","),
-                OptionalParameter::opt_parse(),
+                OptionalParameter::parse(),
                 p_space_or_comment_surrounded(","),
-                OptionalParameter::opt_parse(),
+                OptionalParameter::parse(),
             ),
             ");",
         )

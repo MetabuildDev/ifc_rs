@@ -3,37 +3,25 @@ use winnow::{combinator::delimited, Parser};
 use super::{Point2D, Point3D};
 use crate::parser::{
     geometry::{p_vec2, p_vec3},
-    optional::OptionalParse,
+    optional::IFCParse,
     IFCParser,
 };
 
-impl OptionalParse for Point2D {
-    fn opt_parse<'a>() -> impl IFCParser<'a, Self>
+impl IFCParse for Point2D {
+    fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized,
     {
-        p_vec2().map(Self)
+        delimited("IFCCARTESIANPOINT(", p_vec2().map(Self), ");")
     }
 }
 
-impl Point2D {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
-        delimited("IFCCARTESIANPOINT(", Self::opt_parse(), ");")
-    }
-}
-
-impl OptionalParse for Point3D {
-    fn opt_parse<'a>() -> impl IFCParser<'a, Self>
+impl IFCParse for Point3D {
+    fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized,
     {
-        p_vec3().map(Self)
-    }
-}
-
-impl Point3D {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
-        delimited("IFCCARTESIANPOINT(", Self::opt_parse(), ");")
+        delimited("IFCCARTESIANPOINT(", p_vec3().map(Self), ");")
     }
 }
 
