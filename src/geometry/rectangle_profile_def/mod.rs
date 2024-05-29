@@ -29,8 +29,7 @@ mod test {
 
     #[test]
     fn rectangle_profile_def_round_trip() {
-        let example =
-            "IFCRECTANGLEPROFILEDEF(.AREA.,$,#250,7.99999999999995E0,3.95000000000000E0);";
+        let example = "IFCRECTANGLEPROFILEDEF(.AREA.,$,#250,7.99999999999995E0,3.95);";
 
         let rectangle_profile_def: RectangleProfileDef =
             RectangleProfileDef::parse().parse(example).unwrap();

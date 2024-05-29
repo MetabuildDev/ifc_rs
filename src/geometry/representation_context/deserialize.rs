@@ -56,7 +56,7 @@ impl GeometricRepresentationContext {
 
 #[test]
 fn parse_axis_3d_works() {
-    let data = "IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',3,1.00000000000000E-5,#99,#100);";
+    let data = "IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',3,0.00001,#99,#100);";
     let parsed = GeometricRepresentationContext::parse().parse(data).unwrap();
     assert_eq!(data, parsed.to_string());
 

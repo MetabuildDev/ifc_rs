@@ -88,9 +88,14 @@ impl Deref for IfcDVec3 {
 }
 
 pub fn format_double(d: f64) -> String {
-    // might need tuning 4 decimals allowed
-    // +2 for "0." in string
-    let is_scientific = d.fract().to_string().len() > 4 + 2;
+    // might need tuning 10 decimals allowed
+    let is_scientific = d
+        .fract()
+        .to_string()
+        .chars()
+        .filter(|c| c.is_digit(10) && *c != '0')
+        .count()
+        > 10;
 
     if is_scientific {
         format!("{0:.1$E}", d, 14)
