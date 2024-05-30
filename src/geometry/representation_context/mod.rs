@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::geometry::dimension_count::DimensionCount;
 use crate::id::Id;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
@@ -25,7 +26,7 @@ pub struct GeometricRepresentationContext {
     pub context_type: OptionalParameter<Label>,
 
     /// The integer dimension count of the coordinate space modeled in a geometric representation context.
-    pub coord_space_dimension: usize,
+    pub coord_space_dimension: DimensionCount,
     /// Value of the model precision for geometric models. It is a double value (REAL), typically in 1E-5 to 1E-8 range,
     /// that indicates the tolerance under which two given points are still assumed to be identical.
     /// The value can be used e.g. to sets the maximum distance from an edge curve to the underlying face surface in brep models.

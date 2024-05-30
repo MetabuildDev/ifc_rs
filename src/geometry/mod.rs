@@ -1,4 +1,5 @@
 pub mod axis;
+pub mod dimension_count;
 pub mod direction;
 pub mod extruded_area_solid;
 pub mod geometric_projection;

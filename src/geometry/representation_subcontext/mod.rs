@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
 use crate::id::Id;
 use crate::parser::ifc_float::IfcFloat;
@@ -32,9 +33,9 @@ pub struct GeometricRepresentationSubContext {
     //
     pub context_identifier: OptionalParameter<Label>,
     pub context_type: OptionalParameter<Label>,
-    pub coord_space_dimension: usize,
+    pub coord_space_dimension: OptionalParameter<DimensionCount>,
     pub precision: OptionalParameter<IfcFloat>,
-    pub world_coord_system: Id,
+    pub world_coord_system: OptionalParameter<Id>,
     pub true_north: OptionalParameter<Id>,
 
     /// Parent context from which the sub context derives its world coordinate

@@ -1,7 +1,8 @@
-use winnow::{ascii::dec_uint, combinator::delimited, Parser};
+use winnow::{combinator::delimited, Parser};
 
 use super::GeometricRepresentationContext;
 use crate::{
+    geometry::dimension_count::DimensionCount,
     id::Id,
     parser::{
         comma::Comma,
@@ -19,7 +20,7 @@ impl GeometricRepresentationContext {
                 Comma::parse(),
                 OptionalParameter::parse(),
                 Comma::parse(),
-                dec_uint,
+                DimensionCount::parse(),
                 Comma::parse(),
                 OptionalParameter::parse(),
                 Comma::parse(),
@@ -63,4 +64,8 @@ fn parse_axis_3d_works() {
     let data = "IFCGEOMETRICREPRESENTATIONCONTEXT('TestIdentifier',$,3,$,#99,$);";
     let parsed = GeometricRepresentationContext::parse().parse(data).unwrap();
     assert_eq!(data, parsed.to_string());
+
+    // invalid dimension count (4)
+    let data = "IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',4,0.00001,#99,#100);";
+    assert!(GeometricRepresentationContext::parse().parse(data).is_err());
 }
