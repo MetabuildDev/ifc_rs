@@ -7,4 +7,5 @@ pub mod product_definition_shape;
 pub mod profile_type;
 pub mod rectangle_profile_def;
 pub mod representation_context;
+pub mod representation_subcontext;
 pub mod shape_representation;
