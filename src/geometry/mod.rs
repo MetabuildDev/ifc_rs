@@ -1,6 +1,7 @@
 pub mod axis;
 pub mod direction;
 pub mod extruded_area_solid;
+pub mod geometric_projection;
 pub mod point;
 pub mod polyline;
 pub mod product_definition_shape;

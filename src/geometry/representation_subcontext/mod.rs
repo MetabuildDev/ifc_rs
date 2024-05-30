@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::geometry::geometric_projection::GeometricProjection;
 use crate::id::Id;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
