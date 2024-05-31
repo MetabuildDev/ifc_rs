@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::id::Id;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
@@ -29,7 +30,7 @@ pub struct Person {
     /// Roles played by the person.
     pub roles: OptionalParameter<IfcList<Label>>, // TODO: IfcActorRole
     /// Postal and telecommunication addresses of a person.
-    pub addresses: OptionalParameter<IfcList<Label>>, // TODO: IfcAddress
+    pub addresses: OptionalParameter<IfcList<Id>>,
 }
 
 // #39= IFCPERSON($,'','hannah.schmitz',$,$,$,$,(#35));
