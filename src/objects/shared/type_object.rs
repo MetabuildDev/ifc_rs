@@ -25,13 +25,13 @@ pub struct TypeObject {
     /// present, no instruction is given to which occurrence object the
     /// type object is applicable. The following conventions are used:
     ///
-    ///     * The IFC entity name of the applicable occurrence using
-    ///       the IFC naming convention, CamelCase with IFC prefix
-    ///     * It can be optionally followed by the predefined type after
-    ///       the separator "/" (forward slash), using uppercase
-    ///     * If one type object is applicable to many occurrence objects,
-    ///       then those occurrence object names should be separate by
-    ///       comma "," forming a comma separated string.
+    ///   * The IFC entity name of the applicable occurrence using
+    ///     the IFC naming convention, CamelCase with IFC prefix
+    ///   * It can be optionally followed by the predefined type after
+    ///     the separator "/" (forward slash), using uppercase
+    ///   * If one type object is applicable to many occurrence objects,
+    ///     then those occurrence object names should be separate by
+    ///     comma "," forming a comma separated string.
     pub applicable_occurence: OptionalParameter<Id>,
 
     /// Set list of unique property sets, that are associated with the
