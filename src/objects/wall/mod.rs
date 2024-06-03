@@ -7,7 +7,7 @@ use super::{shared::element::Element, walltype::WallType};
 use crate::{id::IdOr, parser::optional::OptionalParameter};
 
 pub struct Wall {
-    pub element: Element,
+    element: Element,
 
     pub predefined_type: OptionalParameter<IdOr<WallType>>,
 }
