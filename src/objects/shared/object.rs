@@ -8,9 +8,17 @@ use crate::parser::{
 
 use super::root::Root;
 
+/// An IfcObject is the generalization of any semantically treated
+/// thing or process. Objects are things as they appear - i.e. occurrences.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcobject.htm
 pub struct Object {
     root: Root,
 
+    /// The type denotes a particular type that indicates the object further.
+    /// The use has to be established at the level of instantiable subtypes.
+    /// In particular it holds the user defined type, if the enumeration
+    /// of the attribute PredefinedType is set to USERDEFINED.
     pub object_type: OptionalParameter<Label>,
 }
 

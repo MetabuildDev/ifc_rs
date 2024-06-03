@@ -8,9 +8,21 @@ use crate::parser::{
 
 use super::type_product::TypeProduct;
 
+/// IfcElementType defines a list of commonly shared property set
+/// definitions of an element and an optional set of product
+/// representations. It is used to define an element specification
+/// (i.e. the specific product information, that is common to
+/// all occurrences of that product type).
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcelementtype.htm
 pub struct ElementType {
     type_product: TypeProduct,
 
+    /// The type denotes a particular type that indicates the
+    /// object further. The use has to be established at the level
+    /// of instantiable subtypes. In particular it holds the user
+    /// defined type, if the enumeration of the attribute
+    /// 'PredefinedType' is set to USERDEFINED.
     pub element_type: OptionalParameter<Label>,
 }
 

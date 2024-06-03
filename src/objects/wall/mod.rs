@@ -6,9 +6,18 @@ use std::ops::Deref;
 use super::{shared::element::Element, walltype::WallType};
 use crate::{id::IdOr, parser::optional::OptionalParameter};
 
+/// The wall represents a vertical construction that may bound or
+/// subdivide spaces. Wall are usually vertical, or nearly vertical,
+/// planar elements, often designed to bear structural loads.
+/// A wall is however not required to be load bearing.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwall.htm
 pub struct Wall {
     element: Element,
 
+    /// Predefined generic type for a wall that is specified in an
+    /// enumeration. There may be a property set given specifically
+    /// for the predefined types.
     pub predefined_type: OptionalParameter<IdOr<WallType>>,
 }
 

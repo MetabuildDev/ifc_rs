@@ -10,9 +10,15 @@ use crate::{
 
 use super::product::Product;
 
+/// An element is a generalization of all components that make up an AEC product.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcelement.htm
 pub struct Element {
     product: Product,
 
+    /// The tag (or label) identifier at the particular instance of a product,
+    /// e.g. the serial number, or the position number. It is the identifier
+    /// at the occurrence level.
     pub tag: OptionalParameter<Id>,
 }
 

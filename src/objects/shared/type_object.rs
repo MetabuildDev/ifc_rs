@@ -10,10 +10,33 @@ use crate::{
 
 use super::root::Root;
 
+/// The object type defines the specific information about a type,
+/// being common to all occurrences of this type. It refers to the
+/// specific level of the well recognized generic - specific - occurrance
+/// modeling paradigm. The IfcTypeObject gets assigned to the individual
+/// object instances (the occurrences) via the IfcRelDefinesByType relationship.
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifctypeobject.htm
 pub struct TypeObject {
     root: Root,
 
+    /// The attribute optionally defines the data type of the occurrence
+    /// object, to which the assigned type object can relate. If not
+    /// present, no instruction is given to which occurrence object the
+    /// type object is applicable. The following conventions are used:
+    ///
+    ///     * The IFC entity name of the applicable occurrence using
+    ///       the IFC naming convention, CamelCase with IFC prefix
+    ///     * It can be optionally followed by the predefined type after
+    ///       the separator "/" (forward slash), using uppercase
+    ///     * If one type object is applicable to many occurrence objects,
+    ///       then those occurrence object names should be separate by
+    ///       comma "," forming a comma separated string.
     pub applicable_occurence: OptionalParameter<Id>,
+
+    /// Set list of unique property sets, that are associated with the
+    /// object type and are common to all object occurrences referring
+    /// to this object type.
     pub has_property_sets: OptionalParameter<Id>,
 }
 

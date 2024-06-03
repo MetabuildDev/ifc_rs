@@ -8,9 +8,19 @@ mod deserialize;
 mod serialize;
 pub mod type_enum;
 
+/// The element type IfcWallType defines commonly shared information
+/// for occurrences of walls. The set of shared information may include:
+///   * common properties within shared property sets
+///   * common material information
+///   * common material layer definitions
+///   * common shape representations
+///
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwalltype.htm
 pub struct WallType {
     element_type: ElementType,
 
+    /// Identifies the predefined types of a wall element from which
+    /// the type required may be set.
     pub predefined_type: WallTypeEnum,
 }
 
