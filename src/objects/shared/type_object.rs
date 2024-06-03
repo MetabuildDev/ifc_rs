@@ -79,7 +79,7 @@ mod test {
     use crate::{objects::shared::type_object::TypeObject, parser::optional::IFCParse};
 
     #[test]
-    fn root_round_trip() {
+    fn type_object_round_trip() {
         let example = "'2aG1gZj7PD2PztLOx2$IVX',#2,'Double Brick - 270',$,$,$";
 
         let type_object: TypeObject = TypeObject::parse().parse(example).unwrap();
