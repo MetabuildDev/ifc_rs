@@ -28,7 +28,7 @@ pub struct Person {
     /// and/or professional standing and appear after his/her names.
     pub suffix_titles: OptionalParameter<IfcList<Label>>,
     /// Roles played by the person.
-    pub roles: OptionalParameter<IfcList<Label>>, // TODO: IfcActorRole
+    pub roles: OptionalParameter<IfcList<Id>>,
     /// Postal and telecommunication addresses of a person.
     pub addresses: OptionalParameter<IfcList<Id>>,
 }
