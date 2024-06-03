@@ -17,3 +17,4 @@ rust --> |display + SERde| ifc
 # Docs
 
 - [IFC4](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
+- [Minimal File for Starters](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/annex/annex-e/wall-standard-case.ifc)
