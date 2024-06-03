@@ -32,5 +32,3 @@ pub struct Person {
     /// Postal and telecommunication addresses of a person.
     pub addresses: OptionalParameter<IfcList<Id>>,
 }
-
-// #39= IFCPERSON($,'','hannah.schmitz',$,$,$,$,(#35));
