@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, ops::Deref};
 
 use winnow::{combinator::alt, Parser};
 
@@ -17,6 +17,26 @@ pub enum OptionalParameter<T: IFCParse> {
     Omitted(Omitted),
     Inherited(Inherited),
     Custom(T),
+}
+
+impl<T: IFCParse> OptionalParameter<T> {
+    pub fn is_custom(&self) -> bool {
+        match self {
+            OptionalParameter::Custom(_) => true,
+            _ => false,
+        }
+    }
+}
+
+impl<T: IFCParse> Deref for OptionalParameter<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            Self::Custom(t) => t,
+            _ => panic!("called deref on non-custom variant"),
+        }
+    }
 }
 
 impl<T: IFCParse> IFCParse for OptionalParameter<T> {
