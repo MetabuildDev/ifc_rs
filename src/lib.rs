@@ -44,10 +44,7 @@ impl IFC {
 mod test {
     use std::any::Any;
 
-    use crate::{
-        id::Id,
-        meta::datamap::{DataValue, ParsedMap},
-    };
+    use crate::id::Id;
 
     use super::IFC;
     use anyhow::Result;
@@ -56,7 +53,7 @@ mod test {
     fn load_file() -> Result<()> {
         let ifc = IFC::from_file("resources/wall-standard-case.ifc")?;
 
-        let parsed = ifc
+        let _parsed = ifc
             .data
             .0
             .into_iter()

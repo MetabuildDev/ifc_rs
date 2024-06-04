@@ -3,17 +3,11 @@ mod serialize;
 
 use std::{any::Any, collections::BTreeMap};
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, Context, Result};
 use strum::Display;
 use winnow::{combinator::alt, Parser};
 
-use crate::{
-    geometry::Geometry,
-    id::Id,
-    objects::{wall::Wall, walltype::WallType, Objects},
-    parser::optional::IFCParse,
-    units::Units,
-};
+use crate::{geometry::Geometry, id::Id, objects::Objects, units::Units};
 
 /// CRITICAL: split up the index map into a proper struct with fields which hold Hashmaps mapping
 /// indices to one specific type instead of an enum
@@ -30,11 +24,12 @@ pub enum DataValue {
 impl DataValue {
     pub fn parse_types(&self) -> Result<Box<dyn Any>> {
         let mut s = match self {
-            DataValue::Any { s } => s.clone(),
+            DataValue::Any { s } => s.as_str(),
         };
 
         alt((Objects::parse(), Geometry::parse(), Units::parse()))
             .parse_next(&mut s)
             .map_err(|err| anyhow!("content parsing failed: {err:#?}"))
+            .with_context(|| format!("content: {s}"))
     }
 }

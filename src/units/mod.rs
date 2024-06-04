@@ -19,12 +19,7 @@ pub struct Units;
 
 impl Units {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
-        winnow::seq! {
-            alt((
-                angle::AngleUnit::parse_any(),
-                area::AreaUnit::parse_any(),
-            ))
-        }
+        alt((angle::AngleUnit::parse_any(), area::AreaUnit::parse_any()))
     }
 }
 

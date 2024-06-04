@@ -15,16 +15,14 @@ pub struct Objects;
 
 impl Objects {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
-        winnow::seq! {
-            alt((
-                actor_role::ActorRole::parse_any(),
-                address::PostalAddress::parse_any(),
-                address::TelecomAddress::parse_any(),
-                person::Person::parse_any(),
-                wall::Wall::parse_any(),
-                walltype::WallType::parse_any(),
-            ))
-        }
+        alt((
+            actor_role::ActorRole::parse_any(),
+            address::PostalAddress::parse_any(),
+            address::TelecomAddress::parse_any(),
+            person::Person::parse_any(),
+            wall::Wall::parse_any(),
+            walltype::WallType::parse_any(),
+        ))
     }
 }
 
