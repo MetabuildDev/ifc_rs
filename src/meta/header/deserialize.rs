@@ -64,7 +64,9 @@ impl Header {
     fn p_desc_desc<'a>() -> impl IFCParser<'a, Vec<ViewDefinition>> {
         let p_view_def = Self::p_view_definition();
         let p_item = p_space_or_comment_surrounded(delimited("'", p_view_def, "'"));
-        delimited("(", separated(.., p_item, ","), ")")
+        let p_any_items = separated(.., p_item, ",");
+        let p_no_items = ("''").map(|_| vec![]);
+        delimited("(", alt((p_no_items, p_any_items)), ")")
     }
 
     fn p_view_definition<'a>() -> impl IFCParser<'a, ViewDefinition> {
