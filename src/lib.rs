@@ -4,11 +4,7 @@ use parser::optional::IFCParse;
 use std::{fs, path::Path};
 use winnow::{seq, Parser};
 
-use meta::{
-    datamap::{deserialize::p_index_map, DataMap},
-    footer::Footer,
-    header::Header,
-};
+use meta::{datamap::DataMap, footer::Footer, header::Header};
 
 pub mod geometry;
 pub mod id;
@@ -33,7 +29,7 @@ impl IFC {
 
         let me = seq!(Self {
             header: Header::parse(),
-            data: p_index_map(),
+            data: DataMap::parse(),
             footer: Footer::parse(),
         })
         .parse_next(&mut s)
