@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use anyhow::{anyhow, Result};
 use parser::optional::IFCParse;
 use std::{fs, path::Path};
 use winnow::{seq, Parser};
@@ -23,8 +24,8 @@ pub struct IFC {
 }
 
 impl IFC {
-    pub fn from_file(path: impl AsRef<Path>) -> Self {
-        let contents = fs::read_to_string(path).expect("can't read file");
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
+        let contents = fs::read_to_string(path)?;
         let mut s = contents.as_str();
 
         let me = seq!(Self {
@@ -33,18 +34,35 @@ impl IFC {
             footer: Footer::parse(),
         })
         .parse_next(&mut s)
-        .unwrap();
+        .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
 
-        me
+        Ok(me)
     }
 }
 
 #[cfg(test)]
 mod test {
+    use std::any::Any;
+
+    use crate::{
+        id::Id,
+        meta::datamap::{DataValue, ParsedMap},
+    };
+
     use super::IFC;
+    use anyhow::Result;
 
     #[test]
-    fn load_file() {
-        IFC::from_file("resources/wall-standard-case.ifc");
+    fn load_file() -> Result<()> {
+        let ifc = IFC::from_file("resources/wall-standard-case.ifc")?;
+
+        let parsed = ifc
+            .data
+            .0
+            .into_iter()
+            .map(|(id, content)| Ok((id, content.parse_types()?)))
+            .collect::<Result<Vec<(Id, Box<dyn Any>)>>>()?;
+
+        Ok(())
     }
 }

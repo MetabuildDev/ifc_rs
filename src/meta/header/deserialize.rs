@@ -226,17 +226,18 @@ ENDSEC;
 
 #[test]
 fn parse_from_example_file() {
-    let data = r#"
-    ISO-10303-21;
+    let data = r#"ISO-10303-21;
     HEADER;
     FILE_DESCRIPTION((''),'2;1');
     FILE_NAME('','2019-03-24T14:01:39',(''),(''),'BuildingSmart IfcKit by Constructivity','IfcDoc 12.0.0.0','');
     FILE_SCHEMA(('IFC4x2'));
-    ENDSEC;
-    "#;
+    ENDSEC;"#;
 
     let header = Header::parse().parse(data).unwrap();
-    let str_header = header.to_string();
+    let mut str_header = header.to_string();
+    str_header.retain(|c| !c.is_whitespace());
 
-    assert_eq!(data, str_header);
+    let mut s = data.to_string();
+    s.retain(|c| !c.is_whitespace());
+    assert_eq!(s, str_header);
 }

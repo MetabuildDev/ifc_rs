@@ -1,4 +1,4 @@
-use std::{fmt::Display, ops::Deref};
+use std::{any::Any, fmt::Display, ops::Deref};
 
 use winnow::{combinator::alt, Parser};
 
@@ -10,6 +10,13 @@ pub trait IFCParse: Display {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized;
+
+    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn Any>>
+    where
+        Self: Sized + 'static,
+    {
+        Self::parse().map(|s: Self| Box::new(s) as Box<dyn Any>)
+    }
 }
 
 #[derive(Debug, Clone)]
