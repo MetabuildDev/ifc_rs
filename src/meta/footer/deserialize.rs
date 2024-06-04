@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use optional::IFCParse;
 use strum::VariantNames;
 use winnow::combinator::{alt, delimited, preceded};
 use winnow::prelude::*;
@@ -8,12 +9,14 @@ use crate::meta::footer::Footer;
 use crate::meta::version::Version;
 use crate::parser::*;
 
-fn p_footer<'a>() -> impl IFCParser<'a, Footer> {
-    winnow::seq! {
-        Footer {
-            _: p_space_or_comment(),
-            version: p_footer_version(),
-            _: p_space_or_comment(),
+impl IFCParse for Footer {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
+        winnow::seq! {
+            Self {
+                _: p_space_or_comment(),
+                version: p_footer_version(),
+                _: p_space_or_comment(),
+            }
         }
     }
 }
@@ -38,14 +41,14 @@ fn p_footer_version<'a>() -> impl IFCParser<'a, Version> {
 fn parse_footer_works() {
     let data_with_comment = r#"
     /* THE FOLLOWING IS A COMMENT OVER THE FOOTER */
-        END-ISO-10303-21; 
+        END-ISO-10303-21;
     /* THE FOLLOWING IS A COMMENT AFTER THE FOOTER */
     "#;
 
     let data_without_comment = r#"END-ISO-10303-21;"#;
 
-    let footer_1 = p_footer().parse(data_with_comment).unwrap();
-    let footer_2 = p_footer().parse(data_without_comment).unwrap();
+    let footer_1 = Footer::parse().parse(data_with_comment).unwrap();
+    let footer_2 = Footer::parse().parse(data_without_comment).unwrap();
 
     assert_eq!(footer_1, footer_2);
 

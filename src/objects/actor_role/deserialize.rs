@@ -9,8 +9,8 @@ use crate::{
     },
 };
 
-impl ActorRole {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for ActorRole {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCACTORROLE(",
             (

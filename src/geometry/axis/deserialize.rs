@@ -13,8 +13,8 @@ use crate::{
     },
 };
 
-impl Axis2D {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for Axis2D {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAXIS2PLACEMENT2D(",
             separated_pair(Id::parse(), Comma::parse(), OptionalParameter::parse()),
@@ -24,8 +24,8 @@ impl Axis2D {
     }
 }
 
-impl Axis3D {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for Axis3D {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAXIS2PLACEMENT3D(",
             (

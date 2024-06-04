@@ -11,8 +11,8 @@ use crate::{
     },
 };
 
-impl GeometricRepresentationContext {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for GeometricRepresentationContext {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCGEOMETRICREPRESENTATIONCONTEXT(",
             (

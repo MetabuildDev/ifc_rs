@@ -7,7 +7,7 @@ impl Display for DataMap {
         writeln!(f, "DATA;")?;
 
         for (id_str, obj_str) in self.0.iter() {
-            writeln!(f, "{id}= {obj}", id = id_str, obj = obj_str)?;
+            writeln!(f, "{id}= {obj}", id = id_str, obj = obj_str.to_string())?;
         }
 
         writeln!(f, "ENDSEC;")?;
