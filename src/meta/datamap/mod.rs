@@ -1,4 +1,4 @@
-mod deserialize;
+pub mod deserialize;
 mod serialize;
 
 use std::collections::BTreeMap;

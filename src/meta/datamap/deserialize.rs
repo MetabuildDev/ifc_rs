@@ -13,7 +13,7 @@ use crate::{
     parser::{optional::IFCParse, p_space_or_comment_surrounded, IFCParser},
 };
 
-fn p_index_map<'a>() -> impl IFCParser<'a, DataMap> {
+pub(crate) fn p_index_map<'a>() -> impl IFCParser<'a, DataMap> {
     let p_obj = repeat_till(.., any, newline).map(|(s, _): (String, _)| DataValue::Any { s });
     let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
     let p_line_spaced = p_space_or_comment_surrounded(p_line);

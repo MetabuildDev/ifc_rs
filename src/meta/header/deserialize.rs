@@ -17,18 +17,20 @@ use crate::parser::comma::Comma;
 use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
-fn p_header<'a>() -> impl IFCParser<'a, Header> {
-    winnow::seq! {
-        Header {
-            _: p_space_or_comment(),
-            version: p_header_version(),
-            _: p_space_or_comment_surrounded("HEADER;"),
-            description: p_header_description(),
-            _: p_space_or_comment(),
-            name: p_header_name(),
-            _: p_space_or_comment(),
-            schema: p_header_schema(),
-            _: p_space_or_comment_surrounded("ENDSEC;"),
+impl IFCParse for Header {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
+        winnow::seq! {
+            Self {
+                _: p_space_or_comment(),
+                version: p_header_version(),
+                _: p_space_or_comment_surrounded("HEADER;"),
+                description: p_header_description(),
+                _: p_space_or_comment(),
+                name: p_header_name(),
+                _: p_space_or_comment(),
+                schema: p_header_schema(),
+                _: p_space_or_comment_surrounded("ENDSEC;"),
+            }
         }
     }
 }
@@ -190,7 +192,7 @@ HEADER;
 * Header model creation date:     Mon Jun 29 15:15:07 2020
 * EDMuser:                        sdai-user
 * EDMgroup:                       sdai-group
-* License ID and type:            5605 : Permanent license. Expiry date: 
+* License ID and type:            5605 : Permanent license. Expiry date:
 * EDMstepFileFactory options:     020000
 ******************************************************************************************/
 FILE_DESCRIPTION(('ViewDefinition [CoordinationView_V2.0, QuantityTakeOffAddOnView]'),'2;1');
@@ -207,8 +209,8 @@ FILE_SCHEMA(('IFC2X3'));
 ENDSEC;
     "#;
 
-    let header_1 = p_header().parse(data_with_comment).unwrap();
-    let header_2 = p_header().parse(data_without_comment).unwrap();
+    let header_1 = Header::parse().parse(data_with_comment).unwrap();
+    let header_2 = Header::parse().parse(data_without_comment).unwrap();
 
     assert_eq!(header_1, header_2);
 
