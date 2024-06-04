@@ -22,7 +22,10 @@ impl Objects {
             actor_role::ActorRole::parse_any(),
             address::PostalAddress::parse_any(),
             address::TelecomAddress::parse_any(),
+            application::Application::parse_any(),
+            organization::Organization::parse_any(),
             person::Person::parse_any(),
+            person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),
             walltype::WallType::parse_any(),
         ))
