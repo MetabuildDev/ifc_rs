@@ -1,9 +1,8 @@
 use std::{fmt::Display, ops::Deref};
 
+use crate::parser::IFCParse;
 use crate::parser::{
-    label::Label,
-    optional::{IFCParse, OptionalParameter},
-    p_space_or_comment_surrounded, IFCParser,
+    label::Label, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParser,
 };
 
 use super::type_product::TypeProduct;

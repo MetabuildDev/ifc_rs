@@ -2,12 +2,7 @@ use winnow::{combinator::delimited, Parser};
 
 use crate::{
     objects::organization::Organization,
-    parser::{
-        comma::Comma,
-        label::Label,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl Organization {

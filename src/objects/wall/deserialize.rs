@@ -1,9 +1,6 @@
 use optional::OptionalParameter;
 
-use crate::{
-    objects::shared::element::Element,
-    parser::{optional::IFCParse, *},
-};
+use crate::{objects::shared::element::Element, parser::*};
 
 use super::Wall;
 

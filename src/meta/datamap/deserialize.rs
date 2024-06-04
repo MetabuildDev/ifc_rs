@@ -10,7 +10,7 @@ use winnow::{
 use super::{DataMap, DataValue};
 use crate::{
     id::Id,
-    parser::{optional::IFCParse, p_space_or_comment_surrounded, IFCParser},
+    parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
 };
 
 fn p_index_map<'a>() -> impl IFCParser<'a, DataMap> {

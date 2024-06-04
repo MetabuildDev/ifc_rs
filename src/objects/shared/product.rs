@@ -3,10 +3,7 @@ use std::fmt::Display;
 use crate::{
     geometry::point::Point3D,
     id::{Id, IdOr},
-    parser::{
-        optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded, IFCParser,
-    },
+    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
 };
 
 use super::object::Object;

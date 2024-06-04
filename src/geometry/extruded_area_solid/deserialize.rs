@@ -1,6 +1,6 @@
 use crate::id::Id;
 use crate::parser::ifc_float::IfcFloat;
-use crate::parser::{optional::IFCParse, *};
+use crate::parser::*;
 
 use super::ExtrudedAreaSolid;
 

@@ -3,11 +3,7 @@ use winnow::{combinator::delimited, Parser};
 use crate::{
     id::Id,
     objects::person_and_org::PersonAndOrganization,
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl PersonAndOrganization {

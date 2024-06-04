@@ -16,8 +16,8 @@ pub struct AreaUnit {
 mod test {
     use winnow::Parser;
 
-    use crate::parser::optional::IFCParse;
     use crate::units::area::AreaUnit;
+    use crate::units::IFCParse;
 
     #[test]
     fn area_unit_round_trip() {

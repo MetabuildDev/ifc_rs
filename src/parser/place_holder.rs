@@ -2,7 +2,9 @@ use std::fmt::Display;
 
 use winnow::Parser;
 
-use super::{optional::IFCParse, IFCParser};
+use crate::parser::IFCParse;
+
+use super::IFCParser;
 
 /// As mentioned in the wikipedia [DATA section](https://en.wikipedia.org/wiki/ISO_10303-21#DATA_section) there are two kinds of placeholders:
 ///

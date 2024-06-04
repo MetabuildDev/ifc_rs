@@ -4,7 +4,6 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiprefix.htm

@@ -1,7 +1,7 @@
 use crate::geometry::profile_type::ProfileType;
 use crate::parser::comma::Comma;
 use crate::parser::ifc_float::IfcFloat;
-use crate::parser::optional::{IFCParse, OptionalParameter};
+use crate::parser::optional::OptionalParameter;
 use crate::parser::*;
 
 use super::RectangleProfileDef;

@@ -24,8 +24,9 @@ pub struct RectangleProfileDef {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::IFCParse;
+
     use super::RectangleProfileDef;
-    use crate::parser::optional::IFCParse;
 
     #[test]
     fn rectangle_profile_def_round_trip() {

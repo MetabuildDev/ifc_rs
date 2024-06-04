@@ -14,7 +14,6 @@ use super::schema::{FileSchema, FileSchemas};
 use super::version::Version;
 use super::Header;
 use crate::parser::comma::Comma;
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 fn p_header<'a>() -> impl IFCParser<'a, Header> {

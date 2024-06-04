@@ -2,8 +2,8 @@ mod deserialize;
 mod serialize;
 
 use crate::parser::label::Label;
-use crate::parser::optional::{IFCParse, OptionalParameter};
-use crate::parser::{p_space_or_comment, IFCParser};
+use crate::parser::optional::OptionalParameter;
+use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
 use std::str::FromStr;
 
 use strum::{Display, EnumString, VariantNames};

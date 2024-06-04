@@ -6,11 +6,7 @@ use winnow::{
 use super::{Axis2D, Axis3D};
 use crate::{
     id::Id,
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl Axis2D {

@@ -3,7 +3,7 @@ use winnow::{combinator::delimited, Parser};
 use crate::{
     id::Id,
     objects::application::Application,
-    parser::{comma::Comma, label::Label, optional::IFCParse, IFCParser},
+    parser::{comma::Comma, label::Label, IFCParse, IFCParser},
 };
 
 impl Application {

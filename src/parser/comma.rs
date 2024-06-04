@@ -2,7 +2,9 @@ use std::fmt::Display;
 
 use winnow::Parser;
 
-use super::{optional::IFCParse, p_space_or_comment_surrounded};
+use crate::parser::IFCParse;
+
+use super::p_space_or_comment_surrounded;
 
 pub struct Comma;
 

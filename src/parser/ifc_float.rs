@@ -6,7 +6,7 @@ use winnow::ascii::float;
 use winnow::Parser;
 
 use crate::parser::geometry::{p_vec2, p_vec3};
-use crate::parser::{optional::IFCParse, IFCParser};
+use crate::parser::{IFCParse, IFCParser};
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct IfcFloat(pub f64);
