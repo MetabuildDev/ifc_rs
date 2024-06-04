@@ -6,8 +6,8 @@ use crate::{
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
-impl PersonAndOrganization {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for PersonAndOrganization {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCPERSONANDORGANIZATION(",
             (

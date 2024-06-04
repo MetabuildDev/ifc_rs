@@ -5,8 +5,8 @@ use crate::{
     parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
-impl Organization {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for Organization {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCORGANIZATION(",
             (

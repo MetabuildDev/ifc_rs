@@ -6,8 +6,8 @@ use crate::{
     parser::{comma::Comma, label::Label, IFCParse, IFCParser},
 };
 
-impl Application {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for Application {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAPPLICATION(",
             (
