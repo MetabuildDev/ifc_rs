@@ -26,11 +26,14 @@ impl Display for FileDescription {
         write!(
             f,
             "({descs})",
-            descs = self
-                .descriptions
-                .iter()
-                .map(|desc| format!("'{desc}'"))
-                .join(",")
+            descs = if self.descriptions.is_empty() {
+                "''".to_string()
+            } else {
+                self.descriptions
+                    .iter()
+                    .map(|desc| format!("'{desc}'"))
+                    .join(",")
+            }
         )?;
         write!(f, ",")?;
         write!(f, "'{level}'", level = self.implementation_level)?;

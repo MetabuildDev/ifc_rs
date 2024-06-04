@@ -1,26 +1,33 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt::Display};
 
 use winnow::{
     ascii::newline,
-    combinator::{preceded, repeat_till, separated_pair},
-    token::any,
+    combinator::{alt, preceded, repeat_till, separated_pair, terminated},
     Parser,
 };
 
-use super::{DataMap, DataValue};
+use super::DataMap;
 use crate::{
+    geometry::Geometry,
     id::Id,
+    objects::Objects,
     parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
+    units::Units,
 };
 
-fn p_index_map<'a>() -> impl IFCParser<'a, DataMap> {
-    let p_obj = repeat_till(.., any, newline).map(|(s, _): (String, _)| DataValue::Any { s });
-    let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
-    let p_line_spaced = p_space_or_comment_surrounded(p_line);
-    let p_lines =
-        repeat_till(.., p_line_spaced, "ENDSEC;").map(|(v, _): (BTreeMap<Id, DataValue>, _)| v);
-    let p_data_section = p_space_or_comment_surrounded(preceded("DATA;", p_lines));
-    p_data_section.map(DataMap)
+impl IFCParse for DataMap {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
+        let p_obj = terminated(
+            alt((Objects::parse(), Geometry::parse(), Units::parse())),
+            newline,
+        );
+        let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
+        let p_line_spaced = p_space_or_comment_surrounded(p_line);
+        let p_lines = repeat_till(.., p_line_spaced, "ENDSEC;")
+            .map(|(v, _): (BTreeMap<Id, Box<dyn Display>>, _)| v);
+        let p_data_section = p_space_or_comment_surrounded(preceded("DATA;", p_lines));
+        p_data_section.map(DataMap)
+    }
 }
 
 #[test]
@@ -102,9 +109,65 @@ DATA;
 #110= IFCPROJECT('0UQ2T3XlP1QPjq2tNG9N8h',#47,'23022',$,$,'23022 Debeka HV-Erweiterung','',(#102),#97);
 ENDSEC;
 "#;
-    let map = p_index_map().parse(data).unwrap();
+    let map = DataMap::parse().parse(data).unwrap();
 
     println!("{map}");
 
     assert_eq!(format!("{map}").trim(), data.trim());
+}
+
+#[test]
+fn parse_from_example_file() {
+    let data = r#"DATA;
+#1= IFCBUILDING('39t4Pu3nTC4ekXYRIHJB9W',#2,'IfcBuilding',$,$,$,$,$,$,$,$,$);
+#2= IFCOWNERHISTORY(#5,#6,$,.ADDED.,1454575675,$,$,1454575675);
+#5= IFCPERSONANDORGANIZATION(#7,#8,$);
+#6= IFCAPPLICATION(#9,'0.0.1.0','ggRhinoIFC - Geometry Gym Plug-in for Rhino3d','ggRhinoIFC');
+#7= IFCPERSON('Jon','Jon',$,$,$,$,$,$);
+#8= IFCORGANIZATION($,'Geometry Gym Pty Ltd',$,$,$);
+#9= IFCORGANIZATION($,'Geometry Gym Pty Ltd',$,$,$);
+#3= IFCRELAGGREGATES('091a6ewbvCMQ2Vyiqspa7a',#2,'Project Container','Project Container for Buildings',#10,(#1));
+#4= IFCRELCONTAINEDINSPATIALSTRUCTURE('3Sa3dTJGn0H8TQIGiuGQd5',#2,'Building','Building Container for Elements',(#11),#1);
+#10= IFCPROJECT('0$WU4A9R19$vKWO$AdOnKA',#2,'IfcProject',$,$,$,$,(#12),#13);
+#12= IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',3,0.0001,#15,$);
+#13= IFCUNITASSIGNMENT((#18,#19,#20));
+#15= IFCAXIS2PLACEMENT3D(#21,$,$);
+#16= IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Axis','Model',0,$,$,$,#12,$,.MODEL_VIEW.,$);
+#17= IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Body','Model',0,$,$,$,#12,$,.MODEL_VIEW.,$);
+#18= IFCSIUNIT($,.LENGTHUNIT.,.MILLI.,.METRE.);
+#19= IFCSIUNIT($,.PLANEANGLEUNIT.,$,.RADIAN.);
+#20= IFCSIUNIT($,.TIMEUNIT.,$,.SECOND.);
+#21= IFCCARTESIANPOINT((0.,0.,0.));
+#22= IFCSHAPEREPRESENTATION(#17,'Axis','Curve2D',(#24));
+#23= IFCSHAPEREPRESENTATION(#17,'Body','SweptSolid',(#26));
+#24= IFCPOLYLINE((#27,#28));
+#25= IFCPRODUCTDEFINITIONSHAPE($,$,(#22,#23));
+#26= IFCEXTRUDEDAREASOLID(#29,$,#30,2000.);
+#27= IFCCARTESIANPOINT((0.,0.));
+#28= IFCCARTESIANPOINT((5000.,0.));
+#29= IFCRECTANGLEPROFILEDEF(.AREA.,'Wall Perim',#31,5000.,270.);
+#30= IFCDIRECTION((0.,0.,1.));
+#31= IFCAXIS2PLACEMENT2D(#32,$);
+#32= IFCCARTESIANPOINT((2500.,135.));
+#11= IFCWALL('0DWgwt6o1FOx7466fPk$jl',#2,$,$,$,#33,#25,$,$);
+#33= IFCLOCALPLACEMENT($,#36);
+#36= IFCAXIS2PLACEMENT3D(#21,$,$);
+#14= IFCRELDECLARES('1lEof85zvB$O57GEVffll1',#2,$,$,#10,(#37));
+#34= IFCRELASSOCIATESMATERIAL('1BYoVhjtLADPUZYzipA826',#2,'MatAssoc','Material Associates',(#11),#38);
+#38= IFCMATERIALLAYERSETUSAGE(#39,.AXIS2.,.POSITIVE.,0.,$);
+#39= IFCMATERIALLAYERSET((#40,#41,#42),'Double Brick - 270',$);
+#40= IFCMATERIALLAYER(#44,110.,.F.,'Finish',$,$,$);
+#41= IFCMATERIALLAYER($,50.,.T.,'Air Infiltration Barrier',$,$,$);
+#42= IFCMATERIALLAYER(#45,110.,.F.,'Core',$,$,$);
+#44= IFCMATERIAL('Masonry - Brick - Brown',$,$);
+#45= IFCMATERIAL('Masonry',$,$);
+#35= IFCRELDEFINESBYTYPE('1$EkFElNT8TB_VUVG1FtMe',#2,$,$,(#11),#37);
+#37= IFCWALLTYPE('2aG1gZj7PD2PztLOx2$IVX',#2,'Double Brick - 270',$,$,$,$,$,$,.NOTDEFINED.);
+#43= IFCRELASSOCIATESMATERIAL('36U74BIPDD89cYkx9bkV$Y',#2,'MatAssoc','Material Associates',(#37),#39);
+ENDSEC;"#;
+
+    let map = DataMap::parse().parse(data).unwrap();
+    let str_map = map.to_string();
+
+    assert_eq!(data, str_map);
 }

@@ -20,6 +20,13 @@ pub trait IFCParse: Display {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized;
+
+    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn Display>>
+    where
+        Self: Sized + 'static,
+    {
+        Self::parse().map(|s: Self| Box::new(s) as Box<dyn Display>)
+    }
 }
 
 pub(crate) fn p_ident<'a>() -> impl IFCParser<'a, String> {

@@ -9,8 +9,8 @@ use crate::{
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
-impl GeometricRepresentationSubContext {
-    pub fn parse<'a>() -> impl IFCParser<'a, Self> {
+impl IFCParse for GeometricRepresentationSubContext {
+    fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCGEOMETRICREPRESENTATIONSUBCONTEXT(",
             (
