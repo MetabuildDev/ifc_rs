@@ -13,8 +13,8 @@ pub mod walltype;
 
 pub struct Objects;
 
-impl IFCParse for Objects {
-    fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+impl Objects {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
         winnow::seq! {
             alt((
                 actor_role::ActorRole::parse_any(),

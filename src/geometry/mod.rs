@@ -20,8 +20,8 @@ pub mod shape_representation;
 
 pub struct Geometry;
 
-impl IFCParse for Geometry {
-    fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+impl Geometry {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
         winnow::seq! {
             alt((
                 axis::Axis2D::parse_any(),

@@ -17,8 +17,8 @@ use crate::parser::*;
 
 pub struct Units;
 
-impl IFCParse for Units {
-    fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+impl Units {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
         winnow::seq! {
             alt((
                 angle::AngleUnit::parse_any(),
