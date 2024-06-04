@@ -7,13 +7,13 @@ use winnow::{
     Parser,
 };
 
-use super::ParsedMap;
+use super::DataMap;
 use crate::{
     id::Id,
     parser::{optional::IFCParse, p_space_or_comment_surrounded, IFCParser},
 };
 
-impl IFCParse for ParsedMap {
+impl IFCParse for DataMap {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         let p_obj =
             repeat_till(.., any, newline).map(|(s, _): (String, _)| Self::parse_types(&s).unwrap());
@@ -22,7 +22,7 @@ impl IFCParse for ParsedMap {
         let p_lines = repeat_till(.., p_line_spaced, "ENDSEC;")
             .map(|(v, _): (BTreeMap<Id, Box<dyn Display>>, _)| v);
         let p_data_section = p_space_or_comment_surrounded(preceded("DATA;", p_lines));
-        p_data_section.map(ParsedMap)
+        p_data_section.map(DataMap)
     }
 }
 
@@ -105,7 +105,7 @@ DATA;
 #110= IFCPROJECT('0UQ2T3XlP1QPjq2tNG9N8h',#47,'23022',$,$,'23022 Debeka HV-Erweiterung','',(#102),#97);
 ENDSEC;
 "#;
-    let map = ParsedMap::parse().parse(data).unwrap();
+    let map = DataMap::parse().parse(data).unwrap();
 
     println!("{map}");
 
@@ -162,7 +162,7 @@ fn parse_from_example_file() {
 #43= IFCRELASSOCIATESMATERIAL('36U74BIPDD89cYkx9bkV$Y',#2,'MatAssoc','Material Associates',(#37),#39);
 ENDSEC;"#;
 
-    let map = ParsedMap::parse().parse(data).unwrap();
+    let map = DataMap::parse().parse(data).unwrap();
     let str_map = map.to_string();
 
     assert_eq!(data, str_map);

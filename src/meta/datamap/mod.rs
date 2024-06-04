@@ -12,9 +12,9 @@ pub trait ParsedIfcType: Any + Display {}
 
 /// CRITICAL: split up the index map into a proper struct with fields which hold Hashmaps mapping
 /// indices to one specific type instead of an enum
-pub struct ParsedMap(BTreeMap<Id, Box<dyn Display>>);
+pub struct DataMap(BTreeMap<Id, Box<dyn Display>>);
 
-impl ParsedMap {
+impl DataMap {
     pub fn parse_types(mut s: &str) -> Result<Box<dyn Display>> {
         alt((Objects::parse(), Geometry::parse(), Units::parse()))
             .parse_next(&mut s)
@@ -61,7 +61,7 @@ impl ParsedMap {
     }
 }
 
-impl ParsedMap {
+impl DataMap {
     fn downcast_unchecked<T: Display>(boxed: Box<dyn Display>) -> Box<T> {
         unsafe { Box::from_raw(Box::into_raw(boxed) as *mut T) }
     }
@@ -85,7 +85,7 @@ impl ParsedMap {
     }
 }
 
-impl From<Vec<(Id, Box<dyn Display>)>> for ParsedMap {
+impl From<Vec<(Id, Box<dyn Display>)>> for DataMap {
     fn from(value: Vec<(Id, Box<dyn Display>)>) -> Self {
         Self(value.into_iter().collect())
     }

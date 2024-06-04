@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
-use super::ParsedMap;
+use super::DataMap;
 
-impl Display for ParsedMap {
+impl Display for DataMap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "DATA;")?;
 
