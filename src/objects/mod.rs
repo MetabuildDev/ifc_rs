@@ -1,4 +1,4 @@
-use std::{any::Any, fmt::Display};
+use std::fmt::Display;
 
 use winnow::combinator::alt;
 
@@ -14,7 +14,7 @@ pub mod walltype;
 pub struct Objects;
 
 impl Objects {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Display>> {
         alt((
             actor_role::ActorRole::parse_any(),
             address::PostalAddress::parse_any(),

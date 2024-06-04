@@ -5,7 +5,7 @@ use parser::optional::IFCParse;
 use std::{fs, path::Path};
 use winnow::{seq, Parser};
 
-use meta::{datamap::DataMap, footer::Footer, header::Header};
+use meta::{datamap::ParsedMap, footer::Footer, header::Header};
 
 pub mod geometry;
 pub mod id;
@@ -18,7 +18,7 @@ pub mod units;
 pub struct IFC {
     pub header: Header,
 
-    pub data: DataMap,
+    pub data: ParsedMap,
 
     pub footer: Footer,
 }
@@ -30,7 +30,7 @@ impl IFC {
 
         let me = seq!(Self {
             header: Header::parse(),
-            data: DataMap::parse(),
+            data: ParsedMap::parse(),
             footer: Footer::parse(),
         })
         .parse_next(&mut s)
@@ -42,23 +42,12 @@ impl IFC {
 
 #[cfg(test)]
 mod test {
-    use std::any::Any;
-
-    use crate::id::Id;
-
     use super::IFC;
     use anyhow::Result;
 
     #[test]
     fn load_file() -> Result<()> {
-        let ifc = IFC::from_file("resources/wall-standard-case.ifc")?;
-
-        let _parsed = ifc
-            .data
-            .0
-            .into_iter()
-            .map(|(id, content)| Ok((id, content.parse_types()?)))
-            .collect::<Result<Vec<(Id, Box<dyn Any>)>>>()?;
+        let _ifc = IFC::from_file("resources/wall-standard-case.ifc")?;
 
         Ok(())
     }

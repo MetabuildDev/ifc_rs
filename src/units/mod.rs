@@ -4,7 +4,6 @@ pub mod area;
 pub mod name;
 pub mod prefix;
 
-use std::any::Any;
 use std::fmt::Display as StdDisplay;
 use std::str::FromStr;
 
@@ -18,7 +17,7 @@ use crate::parser::*;
 pub struct Units;
 
 impl Units {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn StdDisplay>> {
         alt((angle::AngleUnit::parse_any(), area::AreaUnit::parse_any()))
     }
 }

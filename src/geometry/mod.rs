@@ -1,4 +1,4 @@
-use std::{any::Any, fmt::Display};
+use std::fmt::Display;
 
 use winnow::combinator::alt;
 
@@ -21,7 +21,7 @@ pub mod shape_representation;
 pub struct Geometry;
 
 impl Geometry {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Any>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Display>> {
         alt((
             axis::Axis2D::parse_any(),
             axis::Axis3D::parse_any(),
