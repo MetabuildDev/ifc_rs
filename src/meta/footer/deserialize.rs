@@ -1,6 +1,5 @@
 use std::str::FromStr;
 
-use optional::IFCParse;
 use strum::VariantNames;
 use winnow::combinator::{alt, delimited, preceded};
 use winnow::prelude::*;

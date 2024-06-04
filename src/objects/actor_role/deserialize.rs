@@ -2,11 +2,7 @@ use winnow::{combinator::delimited, Parser};
 
 use crate::{
     objects::actor_role::{ActorRole, Role},
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl IFCParse for ActorRole {

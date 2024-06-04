@@ -1,6 +1,6 @@
 use super::AngleUnit;
 use crate::id::Id;
-use crate::parser::optional::{IFCParse, OptionalParameter};
+use crate::parser::optional::OptionalParameter;
 use crate::parser::*;
 
 impl IFCParse for AngleUnit {

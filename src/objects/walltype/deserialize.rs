@@ -1,6 +1,6 @@
 use crate::{
     objects::{shared::element_type::ElementType, walltype::type_enum::WallTypeEnum},
-    parser::{optional::IFCParse, *},
+    parser::*,
 };
 
 use super::WallType;

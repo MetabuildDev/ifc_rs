@@ -1,5 +1,5 @@
 use super::PolyLine;
-use crate::parser::{list::IfcList, optional::IFCParse, *};
+use crate::parser::{list::IfcList, *};
 
 impl IFCParse for PolyLine {
     fn parse<'a>() -> impl IFCParser<'a, Self> {

@@ -4,7 +4,6 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 /// The enumeration defines whether the definition of a profile shape shall be

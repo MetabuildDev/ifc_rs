@@ -2,10 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
-    parser::{
-        optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded, IFCParser,
-    },
+    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
 };
 
 use super::product::Product;

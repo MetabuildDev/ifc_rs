@@ -3,10 +3,7 @@ use std::fmt::Display;
 use label::Label;
 use optional::OptionalParameter;
 
-use crate::{
-    id::Id,
-    parser::{optional::IFCParse, *},
-};
+use crate::{id::Id, parser::*};
 
 /// IfcRoot is the most abstract and root class for all entity definitions
 /// that roots in the kernel or in subsequent layers of the IFC specification.
@@ -64,7 +61,7 @@ impl Display for Root {
 mod test {
     use winnow::Parser;
 
-    use crate::objects::shared::root::{optional::IFCParse, Root};
+    use crate::objects::shared::root::{IFCParse, Root};
 
     #[test]
     fn root_round_trip() {

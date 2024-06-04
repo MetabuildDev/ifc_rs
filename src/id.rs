@@ -6,7 +6,7 @@ use winnow::{
     Parser,
 };
 
-use crate::parser::{optional::IFCParse, IFCParser};
+use crate::parser::{IFCParse, IFCParser};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Id(pub usize);

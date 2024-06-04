@@ -1,10 +1,8 @@
 use crate::{
     id::Id,
     parser::{
-        comma::Comma,
-        list::IfcList,
-        optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded,
+        comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
+        IFCParse,
     },
 };
 

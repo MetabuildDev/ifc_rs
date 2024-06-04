@@ -6,11 +6,7 @@ use crate::{
         representation_subcontext::GeometricRepresentationSubContext,
     },
     id::Id,
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl IFCParse for GeometricRepresentationSubContext {

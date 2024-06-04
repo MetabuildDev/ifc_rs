@@ -6,7 +6,9 @@ use winnow::{
     Parser,
 };
 
-use super::{optional::IFCParse, p_space_or_comment_surrounded};
+use crate::parser::IFCParse;
+
+use super::p_space_or_comment_surrounded;
 
 #[derive(Debug, Clone)]
 pub struct IfcList<T>(pub Vec<T>);

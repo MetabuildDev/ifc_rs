@@ -2,11 +2,7 @@ use winnow::{combinator::delimited, Parser};
 
 use crate::{
     objects::address::{PostalAddress, TelecomAddress},
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl IFCParse for TelecomAddress {

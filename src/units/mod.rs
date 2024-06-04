@@ -11,7 +11,6 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 pub struct Units;

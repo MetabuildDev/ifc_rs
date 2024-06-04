@@ -4,7 +4,6 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 /// The IfcDimensionCount is restricted to have the dimensionality of either 1, 2, or 3

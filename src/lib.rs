@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use anyhow::{anyhow, Result};
-use parser::optional::IFCParse;
+use parser::IFCParse;
 use std::{fs, path::Path};
 use winnow::{seq, Parser};
 

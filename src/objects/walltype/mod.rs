@@ -36,8 +36,9 @@ impl Deref for WallType {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::IFCParse;
+
     use super::WallType;
-    use crate::parser::optional::IFCParse;
 
     #[test]
     fn wall_type_round_trip() {

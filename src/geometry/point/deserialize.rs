@@ -3,8 +3,7 @@ use winnow::{combinator::delimited, Parser};
 use super::{Point2D, Point3D};
 use crate::parser::{
     ifc_float::{IfcDVec2, IfcDVec3},
-    optional::IFCParse,
-    IFCParser,
+    IFCParse, IFCParser,
 };
 
 impl IFCParse for Point2D {

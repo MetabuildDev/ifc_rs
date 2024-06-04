@@ -6,6 +6,8 @@ pub mod list;
 pub mod optional;
 pub mod place_holder;
 
+use std::fmt::Display;
+
 use winnow::ascii::*;
 use winnow::combinator::*;
 use winnow::token::*;
@@ -13,6 +15,19 @@ use winnow::{error::ErrorKind, Parser};
 
 pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
 impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}
+
+pub trait IFCParse: Display {
+    fn parse<'a>() -> impl IFCParser<'a, Self>
+    where
+        Self: Sized;
+
+    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn Display>>
+    where
+        Self: Sized + 'static,
+    {
+        Self::parse().map(|s: Self| Box::new(s) as Box<dyn Display>)
+    }
+}
 
 pub(crate) fn p_ident<'a>() -> impl IFCParser<'a, String> {
     take_while(.., |c: char| {

@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use winnow::Parser;
 
-use crate::parser::{optional::IFCParse, p_quote_word, IFCParser};
+use crate::parser::{p_quote_word, IFCParse, IFCParser};
 
 /// A label is the term by which something may be referred to.
 /// It is a string which represents the human-interpretable name of something and shall have a natural-language meaning.

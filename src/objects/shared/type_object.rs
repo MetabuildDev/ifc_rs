@@ -2,10 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
-    parser::{
-        optional::{IFCParse, OptionalParameter},
-        p_space_or_comment_surrounded, IFCParser,
-    },
+    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
 };
 
 use super::root::Root;
@@ -76,7 +73,8 @@ impl Display for TypeObject {
 mod test {
     use winnow::Parser;
 
-    use crate::{objects::shared::type_object::TypeObject, parser::optional::IFCParse};
+    use crate::objects::shared::type_object::TypeObject;
+    use crate::parser::IFCParse;
 
     #[test]
     fn type_object_round_trip() {

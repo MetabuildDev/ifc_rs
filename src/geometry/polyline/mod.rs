@@ -18,7 +18,7 @@ mod test {
     use winnow::Parser;
 
     use super::PolyLine;
-    use crate::parser::optional::IFCParse;
+    use crate::parser::IFCParse;
 
     #[test]
     fn poly_line_round_trip() {

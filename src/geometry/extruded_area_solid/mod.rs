@@ -14,8 +14,9 @@ pub struct ExtrudedAreaSolid {
 mod test {
     use winnow::Parser;
 
+    use crate::parser::IFCParse;
+
     use super::ExtrudedAreaSolid;
-    use crate::parser::optional::IFCParse;
 
     #[test]
     fn extruded_area_solid_round_trip() {

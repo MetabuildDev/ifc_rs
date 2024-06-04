@@ -4,11 +4,7 @@ use super::GeometricRepresentationContext;
 use crate::{
     geometry::dimension_count::DimensionCount,
     id::Id,
-    parser::{
-        comma::Comma,
-        optional::{IFCParse, OptionalParameter},
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 impl IFCParse for GeometricRepresentationContext {

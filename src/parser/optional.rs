@@ -2,22 +2,9 @@ use std::{fmt::Display, ops::Deref};
 
 use winnow::{combinator::alt, Parser};
 
-use crate::parser::IFCParser;
+use crate::parser::{IFCParse, IFCParser};
 
 use super::place_holder::{Inherited, Omitted};
-
-pub trait IFCParse: Display {
-    fn parse<'a>() -> impl IFCParser<'a, Self>
-    where
-        Self: Sized;
-
-    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn Display>>
-    where
-        Self: Sized + 'static,
-    {
-        Self::parse().map(|s: Self| Box::new(s) as Box<dyn Display>)
-    }
-}
 
 #[derive(Debug, Clone)]
 pub enum OptionalParameter<T: IFCParse> {

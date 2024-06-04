@@ -2,7 +2,8 @@ use glam::{DVec2, DVec3};
 use winnow::{ascii::float, Parser};
 
 use super::IFCParser;
-use crate::parser::{comma::Comma, optional::IFCParse, p_space_or_comment_surrounded};
+use crate::parser::IFCParse;
+use crate::parser::{comma::Comma, p_space_or_comment_surrounded};
 
 pub fn p_vec2<'a>() -> impl IFCParser<'a, DVec2> {
     winnow::seq! {

@@ -1,7 +1,7 @@
 use winnow::combinator::alt;
 
 use super::AreaUnit;
-use crate::parser::{optional::IFCParse, *};
+use crate::parser::*;
 use crate::units::name::IfcUnitName;
 use crate::units::optional::OptionalParameter;
 use crate::units::place_holder::{Inherited, Omitted};

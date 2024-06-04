@@ -11,7 +11,7 @@ use crate::{
     geometry::Geometry,
     id::Id,
     objects::Objects,
-    parser::{optional::IFCParse, p_space_or_comment_surrounded, IFCParser},
+    parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
     units::Units,
 };
 

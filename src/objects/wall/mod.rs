@@ -33,7 +33,8 @@ impl Deref for Wall {
 mod test {
     use winnow::Parser;
 
-    use crate::{objects::wall::Wall, parser::optional::IFCParse};
+    use crate::objects::wall::Wall;
+    use crate::parser::IFCParse;
 
     #[test]
     fn wall_round_trip() {

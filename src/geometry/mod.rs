@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use winnow::combinator::alt;
 
-use crate::parser::{optional::IFCParse, IFCParser};
+use crate::parser::{IFCParse, IFCParser};
 
 pub mod axis;
 pub mod dimension_count;

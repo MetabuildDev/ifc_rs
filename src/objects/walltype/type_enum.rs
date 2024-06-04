@@ -4,7 +4,6 @@ use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
-use crate::parser::optional::IFCParse;
 use crate::parser::*;
 
 /// This enumeration defines the different types of walls that can further specify an IfcWall or IfcWallType.
