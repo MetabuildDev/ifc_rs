@@ -3,10 +3,7 @@ mod serialize;
 
 use std::{any::Any, collections::BTreeMap, fmt::Display, mem::transmute};
 
-use anyhow::{anyhow, Context, Result};
-use winnow::{combinator::alt, Parser};
-
-use crate::{geometry::Geometry, id::Id, objects::Objects, units::Units};
+use crate::id::Id;
 
 pub trait ParsedIfcType: Any + Display {}
 
@@ -15,13 +12,6 @@ pub trait ParsedIfcType: Any + Display {}
 pub struct DataMap(BTreeMap<Id, Box<dyn Display>>);
 
 impl DataMap {
-    pub fn parse_types(mut s: &str) -> Result<Box<dyn Display>> {
-        alt((Objects::parse(), Geometry::parse(), Units::parse()))
-            .parse_next(&mut s)
-            .map_err(|err| anyhow!("content parsing failed: {err:#?}"))
-            .with_context(|| format!("content: {s}"))
-    }
-
     pub fn insert<T: Display + 'static>(&mut self, id: Id, value: T) -> Option<T> {
         self.0
             .insert(id, Box::new(value))
@@ -85,8 +75,11 @@ impl DataMap {
     }
 }
 
-impl From<Vec<(Id, Box<dyn Display>)>> for DataMap {
-    fn from(value: Vec<(Id, Box<dyn Display>)>) -> Self {
+impl<I> From<I> for DataMap
+where
+    I: IntoIterator<Item = (Id, Box<dyn Display>)>,
+{
+    fn from(value: I) -> Self {
         Self(value.into_iter().collect())
     }
 }
