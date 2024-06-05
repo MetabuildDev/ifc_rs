@@ -6,6 +6,7 @@ use crate::parser::{IFCParse, IFCParser};
 
 pub mod direction_sense_enum;
 pub mod layer_set_direction_enum;
+pub mod material_layer;
 pub mod material_layer_set;
 pub mod material_layer_set_usage;
 
@@ -16,6 +17,7 @@ impl Materials {
         alt((
             layer_set_direction_enum::LayerSetDirectionEnum::parse_any(),
             material_layer_set::MaterialLayerSet::parse_any(),
+            // material_layer::MaterialLayer::parse_any(),
         ))
     }
 }
