@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use comma::Comma;
 use label::Label;
 use optional::OptionalParameter;
 
@@ -36,11 +37,11 @@ impl IFCParse for Root {
         winnow::seq! {
             Self {
                 global_id: Label::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 owner_history: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 name: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 description: OptionalParameter::parse(),
             }
         }

@@ -2,10 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
-    parser::{
-        label::Label, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
-        IFCParser,
-    },
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 use super::type_object::TypeObject;
@@ -46,9 +43,9 @@ impl IFCParse for TypeProduct {
         winnow::seq! {
             Self {
                 type_object: TypeObject::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 representation_maps: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 tag: OptionalParameter::parse()
             }
         }

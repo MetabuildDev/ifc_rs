@@ -9,6 +9,7 @@ pub mod dimension_count;
 pub mod direction;
 pub mod extruded_area_solid;
 pub mod geometric_projection;
+pub mod local_placement;
 pub mod point;
 pub mod polyline;
 pub mod product_definition_shape;
@@ -39,6 +40,7 @@ impl Geometry {
             representation_context::GeometricRepresentationContext::parse_any(),
             representation_subcontext::GeometricRepresentationSubContext::parse_any(),
             shape_representation::ShapeRepresentation::parse_any(),
+            local_placement::LocalPlacement::parse_any(),
         ))
     }
 }
