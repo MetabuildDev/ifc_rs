@@ -10,6 +10,7 @@ use super::DataMap;
 use crate::{
     geometry::Geometry,
     id::Id,
+    material::Materials,
     objects::Objects,
     parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
     units::Units,
@@ -18,7 +19,12 @@ use crate::{
 impl IFCParse for DataMap {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         let p_obj = terminated(
-            alt((Objects::parse(), Geometry::parse(), Units::parse())),
+            alt((
+                Objects::parse(),
+                Geometry::parse(),
+                Units::parse(),
+                Materials::parse(),
+            )),
             newline,
         );
         let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
