@@ -1,8 +1,9 @@
 use std::{fmt::Display, ops::Deref};
 
+use crate::parser::comma::Comma;
 use crate::parser::IFCParse;
 use crate::parser::{
-    label::Label, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParser,
+    label::Label, optional::OptionalParameter,  IFCParser,
 };
 
 use super::root::Root;
@@ -34,7 +35,7 @@ impl IFCParse for Object {
         winnow::seq! {
             Self {
                 root: Root::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 object_type: OptionalParameter::parse(),
             }
         }

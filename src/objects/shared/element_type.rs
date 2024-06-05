@@ -1,9 +1,8 @@
 use std::{fmt::Display, ops::Deref};
 
+use crate::parser::comma::Comma;
 use crate::parser::IFCParse;
-use crate::parser::{
-    label::Label, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParser,
-};
+use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
 
 use super::type_product::TypeProduct;
 
@@ -38,7 +37,7 @@ impl IFCParse for ElementType {
         winnow::seq! {
             Self {
                 type_product: TypeProduct::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 element_type: OptionalParameter::parse(),
             }
         }

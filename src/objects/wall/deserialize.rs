@@ -1,3 +1,4 @@
+use comma::Comma;
 use optional::OptionalParameter;
 
 use crate::{objects::shared::element::Element, parser::*};
@@ -11,7 +12,7 @@ impl IFCParse for Wall {
                 _: p_space_or_comment_surrounded("IFCWALL("),
 
                 element: Element::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 predefined_type: OptionalParameter::parse(),
 
                 _: p_space_or_comment_surrounded(");"),

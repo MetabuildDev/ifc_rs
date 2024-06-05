@@ -1,3 +1,5 @@
+use comma::Comma;
+
 use crate::id::Id;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::*;
@@ -11,11 +13,11 @@ impl IFCParse for ExtrudedAreaSolid {
                 _: p_space_or_comment_surrounded("IFCEXTRUDEDAREASOLID("),
 
                 swept_area: Id::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 position: Id::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 extruded_direction: Id::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 depth: IfcFloat::parse(),
 
                 _: p_space_or_comment_surrounded(");"),

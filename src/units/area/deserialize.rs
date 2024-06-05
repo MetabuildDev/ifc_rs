@@ -1,3 +1,4 @@
+use comma::Comma;
 use winnow::combinator::alt;
 
 use super::AreaUnit;
@@ -17,11 +18,11 @@ impl IFCParse for AreaUnit {
                             Inherited::parse().map(drop)
                         )
                     ),
-                    p_space_or_comment_surrounded(","),
+                    Comma::parse(),
                     ".AREAUNIT.",
-                    p_space_or_comment_surrounded(",")),
+                    Comma::parse()),
                 prefix: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 name: IfcUnitName::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }

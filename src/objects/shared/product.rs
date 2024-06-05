@@ -3,7 +3,10 @@ use std::{fmt::Display, ops::Deref};
 use crate::{
     geometry::point::Point3D,
     id::{Id, IdOr},
-    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter,  IFCParse,
+        IFCParser,
+    },
 };
 
 use super::object::Object;
@@ -54,9 +57,9 @@ impl IFCParse for Product {
         winnow::seq! {
             Self {
                 object: Object::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 object_placement: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 representation: OptionalParameter::parse(),
             }
         }
