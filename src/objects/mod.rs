@@ -41,9 +41,3 @@ impl Objects {
         ))
     }
 }
-
-impl Display for Objects {
-    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        unreachable!()
-    }
-}
