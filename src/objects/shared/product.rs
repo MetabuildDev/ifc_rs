@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, ops::Deref};
 
 use crate::{
     geometry::point::Point3D,
@@ -39,6 +39,14 @@ pub struct Product {
     /// of the shape property of the object within the same object
     /// coordinate system, defined by the object placement.
     pub representation: OptionalParameter<Id>,
+}
+
+impl Deref for Product {
+    type Target = Object;
+
+    fn deref(&self) -> &Self::Target {
+        &self.object
+    }
 }
 
 impl IFCParse for Product {
