@@ -10,6 +10,7 @@ pub mod application;
 pub mod organization;
 pub mod person;
 pub mod person_and_org;
+pub mod rel_aggregates;
 pub mod shared;
 pub mod wall;
 pub mod walltype;
