@@ -29,6 +29,7 @@ impl Objects {
             person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),
             walltype::WallType::parse_any(),
+            building::Building::parse_any(),
         ))
     }
 }
