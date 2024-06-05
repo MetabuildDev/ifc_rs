@@ -4,11 +4,14 @@ use winnow::combinator::alt;
 
 use crate::parser::{IFCParse, IFCParser};
 
+pub mod access_state;
 pub mod actor_role;
 pub mod address;
 pub mod application;
 pub mod building;
+pub mod change_action;
 pub mod organization;
+pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
 pub mod shared;
@@ -25,6 +28,7 @@ impl Objects {
             address::TelecomAddress::parse_any(),
             application::Application::parse_any(),
             organization::Organization::parse_any(),
+            owner_history::OwnerHistory::parse_any(),
             person::Person::parse_any(),
             person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),

@@ -5,6 +5,7 @@ pub mod label;
 pub mod list;
 pub mod optional;
 pub mod place_holder;
+pub mod timestamp;
 
 use std::fmt::Display;
 
