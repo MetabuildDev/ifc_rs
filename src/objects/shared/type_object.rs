@@ -2,7 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
-    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 use super::root::Root;
@@ -50,9 +50,9 @@ impl IFCParse for TypeObject {
         winnow::seq! {
             Self {
                 root: Root::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 applicable_occurence: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 has_property_sets: OptionalParameter::parse()
             }
         }

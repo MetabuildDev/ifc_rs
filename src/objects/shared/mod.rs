@@ -1,7 +1,10 @@
+pub mod composition_type_enum;
 pub mod element;
 pub mod element_type;
 pub mod object;
 pub mod product;
 pub mod root;
+pub mod spatial_element;
+pub mod spatial_structure_element;
 pub mod type_object;
 pub mod type_product;

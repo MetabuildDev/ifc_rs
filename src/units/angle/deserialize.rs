@@ -1,3 +1,5 @@
+use comma::Comma;
+
 use super::AngleUnit;
 use crate::id::Id;
 use crate::parser::optional::OptionalParameter;
@@ -9,9 +11,9 @@ impl IFCParse for AngleUnit {
             Self {
                 _: p_space_or_comment_surrounded("IFCCONVERSIONBASEDUNIT("),
                 dimensional_exponents_id: Id::parse(),
-                _: (p_space_or_comment_surrounded(","), ".PLANEANGLEUNIT.", p_space_or_comment_surrounded(",")),
+                _: (Comma::parse(), ".PLANEANGLEUNIT.", Comma::parse()),
                 parameter_1: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 parameter_2: OptionalParameter::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }
