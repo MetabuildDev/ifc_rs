@@ -2,7 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
-    parser::{optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 use super::product::Product;
@@ -32,7 +32,7 @@ impl IFCParse for Element {
         winnow::seq! {
             Self {
                 product: Product::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 tag: OptionalParameter::parse(),
             }
         }

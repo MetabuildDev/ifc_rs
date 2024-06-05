@@ -1,3 +1,5 @@
+use comma::Comma;
+
 use crate::{
     objects::{shared::element_type::ElementType, walltype::type_enum::WallTypeEnum},
     parser::*,
@@ -12,7 +14,7 @@ impl IFCParse for WallType {
                 _: p_space_or_comment_surrounded("IFCWALLTYPE("),
 
                 element_type: ElementType::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 predefined_type: WallTypeEnum::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
