@@ -115,7 +115,7 @@ mod test {
 
     #[test]
     fn material_layer_round_trip() {
-        let example = "IFCMATERIALLAYER(#44,110.,.F.,'Finish',$,$,$);";
+        let example = "IFCMATERIALLAYER(#44,110.,.FALSE.,'Finish',$,$,$);";
 
         let parsed: MaterialLayer = MaterialLayer::parse().parse(example).unwrap();
         let str = parsed.to_string();

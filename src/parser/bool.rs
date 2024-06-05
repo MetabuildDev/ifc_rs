@@ -1,24 +1,48 @@
 use std::str::FromStr;
 
-use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
 use crate::parser::*;
 
-#[derive(EnumString, VariantNames, Display, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
 pub enum IfcBool {
-    #[strum(to_string = ".TRUE.")]
-    #[strum(serialize = ".T.")]
     True,
-
-    #[strum(to_string = ".FALSE.")]
-    #[strum(serialize = ".F.")]
     False,
-
-    #[strum(to_string = ".UNKNOWN.")]
-    #[strum(serialize = ".U.")]
     Unknown,
+}
+
+impl IfcBool {
+    const VARIANTS: &'static [&'static str] =
+        &[".TRUE.", ".FALSE.", ".UNKNOWN.", ".T.", ".F.", ".U."];
+}
+
+impl FromStr for IfcBool {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            ".TRUE." | ".T." => Ok(Self::True),
+            ".FALSE." | ".F." => Ok(Self::False),
+            ".UNKNOWN." | ".U." => Ok(Self::Unknown),
+
+            _ => Err(format!("failed parsing IfcBool from {s}")),
+        }
+    }
+}
+
+impl Display for IfcBool {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                IfcBool::True => ".TRUE.",
+                IfcBool::False => ".FALSE.",
+                IfcBool::Unknown => ".UNKNOWN.",
+            }
+        )
+    }
 }
 
 impl IFCParse for IfcBool {
