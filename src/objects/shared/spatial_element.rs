@@ -1,8 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use crate::parser::{
-    label::Label, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
-};
+use crate::parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser};
 
 use super::product::Product;
 
@@ -32,7 +30,7 @@ impl IFCParse for SpatialElement {
         winnow::seq! {
             Self {
                 product: Product::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 long_name: OptionalParameter::parse(),
             }
         }

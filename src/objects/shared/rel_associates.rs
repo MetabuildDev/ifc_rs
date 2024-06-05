@@ -1,23 +1,25 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::Id;
+use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::IFCParse;
-use crate::parser::{p_space_or_comment_surrounded, IFCParser};
+use crate::parser::IFCParser;
 
 use super::root::Root;
 
-/// An IfcObject is the generalization of any semantically treated
-/// thing or process. Objects are things as they appear - i.e. occurrences.
+/// The association relationship IfcRelAssociates refers to sources of information
+/// (most notably a classification, library, document, approval, contraint, or material).
+/// The information associated may reside internally or externally of the project data.
+/// There is no dependency implied by the association.
 ///
-/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcobject.htm
+/// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrelassociates.htm
 pub struct RelAssociates {
     root: Root,
 
-    /// The type denotes a particular type that indicates the object further.
-    /// The use has to be established at the level of instantiable subtypes.
-    /// In particular it holds the user defined type, if the enumeration
-    /// of the attribute PredefinedType is set to USERDEFINED.
+    /// Set of object or property definitions to which the external references or
+    /// information is associated. It includes object and type objects, property set
+    /// templates, property templates and property sets and contexts.
     pub related_objects: IfcList<Id>,
 }
 
@@ -34,7 +36,7 @@ impl IFCParse for RelAssociates {
         winnow::seq! {
             Self {
                 root: Root::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 related_objects: IfcList::parse(),
             }
         }

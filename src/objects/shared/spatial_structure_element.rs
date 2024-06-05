@@ -1,8 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use crate::parser::{
-    optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
-};
+use crate::parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser};
 
 use super::{composition_type_enum::CompositionTypeEnum, spatial_element::SpatialElement};
 
@@ -34,7 +32,7 @@ impl IFCParse for SpatialStructureElement {
         winnow::seq! {
             Self {
                 spatial_element: SpatialElement::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 composition_type: OptionalParameter::parse(),
             }
         }
