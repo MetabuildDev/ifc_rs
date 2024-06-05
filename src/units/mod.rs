@@ -1,6 +1,7 @@
 pub mod angle;
 pub mod area;
 
+pub mod assignment;
 pub mod name;
 pub mod prefix;
 
@@ -17,7 +18,11 @@ pub struct Units;
 
 impl Units {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn StdDisplay>> {
-        alt((angle::AngleUnit::parse_any(), area::AreaUnit::parse_any()))
+        alt((
+            angle::AngleUnit::parse_any(),
+            area::AreaUnit::parse_any(),
+            assignment::UnitAssigment::parse_any(),
+        ))
     }
 }
 
