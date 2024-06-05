@@ -14,6 +14,7 @@ pub mod organization;
 pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
+pub mod rel_aggregates;
 pub mod shared;
 pub mod wall;
 pub mod walltype;
@@ -33,6 +34,7 @@ impl Objects {
             person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),
             walltype::WallType::parse_any(),
+            rel_aggregates::RelAggregates::parse_any(),
             building::Building::parse_any(),
         ))
     }
