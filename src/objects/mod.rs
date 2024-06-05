@@ -8,6 +8,7 @@ pub mod access_state;
 pub mod actor_role;
 pub mod address;
 pub mod application;
+pub mod building;
 pub mod change_action;
 pub mod organization;
 pub mod owner_history;
@@ -32,6 +33,7 @@ impl Objects {
             person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),
             walltype::WallType::parse_any(),
+            building::Building::parse_any(),
         ))
     }
 }
