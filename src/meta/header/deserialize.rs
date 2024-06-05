@@ -224,7 +224,7 @@ ENDSEC;
 }
 
 #[test]
-fn parse_from_example_file() {
+fn parse_header_from_example_file() {
     let data = r#"ISO-10303-21;
     HEADER;
     FILE_DESCRIPTION((''),'2;1');

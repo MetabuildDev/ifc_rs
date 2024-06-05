@@ -123,7 +123,7 @@ ENDSEC;
 }
 
 #[test]
-fn parse_from_example_file() {
+fn parse_data_from_example_file() {
     let data = r#"DATA;
 #1= IFCBUILDING('39t4Pu3nTC4ekXYRIHJB9W',#2,'IfcBuilding',$,$,$,$,$,$,$,$,$);
 #2= IFCOWNERHISTORY(#5,#6,$,.ADDED.,1454575675,$,$,1454575675);
