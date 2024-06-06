@@ -1,6 +1,9 @@
 use std::str::FromStr;
 
+use optional::OptionalParameter;
+use place_holder::Inherited;
 use strum::{Display, EnumString, VariantNames};
+use winnow::ascii::dec_int;
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
@@ -35,14 +38,18 @@ impl IFCParse for DimensionCount {
 
         delimited(
             p_space_or_comment(),
-            alt((
-                alt(variants
-                    .map(|v| (v, Self::from_str(v).unwrap()))
-                    .map(|(k, v)| k.map(move |_| v))),
-                "0".map(|_| Self::One),
-            )),
+            alt(variants
+                .map(|v| (v, Self::from_str(v).unwrap()))
+                .map(|(k, v)| k.map(move |_| v))),
             p_space_or_comment(),
         )
+    }
+
+    fn fallback<'a>() -> impl IFCParser<'a, OptionalParameter<Self>>
+    where
+        Self: Sized,
+    {
+        dec_int.map(|_: i32| OptionalParameter::Inherited(Inherited))
     }
 }
 
@@ -50,7 +57,7 @@ impl IFCParse for DimensionCount {
 mod test {
     use winnow::Parser;
 
-    use crate::parser::IFCParse;
+    use crate::parser::{optional::OptionalParameter, IFCParse};
 
     use super::DimensionCount;
 
@@ -74,9 +81,11 @@ mod test {
 
     #[test]
     fn fallback_dimension_count() {
-        assert_eq!(
-            DimensionCount::parse().parse("0").unwrap(),
-            DimensionCount::One
-        );
+        let example = "0";
+
+        let parsed: OptionalParameter<DimensionCount> =
+            OptionalParameter::parse().parse(example).unwrap();
+
+        assert!(parsed.is_inherited());
     }
 }
