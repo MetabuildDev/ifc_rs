@@ -19,7 +19,7 @@ pub struct MaterialLayer {
     /// Note that if this value is not given, it does not denote a layer
     /// with no material (an air gap), it only means that the material
     /// is not specified at that point.
-    pub material: Id,
+    pub material: OptionalParameter<Id>,
 
     /// The thickness of the material layer. The meaning of "thickness"
     /// depends on its usage. In case of building elements elements
@@ -70,7 +70,7 @@ impl IFCParse for MaterialLayer {
             Self {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYER("),
 
-                material: Id::parse(),
+                material: OptionalParameter::parse(),
                 _: Comma::parse(),
                 layer_thickness: IfcFloat::parse(),
                 _: Comma::parse(),

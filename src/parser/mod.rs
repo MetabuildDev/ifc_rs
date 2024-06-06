@@ -11,6 +11,7 @@ pub mod timestamp;
 
 use std::fmt::Display;
 
+use optional::OptionalParameter;
 use winnow::ascii::*;
 use winnow::combinator::*;
 use winnow::token::*;
@@ -29,6 +30,13 @@ pub trait IFCParse: Display {
         Self: Sized + 'static,
     {
         Self::parse().map(|s: Self| Box::new(s) as Box<dyn Display>)
+    }
+
+    fn fallback<'a>() -> impl IFCParser<'a, OptionalParameter<Self>>
+    where
+        Self: Sized,
+    {
+        fail
     }
 }
 

@@ -9,3 +9,4 @@ pub mod spatial_element;
 pub mod spatial_structure_element;
 pub mod type_object;
 pub mod type_product;
+pub mod context;

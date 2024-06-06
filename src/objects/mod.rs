@@ -14,8 +14,12 @@ pub mod organization;
 pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
+pub mod project;
 pub mod rel_aggregates;
 pub mod rel_associates_material;
+pub mod rel_contained_in_spatial_structure;
+pub mod rel_declares;
+pub mod rel_defines_by_type;
 pub mod shared;
 pub mod wall;
 pub mod walltype;
@@ -38,6 +42,10 @@ impl Objects {
             rel_aggregates::RelAggregates::parse_any(),
             building::Building::parse_any(),
             rel_associates_material::RelAssociatesMaterial::parse_any(),
+            rel_contained_in_spatial_structure::RelContainedInSpatialStructure::parse_any(),
+            project::Project::parse_any(),
+            rel_declares::RelDeclares::parse_any(),
+            rel_defines_by_type::RelDefinesByType::parse_any(),
         ))
     }
 }

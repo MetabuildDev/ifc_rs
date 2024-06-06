@@ -20,6 +20,20 @@ impl<T: IFCParse> OptionalParameter<T> {
             _ => false,
         }
     }
+
+    pub fn is_inherited(&self) -> bool {
+        match self {
+            OptionalParameter::Inherited(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_omitted(&self) -> bool {
+        match self {
+            OptionalParameter::Omitted(_) => true,
+            _ => false,
+        }
+    }
 }
 
 impl<T: IFCParse> Deref for OptionalParameter<T> {
@@ -28,7 +42,7 @@ impl<T: IFCParse> Deref for OptionalParameter<T> {
     fn deref(&self) -> &Self::Target {
         match self {
             Self::Custom(t) => t,
-            _ => panic!("called deref on non-custom variant"),
+            _ => panic!("OptionalParameter: called deref on non-custom variant"),
         }
     }
 }
@@ -39,6 +53,7 @@ impl<T: IFCParse> IFCParse for OptionalParameter<T> {
             Omitted::parse().map(Self::Omitted),
             Inherited::parse().map(Self::Inherited),
             T::parse().map(Self::Custom),
+            T::fallback(),
         ))
     }
 }
