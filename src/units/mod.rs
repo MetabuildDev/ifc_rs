@@ -26,12 +26,6 @@ impl Units {
     }
 }
 
-impl StdDisplay for Units {
-    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        unreachable!()
-    }
-}
-
 // TODO: there are a lot more (mostly imperial units)
 #[derive(EnumString, VariantNames, Display, Clone, Copy)]
 pub enum ConversionUnit {

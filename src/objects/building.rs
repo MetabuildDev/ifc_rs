@@ -2,8 +2,8 @@ use std::{fmt::Display, ops::Deref};
 
 use super::{address::PostalAddress, shared::spatial_structure_element::SpatialStructureElement};
 use crate::parser::{
-    ifc_float::IfcFloat, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
-    IFCParser,
+    comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter, p_space_or_comment_surrounded,
+    IFCParse, IFCParser,
 };
 
 /// A building represents a structure that provides shelter for its occupants
@@ -43,11 +43,11 @@ impl IFCParse for Building {
                 _: p_space_or_comment_surrounded("IFCBUILDING("),
 
                 spatial_element_structure: SpatialStructureElement::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 elevation_of_ref_height: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 elevation_of_terrain: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 building_address: OptionalParameter::parse(),
 
                 _: p_space_or_comment_surrounded(");"),

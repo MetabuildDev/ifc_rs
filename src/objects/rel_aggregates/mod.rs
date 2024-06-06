@@ -3,8 +3,8 @@ use std::{fmt::Display, ops::Deref};
 use crate::{
     id::Id,
     parser::{
-        list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
-        IFCParser,
+        comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
+        IFCParse, IFCParser,
     },
 };
 
@@ -46,9 +46,9 @@ impl IFCParse for RelAggregates {
                 _: p_space_or_comment_surrounded("IFCRELAGGREGATES("),
 
                 root: Root::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 relating_object: OptionalParameter::parse(),
-                _: p_space_or_comment_surrounded(","),
+                _: Comma::parse(),
                 related_objects: IfcList::parse(),
 
                 _: p_space_or_comment_surrounded(");"),

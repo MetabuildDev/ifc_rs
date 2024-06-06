@@ -44,9 +44,3 @@ impl Geometry {
         ))
     }
 }
-
-impl Display for Geometry {
-    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        unreachable!()
-    }
-}

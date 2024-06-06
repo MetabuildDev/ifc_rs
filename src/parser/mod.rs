@@ -1,6 +1,8 @@
+pub mod bool;
 pub mod comma;
 pub mod geometry;
 pub mod ifc_float;
+pub mod ifc_integer;
 pub mod label;
 pub mod list;
 pub mod optional;

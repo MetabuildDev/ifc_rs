@@ -15,6 +15,7 @@ pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
 pub mod rel_aggregates;
+pub mod rel_associates_material;
 pub mod shared;
 pub mod wall;
 pub mod walltype;
@@ -36,12 +37,7 @@ impl Objects {
             walltype::WallType::parse_any(),
             rel_aggregates::RelAggregates::parse_any(),
             building::Building::parse_any(),
+            rel_associates_material::RelAssociatesMaterial::parse_any(),
         ))
-    }
-}
-
-impl Display for Objects {
-    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        unreachable!()
     }
 }
