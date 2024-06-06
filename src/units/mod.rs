@@ -1,9 +1,10 @@
-pub mod angle;
-pub mod area;
-
 pub mod assignment;
+pub mod conversion_based_unit;
+pub mod length_unit;
 pub mod name;
 pub mod prefix;
+pub mod shared;
+pub mod si_unit;
 
 use std::fmt::Display as StdDisplay;
 use std::str::FromStr;
@@ -19,9 +20,9 @@ pub struct Units;
 impl Units {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn StdDisplay>> {
         alt((
-            angle::AngleUnit::parse_any(),
-            area::AreaUnit::parse_any(),
             assignment::UnitAssigment::parse_any(),
+            conversion_based_unit::ConversionBasedUnit::parse_any(),
+            si_unit::SiUnit::parse_any(),
         ))
     }
 }

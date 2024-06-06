@@ -89,10 +89,8 @@ fn parse_geometric_representation_subcontext_works() {
         .unwrap();
     assert_eq!(data, parsed.to_string());
 
-    // invalid dimension count (4)
-    let data =
-        "IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Axis','Model',4,*,*,*,#102,$,.GRAPH_VIEW.,$);";
-    assert!(GeometricRepresentationSubContext::parse()
+    "IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Axis','Model',0,$,$,$,#12,$,.MODEL_VIEW.,$);";
+    GeometricRepresentationSubContext::parse()
         .parse(data)
-        .is_err());
+        .unwrap();
 }

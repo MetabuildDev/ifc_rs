@@ -13,8 +13,11 @@ use crate::parser::*;
 /// the IFC geometry allows mixed dimensions, particularly when defining the boundary of planar surfaces.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcgeometryresource/lexical/ifcdimensioncount.htm
-#[derive(Debug, EnumString, VariantNames, Display, Clone, Copy)]
+#[derive(
+    Debug, EnumString, VariantNames, Display, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord,
+)]
 pub enum DimensionCount {
+    #[default]
     #[strum(to_string = "1")]
     One,
 
@@ -32,10 +35,48 @@ impl IFCParse for DimensionCount {
 
         delimited(
             p_space_or_comment(),
-            alt(variants
-                .map(|v| (v, Self::from_str(v).expect("valid DimensionCount")))
-                .map(|(k, v)| k.map(move |_| v))),
+            alt((
+                alt(variants
+                    .map(|v| (v, Self::from_str(v).unwrap()))
+                    .map(|(k, v)| k.map(move |_| v))),
+                "0".map(|_| Self::One),
+            )),
             p_space_or_comment(),
         )
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use winnow::Parser;
+
+    use crate::parser::IFCParse;
+
+    use super::DimensionCount;
+
+    #[test]
+    fn dimension_count() {
+        assert_eq!(
+            DimensionCount::parse().parse("1").unwrap(),
+            DimensionCount::One
+        );
+
+        assert_eq!(
+            DimensionCount::parse().parse("2").unwrap(),
+            DimensionCount::Two
+        );
+
+        assert_eq!(
+            DimensionCount::parse().parse("3").unwrap(),
+            DimensionCount::Three
+        );
+    }
+
+    #[test]
+    fn fallback_dimension_count() {
+        assert_eq!(
+            DimensionCount::parse().parse("0").unwrap(),
+            DimensionCount::One
+        );
     }
 }
