@@ -10,8 +10,8 @@ graph LR
 ifc[IFC STEP text]
 rust[Rust Types]
 
-ifc --> |winnow + serDE| rust
-rust --> |display + SERde| ifc
+ifc --> |winnow| rust
+rust --> |std::fmt::Display| ifc
 ```
 
 # Docs
