@@ -123,6 +123,18 @@ ENDSEC;
 }
 
 #[test]
+fn parse_data_missing() {
+    let data = r#"DATA;
+    #1= IFCBUILDING('39t4Pu3nTC4ekXYRIHJB9W',#2,'IfcBuilding',$,$,$,$,$,$,$,$,$);
+    ENDSEC;"#;
+
+    let map = DataMap::parse().parse(data).unwrap();
+    let str_map = map.to_string();
+
+    assert_eq!(data, str_map);
+}
+
+#[test]
 fn parse_data_from_example_file() {
     let data = r#"DATA;
 #1= IFCBUILDING('39t4Pu3nTC4ekXYRIHJB9W',#2,'IfcBuilding',$,$,$,$,$,$,$,$,$);
