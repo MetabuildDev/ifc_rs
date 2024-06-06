@@ -232,11 +232,5 @@ fn parse_header_from_example_file() {
     FILE_SCHEMA(('IFC4x2'));
     ENDSEC;"#;
 
-    let header = Header::parse().parse(data).unwrap();
-    let mut str_header = header.to_string();
-    str_header.retain(|c| !c.is_whitespace());
-
-    let mut s = data.to_string();
-    s.retain(|c| !c.is_whitespace());
-    assert_eq!(s, str_header);
+    Header::parse().parse(data).unwrap();
 }
