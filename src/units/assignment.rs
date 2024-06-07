@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser},
 };
 
@@ -36,6 +37,8 @@ impl Display for UnitAssigment {
         write!(f, "IFCUNITASSIGNMENT({});", self.units)
     }
 }
+
+impl IfcType for UnitAssigment {}
 
 #[cfg(test)]
 mod test {

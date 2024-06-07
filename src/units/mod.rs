@@ -6,19 +6,19 @@ pub mod prefix;
 pub mod shared;
 pub mod si_unit;
 
-use std::fmt::Display as StdDisplay;
 use std::str::FromStr;
 
 use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
 
+use crate::ifc_type::IfcType;
 use crate::parser::*;
 
 pub struct Units;
 
 impl Units {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn StdDisplay>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
             assignment::UnitAssigment::parse_any(),
             conversion_based_unit::ConversionBasedUnit::parse_any(),

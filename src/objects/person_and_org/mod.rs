@@ -2,6 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
 
@@ -17,3 +18,5 @@ pub struct PersonAndOrganization {
     /// Roles played by the person within the context of an organization.
     pub roles: OptionalParameter<IfcList<Id>>,
 }
+
+impl IfcType for PersonAndOrganization {}

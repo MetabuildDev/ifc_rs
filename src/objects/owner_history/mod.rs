@@ -2,6 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::objects::access_state::AccessState;
 use crate::objects::change_action::ChangeAction;
 use crate::parser::optional::OptionalParameter;
@@ -39,3 +40,5 @@ pub struct OwnerHistory {
     /// Time and date of creation.
     pub creation_date: IfcTimestamp,
 }
+
+impl IfcType for OwnerHistory {}

@@ -4,7 +4,7 @@ mod serialize;
 use std::ops::Deref;
 
 use super::{shared::element::Element, walltype::WallType};
-use crate::{id::IdOr, parser::optional::OptionalParameter};
+use crate::{id::IdOr, ifc_type::IfcType, parser::optional::OptionalParameter};
 
 /// The wall represents a vertical construction that may bound or
 /// subdivide spaces. Wall are usually vertical, or nearly vertical,
@@ -28,6 +28,8 @@ impl Deref for Wall {
         &self.element
     }
 }
+
+impl IfcType for Wall {}
 
 #[cfg(test)]
 mod test {

@@ -2,6 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 
 ///  IfcApplication holds the information about an IFC compliant application
@@ -20,3 +21,5 @@ pub struct Application {
     /// Short identifying name for the application.
     pub application_identifier: Label,
 }
+
+impl IfcType for Application {}

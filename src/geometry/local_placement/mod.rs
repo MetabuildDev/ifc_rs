@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{
         comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
@@ -53,6 +54,8 @@ impl Display for LocalPlacement {
         )
     }
 }
+
+impl IfcType for LocalPlacement {}
 
 #[cfg(test)]
 mod test {

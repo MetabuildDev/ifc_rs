@@ -2,6 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{
         comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
@@ -56,6 +57,8 @@ impl Display for RelAssociatesMaterial {
         )
     }
 }
+
+impl IfcType for RelAssociatesMaterial {}
 
 #[cfg(test)]
 mod test {

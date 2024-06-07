@@ -1,4 +1,4 @@
-use crate::{id::Id, parser::list::IfcList};
+use crate::{id::Id, ifc_type::IfcType, parser::list::IfcList};
 
 mod deserialize;
 mod serialize;
@@ -12,6 +12,8 @@ pub struct PolyLine {
     /// The points defining the polyline.
     pub points: IfcList<Id>,
 }
+
+impl IfcType for PolyLine {}
 
 #[cfg(test)]
 mod test {

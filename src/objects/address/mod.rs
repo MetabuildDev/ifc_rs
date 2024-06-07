@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
@@ -36,6 +37,8 @@ pub struct TelecomAddress {
     pub homepage_url: OptionalParameter<Label>,
 }
 
+impl IfcType for TelecomAddress {}
+
 /// The address for delivery of paper based mail.
 
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifcpostaladdress.htm
@@ -68,3 +71,5 @@ pub struct PostalAddress {
     /// The name of a country
     pub country: OptionalParameter<Label>,
 }
+
+impl IfcType for PostalAddress {}

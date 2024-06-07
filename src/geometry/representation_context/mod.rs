@@ -3,6 +3,7 @@ mod serialize;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
@@ -41,3 +42,5 @@ pub struct GeometricRepresentationContext {
     /// geographic northing direction.
     pub true_north: OptionalParameter<Id>,
 }
+
+impl IfcType for GeometricRepresentationContext {}

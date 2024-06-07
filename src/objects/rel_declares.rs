@@ -1,6 +1,7 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
@@ -61,6 +62,8 @@ impl Display for RelDeclares {
         )
     }
 }
+
+impl IfcType for RelDeclares {}
 
 #[cfg(test)]
 mod test {

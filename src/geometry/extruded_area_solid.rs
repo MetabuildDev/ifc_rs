@@ -1,3 +1,4 @@
+use crate::ifc_type::IfcType;
 use crate::parser::*;
 use crate::{id::Id, parser::ifc_float::IfcFloat};
 use comma::Comma;
@@ -41,6 +42,8 @@ impl Display for ExtrudedAreaSolid {
         )
     }
 }
+
+impl IfcType for ExtrudedAreaSolid {}
 
 #[cfg(test)]
 mod test {

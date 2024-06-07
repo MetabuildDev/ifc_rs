@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fmt::Display};
+use std::collections::BTreeMap;
 
 use winnow::{
     combinator::{alt, preceded, repeat_till, separated_pair},
@@ -9,6 +9,7 @@ use super::DataMap;
 use crate::{
     geometry::Geometry,
     id::Id,
+    ifc_type::IfcType,
     material::Materials,
     objects::Objects,
     parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
@@ -26,7 +27,7 @@ impl IFCParse for DataMap {
         let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
         let p_line_spaced = p_space_or_comment_surrounded(p_line);
         let p_lines = repeat_till(.., p_line_spaced, p_space_or_comment_surrounded("ENDSEC;"))
-            .map(|(v, _): (BTreeMap<Id, Box<dyn Display>>, _)| v);
+            .map(|(v, _): (BTreeMap<Id, Box<dyn IfcType>>, _)| v);
         let p_data_section = p_space_or_comment_surrounded(preceded("DATA;", p_lines));
         p_data_section.map(DataMap)
     }

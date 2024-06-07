@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use crate::{id::Id, parser::optional::OptionalParameter};
+use crate::{id::Id, ifc_type::IfcType, parser::optional::OptionalParameter};
 
 /// The IfcAxis2Placement2D provides location and orientation to place items in a two-dimensional
 /// space. The attribute RefDirection defines the x axis, the y axis is derived.
@@ -19,6 +19,8 @@ pub struct Axis2D {
     ///	that it defaults to [1.0, 0.0].
     pub local_x: OptionalParameter<Id>,
 }
+
+impl IfcType for Axis2D {}
 
 /// The IfcAxis2Placement3D provides location and orientations to place items in a
 /// three-dimensional space. The attribute Axis defines the Z direction, RefDirection the X
@@ -40,3 +42,5 @@ pub struct Axis3D {
     /// RefDirection is omitted, these directions are taken from the geometric coordinate system.
     pub local_x: OptionalParameter<Id>,
 }
+
+impl IfcType for Axis3D {}

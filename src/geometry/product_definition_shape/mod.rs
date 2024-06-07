@@ -3,6 +3,7 @@ pub mod serialize;
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
 };
 
@@ -21,12 +22,14 @@ pub struct ProductDefinitionShape {
     // from IfcProductRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcproductrepresentation.htm
     //
     /// The word or group of words by which the product representation is known.
-    name: OptionalParameter<Label>,
+    pub name: OptionalParameter<Label>,
     // TODO: This should be TEXT instead
     /// The word or group of words that characterize the product representation. It can be used to
     /// add additional meaning to the name of the product representation.
-    description: OptionalParameter<Label>,
+    pub description: OptionalParameter<Label>,
     /// Contained list of representations (including shape representations). Each member defines a
     /// valid representation of a particular type within a particular representation context.
-    representations: IfcList<Id>,
+    pub representations: IfcList<Id>,
 }
+
+impl IfcType for ProductDefinitionShape {}
