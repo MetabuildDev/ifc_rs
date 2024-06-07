@@ -21,6 +21,13 @@ impl<T: IFCParse> OptionalParameter<T> {
         }
     }
 
+    pub fn custom(&self) -> Option<&T> {
+        match self {
+            OptionalParameter::Custom(t) => Some(t),
+            _ => None,
+        }
+    }
+
     pub fn is_inherited(&self) -> bool {
         match self {
             OptionalParameter::Inherited(_) => true,

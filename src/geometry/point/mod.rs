@@ -1,10 +1,26 @@
 mod deserialize;
 mod serialize;
 
+use std::fmt::Display;
+
 use crate::{
     ifc_type::IfcType,
     parser::ifc_float::{IfcDVec2, IfcDVec3},
 };
+
+pub enum PointType<'a> {
+    D2(&'a Point2D),
+    D3(&'a Point3D),
+}
+
+impl<'a> Display for PointType<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PointType::D2(d2) => write!(f, "{d2}"),
+            PointType::D3(d3) => write!(f, "{d3}"),
+        }
+    }
+}
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
