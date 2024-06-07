@@ -3,6 +3,7 @@ pub mod serialize;
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
 };
 
@@ -33,3 +34,5 @@ pub struct ShapeRepresentation {
     /// Set of geometric representation items that are defined for this representation.
     items: IfcList<Id>,
 }
+
+impl IfcType for ShapeRepresentation {}

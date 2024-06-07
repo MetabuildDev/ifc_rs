@@ -9,6 +9,7 @@ use meta::{datamap::DataMap, footer::Footer, header::Header};
 
 pub mod geometry;
 pub mod id;
+pub mod ifc_type;
 pub mod material;
 pub mod meta;
 pub mod objects;

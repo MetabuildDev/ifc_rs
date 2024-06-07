@@ -4,6 +4,7 @@ mod serialize;
 use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
@@ -58,3 +59,5 @@ pub struct GeometricRepresentationSubContext {
     /// if the TargetView attribute is set to USERDEFINED.
     pub user_defined_target_view: OptionalParameter<Label>,
 }
+
+impl IfcType for GeometricRepresentationSubContext {}

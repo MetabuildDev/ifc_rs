@@ -2,6 +2,8 @@ use std::ops::Deref;
 
 use type_enum::WallTypeEnum;
 
+use crate::ifc_type::IfcType;
+
 use super::shared::element_type::ElementType;
 
 mod deserialize;
@@ -31,6 +33,8 @@ impl Deref for WallType {
         &self.element_type
     }
 }
+
+impl IfcType for WallType {}
 
 #[cfg(test)]
 mod test {

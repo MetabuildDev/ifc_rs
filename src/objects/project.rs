@@ -1,5 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
+use crate::ifc_type::IfcType;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
@@ -46,6 +47,8 @@ impl Display for Project {
         write!(f, "IFCPROJECT({});", self.context)
     }
 }
+
+impl IfcType for Project {}
 
 #[cfg(test)]
 mod test {

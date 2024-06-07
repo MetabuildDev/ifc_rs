@@ -17,6 +17,8 @@ use winnow::combinator::*;
 use winnow::token::*;
 use winnow::{error::ErrorKind, Parser};
 
+use crate::ifc_type::IfcType;
+
 pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
 impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}
 
@@ -25,11 +27,12 @@ pub trait IFCParse: Display {
     where
         Self: Sized;
 
-    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn Display>>
+    fn parse_any<'a>() -> impl IFCParser<'a, Box<dyn IfcType>>
     where
         Self: Sized + 'static,
+        Self: IfcType,
     {
-        Self::parse().map(|s: Self| Box::new(s) as Box<dyn Display>)
+        Self::parse().map(|s: Self| Box::new(s) as Box<dyn IfcType>)
     }
 
     fn fallback<'a>() -> impl IFCParser<'a, OptionalParameter<Self>>

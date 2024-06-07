@@ -4,7 +4,10 @@ use super::{
     name::IfcUnitName, optional::OptionalParameter, prefix::IfcPrefix,
     shared::named_unit::NamedUnit, IFCParse, IFCParser,
 };
-use crate::units::{comma::Comma, p_space_or_comment_surrounded};
+use crate::{
+    ifc_type::IfcType,
+    units::{comma::Comma, p_space_or_comment_surrounded},
+};
 
 /// The IfcSIUnit covers both standard base SI units such as meter and second,
 /// and derived SI units such as Pascal, square meter and cubic meter.
@@ -55,6 +58,8 @@ impl Display for SiUnit {
         )
     }
 }
+
+impl IfcType for SiUnit {}
 
 #[cfg(test)]
 mod test {

@@ -3,6 +3,8 @@ mod serialize;
 
 use serde::{Deserialize, Serialize};
 
+use crate::ifc_type::IfcType;
+
 use super::version;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -12,6 +14,8 @@ pub struct Header {
     pub name: details::FileDetails,
     pub schema: schema::FileSchemas,
 }
+
+impl IfcType for Header {}
 
 pub mod description {
 

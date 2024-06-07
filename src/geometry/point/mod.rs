@@ -1,7 +1,10 @@
 mod deserialize;
 mod serialize;
 
-use crate::parser::ifc_float::{IfcDVec2, IfcDVec3};
+use crate::{
+    ifc_type::IfcType,
+    parser::ifc_float::{IfcDVec2, IfcDVec3},
+};
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
@@ -15,6 +18,8 @@ use crate::parser::ifc_float::{IfcDVec2, IfcDVec3};
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Point2D(IfcDVec2);
 
+impl IfcType for Point2D {}
+
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
 /// Cartesian points are used.
@@ -26,3 +31,5 @@ pub struct Point2D(IfcDVec2);
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Point3D(IfcDVec3);
+
+impl IfcType for Point3D {}

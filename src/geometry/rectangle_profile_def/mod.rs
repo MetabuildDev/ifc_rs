@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::{id::Id, parser::optional::OptionalParameter};
@@ -19,6 +20,8 @@ pub struct RectangleProfileDef {
     x_dim: IfcFloat,
     y_dim: IfcFloat,
 }
+
+impl IfcType for RectangleProfileDef {}
 
 #[cfg(test)]
 mod test {

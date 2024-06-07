@@ -1,8 +1,9 @@
-use std::fmt::Display;
-
 use winnow::combinator::alt;
 
-use crate::parser::{IFCParse, IFCParser};
+use crate::{
+    ifc_type::IfcType,
+    parser::{IFCParse, IFCParser},
+};
 
 pub mod access_state;
 pub mod actor_role;
@@ -27,7 +28,7 @@ pub mod walltype;
 pub struct Objects;
 
 impl Objects {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Display>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
             actor_role::ActorRole::parse_any(),
             address::PostalAddress::parse_any(),

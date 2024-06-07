@@ -2,6 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::id::Id;
+use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
@@ -32,3 +33,5 @@ pub struct Person {
     /// Postal and telecommunication addresses of a person.
     pub addresses: OptionalParameter<IfcList<Id>>,
 }
+
+impl IfcType for Person {}

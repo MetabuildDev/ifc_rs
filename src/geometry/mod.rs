@@ -1,8 +1,9 @@
-use std::fmt::Display;
-
 use winnow::combinator::alt;
 
-use crate::parser::{IFCParse, IFCParser};
+use crate::{
+    ifc_type::IfcType,
+    parser::{IFCParse, IFCParser},
+};
 
 pub mod axis;
 pub mod dimension_count;
@@ -22,20 +23,17 @@ pub mod shape_representation;
 pub struct Geometry;
 
 impl Geometry {
-    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn Display>> {
+    pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
             axis::Axis2D::parse_any(),
             axis::Axis3D::parse_any(),
-            dimension_count::DimensionCount::parse_any(),
             direction::Direction2D::parse_any(),
             direction::Direction3D::parse_any(),
             extruded_area_solid::ExtrudedAreaSolid::parse_any(),
-            geometric_projection::GeometricProjection::parse_any(),
             point::Point2D::parse_any(),
             point::Point3D::parse_any(),
             polyline::PolyLine::parse_any(),
             product_definition_shape::ProductDefinitionShape::parse_any(),
-            profile_type::ProfileType::parse_any(),
             rectangle_profile_def::RectangleProfileDef::parse_any(),
             representation_context::GeometricRepresentationContext::parse_any(),
             representation_subcontext::GeometricRepresentationSubContext::parse_any(),

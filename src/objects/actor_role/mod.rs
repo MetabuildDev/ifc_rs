@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
 use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
@@ -95,3 +96,5 @@ impl IFCParse for Role {
         )
     }
 }
+
+impl IfcType for ActorRole {}

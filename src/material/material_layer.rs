@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     id::Id,
+    ifc_type::IfcType,
     parser::{
         bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
         optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -105,6 +106,8 @@ impl Display for MaterialLayer {
         )
     }
 }
+
+impl IfcType for MaterialLayer {}
 
 #[cfg(test)]
 mod test {

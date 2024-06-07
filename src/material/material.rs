@@ -1,8 +1,11 @@
 use std::fmt::Display;
 
-use crate::parser::{
-    comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
-    IFCParse, IFCParser,
+use crate::{
+    ifc_type::IfcType,
+    parser::{
+        comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
+        IFCParse, IFCParser,
+    },
 };
 
 /// IfcMaterial is a homogeneous or inhomogeneous substance that can be
@@ -49,6 +52,8 @@ impl Display for Material {
         )
     }
 }
+
+impl IfcType for Material {}
 
 #[cfg(test)]
 mod test {

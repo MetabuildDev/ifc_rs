@@ -5,6 +5,7 @@ use super::{
 };
 use crate::{
     id::IdOr,
+    ifc_type::IfcType,
     parser::optional::OptionalParameter,
     units::{comma::Comma, p_space_or_comment_surrounded},
 };
@@ -59,6 +60,8 @@ impl Display for ConversionBasedUnit {
         )
     }
 }
+
+impl IfcType for ConversionBasedUnit {}
 
 #[cfg(test)]
 mod test {
