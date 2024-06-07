@@ -47,7 +47,7 @@ pub mod details {
     use chrono::Utc;
     use serde::{Deserialize, Serialize};
 
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct FileDetails {
         pub name: FileName,
         pub timestamp: TimeStamp,
@@ -58,19 +58,19 @@ pub mod details {
         pub authorization: Authorization,
     }
 
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct FileName(pub String);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct TimeStamp(pub chrono::DateTime<Utc>);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct Author(pub String);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct Organization(pub String);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct PreprocessorVersion(pub String);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct OriginatingSystem(pub String);
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct Authorization(pub String);
 }
 

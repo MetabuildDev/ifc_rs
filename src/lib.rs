@@ -5,7 +5,17 @@ use parser::IFCParse;
 use std::{fs, path::Path};
 use winnow::{seq, Parser};
 
-use meta::{datamap::DataMap, footer::Footer, header::Header};
+use meta::{
+    datamap::DataMap,
+    footer::Footer,
+    header::{
+        description::{FileDescription, ImplementationLevel},
+        details::FileDetails,
+        schema::FileSchemas,
+        Header,
+    },
+    version::Version,
+};
 
 pub mod geometry;
 pub mod id;
@@ -23,6 +33,26 @@ pub struct IFC {
     pub data: DataMap,
 
     pub footer: Footer,
+}
+
+impl Default for IFC {
+    fn default() -> Self {
+        Self {
+            header: Header {
+                version: Version::ISO_10303_21,
+                description: FileDescription {
+                    descriptions: Vec::new(),
+                    implementation_level: ImplementationLevel::_2_1,
+                },
+                name: FileDetails::default(),
+                schema: FileSchemas(Vec::new()),
+            },
+            data: Default::default(),
+            footer: Footer {
+                version: Version::ISO_10303_21,
+            },
+        }
+    }
 }
 
 impl IFC {

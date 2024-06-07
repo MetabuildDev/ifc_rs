@@ -1,7 +1,12 @@
 mod deserialize;
 mod serialize;
 
-use std::fmt::Display;
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
+
+use glam::{DVec2, DVec3};
 
 use crate::{
     ifc_type::IfcType,
@@ -34,6 +39,26 @@ impl<'a> Display for PointType<'a> {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Point2D(IfcDVec2);
 
+impl Deref for Point2D {
+    type Target = IfcDVec2;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for Point2D {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl From<DVec2> for Point2D {
+    fn from(value: DVec2) -> Self {
+        Self(IfcDVec2(value))
+    }
+}
+
 impl IfcType for Point2D {}
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
@@ -47,5 +72,25 @@ impl IfcType for Point2D {}
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Point3D(IfcDVec3);
+
+impl Deref for Point3D {
+    type Target = IfcDVec3;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for Point3D {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl From<DVec3> for Point3D {
+    fn from(value: DVec3) -> Self {
+        Self(IfcDVec3(value))
+    }
+}
 
 impl IfcType for Point3D {}

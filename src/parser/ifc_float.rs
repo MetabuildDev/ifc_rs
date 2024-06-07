@@ -27,7 +27,7 @@ impl Display for IfcFloat {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct IfcDVec2(DVec2);
+pub struct IfcDVec2(pub(crate) DVec2);
 
 impl IFCParse for IfcDVec2 {
     fn parse<'a>() -> impl IFCParser<'a, Self>
@@ -57,7 +57,7 @@ impl Deref for IfcDVec2 {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct IfcDVec3(DVec3);
+pub struct IfcDVec3(pub(crate) DVec3);
 
 impl IFCParse for IfcDVec3 {
     fn parse<'a>() -> impl IFCParser<'a, Self>

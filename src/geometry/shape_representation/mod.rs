@@ -10,11 +10,7 @@ use crate::{
     IFC,
 };
 
-use super::{
-    extruded_area_solid::ExtrudedAreaSolid,
-    point::{Point2D, Point3D, PointType},
-    polyline::PolyLine,
-};
+use super::{extruded_area_solid::ExtrudedAreaSolid, point::PointType, polyline::PolyLine};
 
 pub enum ShapeItems<'a> {
     PolyLine(IfcList<PointType<'a>>),
@@ -64,23 +60,7 @@ impl ShapeRepresentation {
             let item = ifc.data.get_untyped(*item_id);
 
             if let Some(poly_line) = item.downcast_ref::<PolyLine>() {
-                ShapeItems::PolyLine(IfcList(
-                    poly_line
-                        .points
-                        .iter()
-                        .map(|point_id| {
-                            let point = ifc.data.get_untyped(*point_id);
-
-                            if let Some(point_2d) = point.downcast_ref::<Point2D>() {
-                                PointType::D2(point_2d)
-                            } else if let Some(point_3d) = point.downcast_ref::<Point3D>() {
-                                PointType::D3(point_3d)
-                            } else {
-                                unreachable!()
-                            }
-                        })
-                        .collect(),
-                ))
+                ShapeItems::PolyLine(poly_line.points(ifc))
             } else if let Some(extruded_area_solid) = item.downcast_ref::<ExtrudedAreaSolid>() {
                 ShapeItems::ExtrudedAreaSolid(extruded_area_solid)
             } else {
