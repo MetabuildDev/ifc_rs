@@ -6,6 +6,8 @@ use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
 
+pub trait Address: IfcType {}
+
 ///  Address to which telephone, electronic mail and other forms of
 ///  telecommunications should be addressed.
 ///
@@ -38,6 +40,7 @@ pub struct TelecomAddress {
 }
 
 impl IfcType for TelecomAddress {}
+impl Address for TelecomAddress {}
 
 /// The address for delivery of paper based mail.
 
@@ -73,3 +76,4 @@ pub struct PostalAddress {
 }
 
 impl IfcType for PostalAddress {}
+impl Address for PostalAddress {}

@@ -1,11 +1,15 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::IFC;
+
+use super::actor_role::ActorRole;
+use super::address::Address;
 
 /// An individual human being.
 ///
@@ -32,6 +36,70 @@ pub struct Person {
     pub roles: OptionalParameter<IfcList<Id>>,
     /// Postal and telecommunication addresses of a person.
     pub addresses: OptionalParameter<IfcList<Id>>,
+}
+
+impl Person {
+    pub fn new<'a, R>(
+        id: impl Into<Option<&'a str>>,
+        family_name: impl Into<Option<&'a str>>,
+        given_name: impl Into<Option<&'a str>>,
+        middle_names: impl Into<Option<&'a [&'a str]>>,
+        prefix_titles: impl Into<Option<&'a [&'a str]>>,
+        suffix_titles: impl Into<Option<&'a [&'a str]>>,
+        roles: impl Into<Option<R>>,
+        ifc: &mut IFC,
+    ) -> Self
+    where
+        R: IntoIterator<Item = IdOr<ActorRole>>,
+    {
+        Self {
+            id: id.into().map(|s| s.into()).into(),
+            family_name: family_name.into().map(|s| s.into()).into(),
+            given_name: given_name.into().map(|s| s.into()).into(),
+            middle_names: middle_names
+                .into()
+                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
+                .into(),
+            prefix_titles: prefix_titles
+                .into()
+                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
+                .into(),
+            suffix_titles: suffix_titles
+                .into()
+                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
+                .into(),
+            roles: roles
+                .into()
+                .map(|roles| IfcList(roles.into_iter().map(|r| r.into_id(ifc).id()).collect()))
+                .into(),
+            addresses: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn add_address<A: Address>(&mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) {
+        if self.addresses.is_omitted() {
+            self.addresses = IfcList::empty().into();
+        }
+
+        self.addresses
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(address.into().into_id(ifc).id());
+    }
+
+    pub fn empty() -> Self {
+        Self {
+            id: OptionalParameter::omitted(),
+            family_name: OptionalParameter::omitted(),
+            given_name: OptionalParameter::omitted(),
+            middle_names: OptionalParameter::omitted(),
+            prefix_titles: OptionalParameter::omitted(),
+            suffix_titles: OptionalParameter::omitted(),
+            roles: OptionalParameter::omitted(),
+            addresses: OptionalParameter::omitted(),
+        }
+    }
 }
 
 impl IfcType for Person {}

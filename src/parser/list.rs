@@ -14,6 +14,10 @@ use super::p_space_or_comment_surrounded;
 pub struct IfcList<T>(pub Vec<T>);
 
 impl<T> IfcList<T> {
+    pub fn empty() -> Self {
+        Self(Vec::new())
+    }
+
     pub fn iter(&self) -> Iter<'_, T> {
         self.0.iter()
     }

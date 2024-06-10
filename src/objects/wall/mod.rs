@@ -3,8 +3,18 @@ mod serialize;
 
 use std::ops::Deref;
 
-use super::{shared::element::Element, walltype::WallType};
-use crate::{id::IdOr, ifc_type::IfcType, parser::optional::OptionalParameter};
+use super::{
+    owner_history::OwnerHistory,
+    shared::{element::Element, object::Object, product::Product, root::Root},
+    walltype::WallType,
+};
+use crate::{
+    geometry::{local_placement::LocalPlacement, product_definition_shape::ProductDefinitionShape},
+    id::IdOr,
+    ifc_type::IfcType,
+    parser::{label::Label, optional::OptionalParameter},
+    IFC,
+};
 
 /// The wall represents a vertical construction that may bound or
 /// subdivide spaces. Wall are usually vertical, or nearly vertical,
@@ -21,6 +31,43 @@ pub struct Wall {
     pub predefined_type: OptionalParameter<IdOr<WallType>>,
 }
 
+impl Wall {
+    pub fn new<'a>(
+        global_id: impl Into<Label>,
+        owner_history: impl Into<Option<IdOr<OwnerHistory>>>,
+        name: impl Into<Option<&'a str>>,
+        description: impl Into<Option<&'a str>>,
+        object_type: impl Into<Option<&'a str>>,
+        object_placement: impl Into<Option<IdOr<LocalPlacement>>>,
+        representation: impl Into<Option<IdOr<ProductDefinitionShape>>>,
+        predefined_type: impl Into<Option<IdOr<WallType>>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            element: Element::new(
+                Product::new(
+                    Object::new(
+                        Root::new(
+                            global_id.into(),
+                            owner_history.into().map(|h| h.into_id(ifc).id()).into(),
+                            name.into().map(|s| s.into()).into(),
+                            description.into().map(|s| s.into()).into(),
+                        ),
+                        object_type.into().map(|s| s.into()).into(),
+                    ),
+                    object_placement
+                        .into()
+                        .map(|p| IdOr::Id(p.into_id(ifc).id()))
+                        .into(),
+                    representation.into().map(|r| r.into_id(ifc).id()).into(),
+                ),
+                OptionalParameter::omitted(),
+            ),
+            predefined_type: predefined_type.into().into(),
+        }
+    }
+}
+
 impl Deref for Wall {
     type Target = Element;
 
@@ -33,10 +80,24 @@ impl IfcType for Wall {}
 
 #[cfg(test)]
 mod test {
+    use glam::DVec3;
     use winnow::Parser;
 
+    use crate::geometry::axis::Axis3D;
+    use crate::geometry::local_placement::LocalPlacement;
+    use crate::geometry::point::Point3D;
+    use crate::geometry::product_definition_shape::test::new_product_definition_shape;
+    use crate::id::IdOr;
+    use crate::objects::application::Application;
+    use crate::objects::change_action::ChangeAction;
+    use crate::objects::organization::Organization;
+    use crate::objects::owner_history::OwnerHistory;
+    use crate::objects::person::Person;
+    use crate::objects::person_and_org::PersonAndOrganization;
     use crate::objects::wall::Wall;
+    use crate::parser::timestamp::IfcTimestamp;
     use crate::parser::IFCParse;
+    use crate::IFC;
 
     #[test]
     fn wall_round_trip() {
@@ -46,5 +107,60 @@ mod test {
         let str_wall = wall.to_string();
 
         assert_eq!(example, str_wall);
+    }
+
+    #[test]
+    fn create_wall() {
+        let mut ifc = IFC::default();
+
+        let person_id = ifc.data.insert_new(Person::empty());
+        let application = Application::new(
+            person_id.clone(),
+            "0.0.1",
+            "create_wall_test",
+            "IFC4",
+            &mut ifc,
+        );
+        let application_id = ifc.data.insert_new(application);
+
+        let owner_history = OwnerHistory::new(
+            PersonAndOrganization::new(
+                person_id.clone(),
+                Organization::new(None, "organization_name", None),
+                Vec::new(),
+                &mut ifc,
+            ),
+            application_id.clone(),
+            None,
+            ChangeAction::Added,
+            None,
+            person_id,
+            application_id,
+            IfcTimestamp::now(),
+            &mut ifc,
+        );
+
+        let local_placement = LocalPlacement::new(
+            Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc),
+            &mut ifc,
+        );
+
+        let representation = new_product_definition_shape(&mut ifc);
+
+        let wall = Wall::new(
+            "global_id_example",
+            IdOr::from(owner_history),
+            "example_name",
+            "example_description",
+            "example_object_type",
+            IdOr::from(local_placement),
+            IdOr::from(representation),
+            None,
+            &mut ifc,
+        );
+
+        ifc.data.insert_new(wall);
+
+        println!("{}", ifc.data);
     }
 }

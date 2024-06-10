@@ -13,6 +13,12 @@ use crate::parser::{IFCParse, IFCParser};
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct IfcTimestamp(pub chrono::DateTime<Utc>);
 
+impl IfcTimestamp {
+    pub fn now() -> Self {
+        Self(Utc::now())
+    }
+}
+
 impl IFCParse for IfcTimestamp {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where

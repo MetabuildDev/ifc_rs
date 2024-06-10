@@ -14,6 +14,14 @@ pub enum OptionalParameter<T: IFCParse> {
 }
 
 impl<T: IFCParse> OptionalParameter<T> {
+    pub fn omitted() -> Self {
+        Self::Omitted(Omitted)
+    }
+
+    pub fn inherited() -> Self {
+        Self::Inherited(Inherited)
+    }
+
     pub fn is_custom(&self) -> bool {
         match self {
             OptionalParameter::Custom(_) => true,
@@ -22,6 +30,13 @@ impl<T: IFCParse> OptionalParameter<T> {
     }
 
     pub fn custom(&self) -> Option<&T> {
+        match self {
+            OptionalParameter::Custom(t) => Some(t),
+            _ => None,
+        }
+    }
+
+    pub fn custom_mut(&mut self) -> Option<&mut T> {
         match self {
             OptionalParameter::Custom(t) => Some(t),
             _ => None,
@@ -40,6 +55,20 @@ impl<T: IFCParse> OptionalParameter<T> {
             OptionalParameter::Omitted(_) => true,
             _ => false,
         }
+    }
+}
+
+impl<T: IFCParse> From<Option<T>> for OptionalParameter<T> {
+    fn from(value: Option<T>) -> Self {
+        match value {
+            Some(t) => Self::Custom(t),
+            None => Self::omitted(),
+        }
+    }
+}
+impl<T: IFCParse> From<T> for OptionalParameter<T> {
+    fn from(value: T) -> Self {
+        Self::Custom(value)
     }
 }
 

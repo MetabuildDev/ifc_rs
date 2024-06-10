@@ -1,13 +1,16 @@
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
         comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
     },
+    IFC,
 };
+
+use super::axis::AxisPlacement;
 
 /// An IfcLocalPlacement defines the relative placement of a product in
 /// relation to the placement of another product or the absolute placement
@@ -27,6 +30,24 @@ pub struct LocalPlacement {
     /// coordinate system into the relating. The placement can be either 2D or 3D,
     /// depending on the dimension count of the coordinate system.
     pub relative_placement: Id,
+}
+
+impl LocalPlacement {
+    pub fn new<A: AxisPlacement>(relative_placement: impl Into<IdOr<A>>, ifc: &mut IFC) -> Self {
+        Self {
+            placement_rel_to: OptionalParameter::omitted(),
+            relative_placement: relative_placement.into().into_id(ifc).id(),
+        }
+    }
+
+    pub fn relative_to<A: AxisPlacement>(
+        mut self,
+        placement_rel_to: impl Into<IdOr<A>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.placement_rel_to = placement_rel_to.into().into_id(ifc).id().into();
+        self
+    }
 }
 
 impl IFCParse for LocalPlacement {

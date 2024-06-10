@@ -2,9 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::parser::comma::Comma;
 use crate::parser::IFCParse;
-use crate::parser::{
-    label::Label, optional::OptionalParameter,  IFCParser,
-};
+use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
 
 use super::root::Root;
 
@@ -20,6 +18,12 @@ pub struct Object {
     /// In particular it holds the user defined type, if the enumeration
     /// of the attribute PredefinedType is set to USERDEFINED.
     pub object_type: OptionalParameter<Label>,
+}
+
+impl Object {
+    pub fn new(root: Root, object_type: OptionalParameter<Label>) -> Self {
+        Self { root, object_type }
+    }
 }
 
 impl Deref for Object {

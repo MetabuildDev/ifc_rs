@@ -20,6 +20,18 @@ impl IFCParse for IfcFloat {
     }
 }
 
+impl From<f64> for IfcFloat {
+    fn from(value: f64) -> Self {
+        Self(value)
+    }
+}
+
+impl Into<f64> for IfcFloat {
+    fn into(self) -> f64 {
+        self.0
+    }
+}
+
 impl Display for IfcFloat {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format_double(self.0))

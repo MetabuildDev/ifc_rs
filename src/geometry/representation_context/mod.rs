@@ -7,6 +7,9 @@ use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
+use crate::IFC;
+
+use super::axis::AxisPlacement;
 
 /// The IfcGeometricRepresentationContext defines the context that applies to several shape
 /// representations of products within a project. It defines the type of the context in which the
@@ -41,6 +44,27 @@ pub struct GeometricRepresentationContext {
     /// If not present, it defaults to 0. 1., meaning that the positive Y axis of the project coordinate system equals the
     /// geographic northing direction.
     pub true_north: OptionalParameter<Id>,
+}
+
+impl GeometricRepresentationContext {
+    pub fn new(
+        context_type: impl Into<Label>,
+        coord_space_dimension: DimensionCount,
+        precision: impl Into<Option<f64>>,
+        world_coord_system: impl AxisPlacement,
+        ifc: &mut IFC,
+    ) -> Self {
+        let id = ifc.data.insert_new(world_coord_system);
+
+        Self {
+            context_identifier: OptionalParameter::omitted(),
+            context_type: OptionalParameter::Custom(context_type.into()),
+            coord_space_dimension,
+            precision: OptionalParameter::from(precision.into().map(|f| f.into())),
+            world_coord_system: id.id(),
+            true_north: OptionalParameter::omitted(),
+        }
+    }
 }
 
 impl IfcType for GeometricRepresentationContext {}

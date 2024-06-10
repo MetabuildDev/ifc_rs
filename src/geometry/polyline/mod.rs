@@ -1,6 +1,9 @@
 use crate::{id::Id, ifc_type::IfcType, parser::list::IfcList, IFC};
 
-use super::point::{Point2D, Point3D, PointType};
+use super::{
+    point::{Point2D, Point3D, PointType},
+    shape_representation::ShapeItem,
+};
 
 mod deserialize;
 mod serialize;
@@ -21,7 +24,7 @@ impl PolyLine {
             points: IfcList(
                 points
                     .into_iter()
-                    .map(|point| ifc.data.insert_new(point))
+                    .map(|point| ifc.data.insert_new(point).id())
                     .collect(),
             ),
         }
@@ -32,7 +35,7 @@ impl PolyLine {
             points: IfcList(
                 points
                     .into_iter()
-                    .map(|point| ifc.data.insert_new(point))
+                    .map(|point| ifc.data.insert_new(point).id())
                     .collect(),
             ),
         }
@@ -59,6 +62,7 @@ impl PolyLine {
 }
 
 impl IfcType for PolyLine {}
+impl ShapeItem for PolyLine {}
 
 #[cfg(test)]
 mod test {

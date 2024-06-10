@@ -3,10 +3,7 @@ use std::{fmt::Display, ops::Deref};
 use crate::{
     geometry::point::Point3D,
     id::{Id, IdOr},
-    parser::{
-        comma::Comma, optional::OptionalParameter,  IFCParse,
-        IFCParser,
-    },
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
 use super::object::Object;
@@ -42,6 +39,20 @@ pub struct Product {
     /// of the shape property of the object within the same object
     /// coordinate system, defined by the object placement.
     pub representation: OptionalParameter<Id>,
+}
+
+impl Product {
+    pub fn new(
+        object: Object,
+        object_placement: OptionalParameter<IdOr<Point3D>>,
+        representation: OptionalParameter<Id>,
+    ) -> Self {
+        Self {
+            object,
+            object_placement,
+            representation,
+        }
+    }
 }
 
 impl Deref for Product {

@@ -27,6 +27,8 @@ impl<'a> Display for PointType<'a> {
     }
 }
 
+pub trait CartesianPoint: IfcType {}
+
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
 /// Cartesian points are used.
@@ -60,6 +62,7 @@ impl From<DVec2> for Point2D {
 }
 
 impl IfcType for Point2D {}
+impl CartesianPoint for Point2D {}
 
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
@@ -94,3 +97,4 @@ impl From<DVec3> for Point3D {
 }
 
 impl IfcType for Point3D {}
+impl CartesianPoint for Point3D {}
