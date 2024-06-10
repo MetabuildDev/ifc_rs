@@ -63,23 +63,27 @@ pub mod test {
 
     use crate::{
         geometry::{
-            axis::Axis2D, dimension_count::DimensionCount,
+            axis::Axis3D, dimension_count::DimensionCount,
             geometric_projection::GeometricProjection, point::Point3D, polyline::PolyLine,
             representation_context::GeometricRepresentationContext,
             representation_subcontext::GeometricRepresentationSubContext,
             shape_representation::ShapeRepresentation,
         },
+        id::IdOr,
         IFC,
     };
 
     use super::ProductDefinitionShape;
 
-    pub fn new_product_definition_shape(ifc: &mut IFC) -> ProductDefinitionShape {
+    pub fn new_product_definition_shape(
+        ifc: &mut IFC,
+        world_coord_system: IdOr<Axis3D>,
+    ) -> ProductDefinitionShape {
         let context = GeometricRepresentationContext::new(
             "Model",
             DimensionCount::Three,
             0.01,
-            Axis2D::new(Point3D::from(DVec3::ZERO), ifc),
+            world_coord_system,
             ifc,
         );
 
@@ -117,7 +121,10 @@ pub mod test {
     fn create_product_definition_shape() {
         let mut ifc = IFC::default();
 
-        let shape = new_product_definition_shape(&mut ifc);
+        let axis = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
+        let axis_id = ifc.data.insert_new(axis);
+
+        let shape = new_product_definition_shape(&mut ifc, axis_id);
         ifc.data.insert_new(shape);
 
         println!("{}", ifc.data);

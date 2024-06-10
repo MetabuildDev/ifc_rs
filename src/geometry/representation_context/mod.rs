@@ -2,7 +2,7 @@ mod deserialize;
 mod serialize;
 
 use crate::geometry::dimension_count::DimensionCount;
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
@@ -51,10 +51,10 @@ impl GeometricRepresentationContext {
         context_type: impl Into<Label>,
         coord_space_dimension: DimensionCount,
         precision: impl Into<Option<f64>>,
-        world_coord_system: impl AxisPlacement,
+        world_coord_system: IdOr<impl AxisPlacement>,
         ifc: &mut IFC,
     ) -> Self {
-        let id = ifc.data.insert_new(world_coord_system);
+        let id = world_coord_system.into_id(ifc);
 
         Self {
             context_identifier: OptionalParameter::omitted(),

@@ -79,7 +79,7 @@ impl Deref for Wall {
 impl IfcType for Wall {}
 
 #[cfg(test)]
-mod test {
+pub mod test {
     use glam::DVec3;
     use winnow::Parser;
 
@@ -87,6 +87,10 @@ mod test {
     use crate::geometry::local_placement::LocalPlacement;
     use crate::geometry::point::Point3D;
     use crate::geometry::product_definition_shape::test::new_product_definition_shape;
+    use crate::geometry::product_definition_shape::ProductDefinitionShape;
+    use crate::geometry::representation_context::GeometricRepresentationContext;
+    use crate::geometry::representation_subcontext::GeometricRepresentationSubContext;
+    use crate::geometry::shape_representation::ShapeRepresentation;
     use crate::id::IdOr;
     use crate::objects::application::Application;
     use crate::objects::change_action::ChangeAction;
@@ -107,6 +111,87 @@ mod test {
         let str_wall = wall.to_string();
 
         assert_eq!(example, str_wall);
+    }
+
+    pub fn print_wall_hierarchy(ifc: &IFC) {
+        use crate::objects::wall::Wall;
+
+        for wall in ifc.data.find_all_of_type::<Wall>() {
+            println!("wall: {wall}");
+
+            if let Some(owner_history) = wall
+                .owner_history
+                .custom()
+                .map(|&id| ifc.data.get_untyped(id))
+            {
+                println!("\towner_history: {owner_history}");
+            }
+
+            if let Some(id_or) = wall.object_placement.custom() {
+                match id_or {
+                    IdOr::Id(id) => println!("\tpoint3d: {}", ifc.data.get_untyped(*id)),
+                    IdOr::Custom(point) => println!("\tpoint3d: {point}"),
+                }
+            }
+
+            if let Some(representation) = wall
+                .representation
+                .custom()
+                .map(|&id| ifc.data.get_untyped(id))
+            {
+                println!("\trepresentation: {representation}");
+
+                for repr in representation
+                    .downcast_ref::<ProductDefinitionShape>()
+                    .unwrap()
+                    .representations
+                    .iter()
+                {
+                    let shape = ifc.data.get::<ShapeRepresentation>(*repr);
+                    println!("\t\tshape_representation: {shape}");
+
+                    let sub_context = ifc
+                        .data
+                        .get::<GeometricRepresentationSubContext>(shape.context_of_items);
+
+                    println!("\t\t\tsub context: {sub_context}");
+
+                    let parent_context = ifc
+                        .data
+                        .get::<GeometricRepresentationContext>(sub_context.parent_context);
+
+                    println!("\t\t\t\tcontext: {parent_context}");
+                    println!(
+                        "\t\t\t\t\tcoord_dims: {}",
+                        parent_context.coord_space_dimension
+                    );
+
+                    let world_coord_system =
+                        ifc.data.get::<Axis3D>(parent_context.world_coord_system);
+
+                    println!("\t\t\t\t\tworld_coord_system: {world_coord_system}");
+                    println!(
+                        "\t\t\t\t\t\tcoord_system_point: {}",
+                        ifc.data.get_untyped(world_coord_system.location)
+                    );
+
+                    for (index, item) in shape.items(&ifc).enumerate() {
+                        println!("\t\t\titem {index}: {item}");
+                    }
+                }
+            }
+
+            if let Some(tag) = wall.tag.custom().map(|&id| ifc.data.get_untyped(id)) {
+                println!("\ttag: {tag}");
+            }
+
+            if let Some(id_or) = wall.predefined_type.custom() {
+                match id_or {
+                    IdOr::Id(id) => println!("\twall_type: {}", ifc.data.get_untyped(*id)),
+                    IdOr::Custom(wall_type) => println!("\twall_type: {}", wall_type),
+                }
+            }
+        }
     }
 
     #[test]
@@ -140,12 +225,11 @@ mod test {
             &mut ifc,
         );
 
-        let local_placement = LocalPlacement::new(
-            Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc),
-            &mut ifc,
-        );
+        let axis = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
+        let axis_id = ifc.data.insert_new(axis);
+        let local_placement = LocalPlacement::new(axis_id.clone(), &mut ifc);
 
-        let representation = new_product_definition_shape(&mut ifc);
+        let representation = new_product_definition_shape(&mut ifc, axis_id);
 
         let wall = Wall::new(
             "global_id_example",
@@ -162,5 +246,7 @@ mod test {
         ifc.data.insert_new(wall);
 
         println!("{}", ifc.data);
+        println!();
+        print_wall_hierarchy(&ifc)
     }
 }
