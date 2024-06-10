@@ -11,6 +11,24 @@ use crate::parser::{p_quote_word, IFCParse, IFCParser};
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Label(pub String);
 
+impl From<String> for Label {
+    fn from(value: String) -> Self {
+        Self(value)
+    }
+}
+
+impl From<&String> for Label {
+    fn from(value: &String) -> Self {
+        Self(value.clone())
+    }
+}
+
+impl From<&str> for Label {
+    fn from(value: &str) -> Self {
+        Self(value.to_string())
+    }
+}
+
 impl IFCParse for Label {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where

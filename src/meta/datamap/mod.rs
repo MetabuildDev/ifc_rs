@@ -3,7 +3,10 @@ mod serialize;
 
 use std::collections::BTreeMap;
 
-use crate::{id::Id, ifc_type::IfcType};
+use crate::{
+    id::{Id, IdOr},
+    ifc_type::IfcType,
+};
 
 /// CRITICAL: split up the index map into a proper struct with fields which hold Hashmaps mapping
 /// indices to one specific type instead of an enum
@@ -11,7 +14,7 @@ use crate::{id::Id, ifc_type::IfcType};
 pub struct DataMap(BTreeMap<Id, Box<dyn IfcType>>);
 
 impl DataMap {
-    pub fn insert_new<T: IfcType + 'static>(&mut self, value: T) -> Id {
+    pub fn insert_new<T: IfcType + 'static>(&mut self, value: T) -> IdOr<T> {
         let new_id = self
             .0
             .keys()
@@ -22,7 +25,7 @@ impl DataMap {
 
         self.insert(new_id, value);
 
-        new_id
+        IdOr::Id(new_id)
     }
 
     pub fn insert<T: IfcType + 'static>(&mut self, id: Id, value: T) -> Option<Box<dyn IfcType>> {

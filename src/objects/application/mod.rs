@@ -1,9 +1,12 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
+use crate::IFC;
+
+use super::person::Person;
 
 ///  IfcApplication holds the information about an IFC compliant application
 ///  developed by an application developer who is a member of buildingSMART.
@@ -20,6 +23,23 @@ pub struct Application {
     pub application_full_name: Label,
     /// Short identifying name for the application.
     pub application_identifier: Label,
+}
+
+impl Application {
+    pub fn new(
+        application_developer: impl Into<IdOr<Person>>,
+        version: impl Into<Label>,
+        application_full_name: impl Into<Label>,
+        application_identifier: impl Into<Label>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            application_developer: application_developer.into().into_id(ifc).id(),
+            version: version.into(),
+            application_full_name: application_full_name.into(),
+            application_identifier: application_identifier.into(),
+        }
+    }
 }
 
 impl IfcType for Application {}

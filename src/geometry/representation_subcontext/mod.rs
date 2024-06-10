@@ -3,11 +3,14 @@ mod serialize;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
+use crate::IFC;
+
+use super::representation_context::GeometricRepresentationContext;
 
 /// The IfcGeometricRepresentationSubContext defines the context that applies
 /// to several shape representations of a product being a sub context, sharing
@@ -58,6 +61,35 @@ pub struct GeometricRepresentationSubContext {
     /// User defined target view, this attribute value shall be given,
     /// if the TargetView attribute is set to USERDEFINED.
     pub user_defined_target_view: OptionalParameter<Label>,
+}
+
+impl GeometricRepresentationSubContext {
+    pub fn derive(
+        context: impl Into<IdOr<GeometricRepresentationContext>>,
+        target_scale: impl Into<Option<f64>>,
+        target_view: GeometricProjection,
+        context_type: impl Into<Option<Label>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let id = match context.into() {
+            IdOr::Id(id) => id,
+            IdOr::Custom(context) => ifc.data.insert_new(context).id(),
+        };
+
+        Self {
+            context_identifier: OptionalParameter::inherited(),
+            context_type: OptionalParameter::inherited(),
+            coord_space_dimension: OptionalParameter::inherited(),
+            precision: OptionalParameter::inherited(),
+            world_coord_system: OptionalParameter::inherited(),
+            true_north: OptionalParameter::inherited(),
+
+            parent_context: id,
+            target_scale: OptionalParameter::from(target_scale.into().map(|f| f.into())),
+            target_view,
+            user_defined_target_view: OptionalParameter::from(context_type.into()),
+        }
+    }
 }
 
 impl IfcType for GeometricRepresentationSubContext {}

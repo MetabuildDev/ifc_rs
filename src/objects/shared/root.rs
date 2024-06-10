@@ -32,6 +32,22 @@ pub struct Root {
     pub description: OptionalParameter<Label>,
 }
 
+impl Root {
+    pub fn new(
+        global_id: Label,
+        owner_history: OptionalParameter<Id>,
+        name: OptionalParameter<Label>,
+        description: OptionalParameter<Label>,
+    ) -> Self {
+        Self {
+            global_id,
+            owner_history,
+            name,
+            description,
+        }
+    }
+}
+
 impl IFCParse for Root {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {

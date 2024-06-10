@@ -19,6 +19,12 @@ pub struct Element {
     pub tag: OptionalParameter<Id>,
 }
 
+impl Element {
+    pub fn new(product: Product, tag: OptionalParameter<Id>) -> Self {
+        Self { product, tag }
+    }
+}
+
 impl Deref for Element {
     type Target = Product;
 

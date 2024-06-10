@@ -4,13 +4,18 @@ pub mod serialize;
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     IFC,
 };
 
-use super::{extruded_area_solid::ExtrudedAreaSolid, point::PointType, polyline::PolyLine};
+use super::{
+    extruded_area_solid::ExtrudedAreaSolid, point::PointType, polyline::PolyLine,
+    representation_subcontext::GeometricRepresentationSubContext,
+};
+
+pub trait ShapeItem: IfcType {}
 
 pub enum ShapeItems<'a> {
     PolyLine(IfcList<PointType<'a>>),
@@ -55,6 +60,27 @@ pub struct ShapeRepresentation {
 }
 
 impl ShapeRepresentation {
+    pub fn new(
+        context: impl Into<IdOr<GeometricRepresentationSubContext>>,
+        identifier: impl Into<Label>,
+        repr_type: impl Into<Label>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let context_id = context.into().into_id(ifc);
+
+        Self {
+            context_of_items: context_id.id(),
+            representation_identifier: identifier.into().into(),
+            representation_type: repr_type.into().into(),
+            items: IfcList(Vec::new()),
+        }
+    }
+
+    pub fn add_item<ITEM: ShapeItem>(&mut self, item: ITEM, ifc: &mut IFC) {
+        let item_id = ifc.data.insert_new(item);
+        self.items.0.push(item_id.id());
+    }
+
     pub fn items<'a>(&'a self, ifc: &'a IFC) -> impl Iterator<Item = ShapeItems<'a>> {
         self.items.iter().map(|item_id| {
             let item = ifc.data.get_untyped(*item_id);

@@ -1,7 +1,11 @@
 mod deserialize;
 mod serialize;
 
-use crate::{id::Id, ifc_type::IfcType, parser::optional::OptionalParameter};
+use crate::{id::Id, ifc_type::IfcType, parser::optional::OptionalParameter, IFC};
+
+use super::point::CartesianPoint;
+
+pub trait AxisPlacement: IfcType {}
 
 /// The IfcAxis2Placement2D provides location and orientation to place items in a two-dimensional
 /// space. The attribute RefDirection defines the x axis, the y axis is derived.
@@ -20,7 +24,19 @@ pub struct Axis2D {
     pub local_x: OptionalParameter<Id>,
 }
 
+impl Axis2D {
+    pub fn new(point: impl CartesianPoint, ifc: &mut IFC) -> Self {
+        let id = ifc.data.insert_new(point);
+
+        Self {
+            location: id.id(),
+            local_x: OptionalParameter::omitted(),
+        }
+    }
+}
+
 impl IfcType for Axis2D {}
+impl AxisPlacement for Axis2D {}
 
 /// The IfcAxis2Placement3D provides location and orientations to place items in a
 /// three-dimensional space. The attribute Axis defines the Z direction, RefDirection the X
@@ -43,4 +59,17 @@ pub struct Axis3D {
     pub local_x: OptionalParameter<Id>,
 }
 
+impl Axis3D {
+    pub fn new(point: impl CartesianPoint, ifc: &mut IFC) -> Self {
+        let id = ifc.data.insert_new(point);
+
+        Self {
+            location: id.id(),
+            local_z: OptionalParameter::omitted(),
+            local_x: OptionalParameter::omitted(),
+        }
+    }
+}
+
 impl IfcType for Axis3D {}
+impl AxisPlacement for Axis3D {}

@@ -6,6 +6,8 @@ use optional::OptionalParameter;
 
 use std::fmt::Display;
 
+use super::shape_representation::ShapeItem;
+
 pub struct ExtrudedAreaSolid {
     pub swept_area: Id,
     pub position: OptionalParameter<Id>,
@@ -44,6 +46,7 @@ impl Display for ExtrudedAreaSolid {
 }
 
 impl IfcType for ExtrudedAreaSolid {}
+impl ShapeItem for ExtrudedAreaSolid {}
 
 #[cfg(test)]
 mod test {

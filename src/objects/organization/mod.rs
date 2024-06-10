@@ -1,11 +1,15 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::IFC;
+
+use super::actor_role::ActorRole;
+use super::address::Address;
 
 /// A named and structured grouping with a corporate identity.
 ///
@@ -22,6 +26,50 @@ pub struct Organization {
     pub roles: OptionalParameter<IfcList<Id>>,
     /// Postal and telecommunication addresses of an organization.
     pub addresses: OptionalParameter<IfcList<Id>>,
+}
+
+impl Organization {
+    pub fn new<'a>(
+        id: impl Into<Option<&'a str>>,
+        name: impl Into<Label>,
+        description: impl Into<Option<&'a str>>,
+    ) -> Self {
+        Self {
+            id: id.into().map(|s| s.into()).into(),
+            name: name.into(),
+            description: description.into().map(|s| s.into()).into(),
+            roles: OptionalParameter::omitted(),
+            addresses: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn add_role(mut self, role: impl Into<IdOr<ActorRole>>, ifc: &mut IFC) -> Self {
+        if self.roles.is_omitted() {
+            self.roles = IfcList::empty().into();
+        }
+
+        self.roles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(role.into().into_id(ifc).id());
+
+        self
+    }
+
+    pub fn add_address<A: Address>(mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) -> Self {
+        if self.addresses.is_omitted() {
+            self.addresses = IfcList::empty().into();
+        }
+
+        self.addresses
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(address.into().into_id(ifc).id());
+
+        self
+    }
 }
 
 impl IfcType for Organization {}
