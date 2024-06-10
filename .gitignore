@@ -20,3 +20,5 @@ result
 result-*
 
 .direnv
+
+examples/*.ifc

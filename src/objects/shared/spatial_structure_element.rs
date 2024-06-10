@@ -19,6 +19,18 @@ pub struct SpatialStructureElement {
     pub composition_type: OptionalParameter<CompositionTypeEnum>,
 }
 
+impl SpatialStructureElement {
+    pub fn new(
+        spatial_element: SpatialElement,
+        composition_type: OptionalParameter<CompositionTypeEnum>,
+    ) -> Self {
+        Self {
+            spatial_element,
+            composition_type,
+        }
+    }
+}
+
 impl Deref for SpatialStructureElement {
     type Target = SpatialElement;
 

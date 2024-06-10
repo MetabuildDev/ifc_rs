@@ -1,12 +1,22 @@
 use std::{fmt::Display, ops::Deref};
 
-use super::{address::PostalAddress, shared::spatial_structure_element::SpatialStructureElement};
+use super::{
+    address::PostalAddress,
+    owner_history::OwnerHistory,
+    shared::{
+        composition_type_enum::CompositionTypeEnum, object::Object, product::Product, root::Root,
+        spatial_element::SpatialElement, spatial_structure_element::SpatialStructureElement,
+    },
+};
 use crate::{
+    geometry::{local_placement::LocalPlacement, product_definition_shape::ProductDefinitionShape},
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
-        comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
+        comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    IFC,
 };
 
 /// A building represents a structure that provides shelter for its occupants
@@ -28,7 +38,52 @@ pub struct Building {
     pub elevation_of_terrain: OptionalParameter<IfcFloat>,
 
     /// Address given to the building for postal purposes.
-    pub building_address: OptionalParameter<PostalAddress>,
+    pub building_address: OptionalParameter<Id>,
+}
+
+impl Building {
+    pub fn new<'a>(
+        global_id: impl Into<Label>,
+        owner_history: impl Into<Option<IdOr<OwnerHistory>>>,
+        name: impl Into<Option<&'a str>>,
+        description: impl Into<Option<&'a str>>,
+        object_type: impl Into<Option<&'a str>>,
+        object_placement: impl Into<Option<IdOr<LocalPlacement>>>,
+        representation: impl Into<Option<IdOr<ProductDefinitionShape>>>,
+        composition_type_enum: impl Into<Option<CompositionTypeEnum>>,
+        elevation_of_ref_height: impl Into<Option<f64>>,
+        elevation_of_terrain: impl Into<Option<f64>>,
+        building_address: impl Into<Option<IdOr<PostalAddress>>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            spatial_element_structure: SpatialStructureElement::new(
+                SpatialElement::new(
+                    Product::new(
+                        Object::new(
+                            Root::new(
+                                global_id.into(),
+                                owner_history.into().map(|h| h.into_id(ifc).id()).into(),
+                                name.into().map(|s| s.into()).into(),
+                                description.into().map(|s| s.into()).into(),
+                            ),
+                            object_type.into().map(|s| s.into()).into(),
+                        ),
+                        object_placement
+                            .into()
+                            .map(|p| IdOr::Id(p.into_id(ifc).id()))
+                            .into(),
+                        representation.into().map(|r| r.into_id(ifc).id()).into(),
+                    ),
+                    OptionalParameter::omitted(),
+                ),
+                composition_type_enum.into().into(),
+            ),
+            elevation_of_ref_height: elevation_of_ref_height.into().map(|f| f.into()).into(),
+            elevation_of_terrain: elevation_of_terrain.into().map(|f| f.into()).into(),
+            building_address: building_address.into().map(|a| a.into_id(ifc).id()).into(),
+        }
+    }
 }
 
 impl Deref for Building {

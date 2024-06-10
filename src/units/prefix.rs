@@ -9,63 +9,63 @@ use crate::parser::*;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiprefix.htm
 #[derive(EnumString, VariantNames, Display, Clone, Copy)]
 pub enum IfcPrefix {
-    // 10^18
+    /// 10^18
     #[strum(to_string = ".EXA.")]
     Exa,
 
-    // 10^15
+    /// 10^15
     #[strum(to_string = ".PETA.")]
     Peta,
 
-    // 10^12
+    /// 10^12
     #[strum(to_string = ".TERA.")]
     Tera,
 
-    // 10^9
+    /// 10^9
     #[strum(to_string = ".GIGA.")]
     Giga,
 
-    // 10^6
+    /// 10^6
     #[strum(to_string = ".MEGA.")]
     Mega,
 
-    // 10^3
+    /// 10^3
     #[strum(to_string = ".KILO.")]
     Kilo,
 
-    // 10
+    /// 10
     #[strum(to_string = ".DECA.")]
     Deca,
 
-    // 10^-1
+    /// 10^-1
     #[strum(to_string = ".DECI.")]
     Deci,
 
-    // 10^-2
+    /// 10^-2
     #[strum(to_string = ".CENTI.")]
     Centi,
 
-    // 10^-3
+    /// 10^-3
     #[strum(to_string = ".MILLI.")]
     Milli,
 
-    // 10^-6
+    /// 10^-6
     #[strum(to_string = ".MICRO.")]
     Micro,
 
-    // 10^-9
+    /// 10^-9
     #[strum(to_string = ".NANO.")]
     Nano,
 
-    // 10^-12
+    /// 10^-12
     #[strum(to_string = ".PICO.")]
     Pico,
 
-    // 10^-15
+    /// 10^-15
     #[strum(to_string = ".FEMTO.")]
     Femto,
 
-    // 10^-18
+    /// 10^-18
     #[strum(to_string = ".ATTO.")]
     Atto,
 }

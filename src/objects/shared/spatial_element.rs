@@ -17,6 +17,12 @@ pub struct SpatialElement {
     pub long_name: OptionalParameter<Label>,
 }
 
+impl SpatialElement {
+    pub fn new(product: Product, long_name: OptionalParameter<Label>) -> Self {
+        Self { product, long_name }
+    }
+}
+
 impl Deref for SpatialElement {
     type Target = Product;
 

@@ -39,19 +39,14 @@ pub struct Person {
 }
 
 impl Person {
-    pub fn new<'a, R>(
+    pub fn new<'a>(
         id: impl Into<Option<&'a str>>,
         family_name: impl Into<Option<&'a str>>,
         given_name: impl Into<Option<&'a str>>,
         middle_names: impl Into<Option<&'a [&'a str]>>,
         prefix_titles: impl Into<Option<&'a [&'a str]>>,
         suffix_titles: impl Into<Option<&'a [&'a str]>>,
-        roles: impl Into<Option<R>>,
-        ifc: &mut IFC,
-    ) -> Self
-    where
-        R: IntoIterator<Item = IdOr<ActorRole>>,
-    {
+    ) -> Self {
         Self {
             id: id.into().map(|s| s.into()).into(),
             family_name: family_name.into().map(|s| s.into()).into(),
@@ -68,15 +63,26 @@ impl Person {
                 .into()
                 .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
                 .into(),
-            roles: roles
-                .into()
-                .map(|roles| IfcList(roles.into_iter().map(|r| r.into_id(ifc).id()).collect()))
-                .into(),
+            roles: OptionalParameter::omitted(),
             addresses: OptionalParameter::omitted(),
         }
     }
 
-    pub fn add_address<A: Address>(&mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) {
+    pub fn add_role(mut self, role: impl Into<IdOr<ActorRole>>, ifc: &mut IFC) -> Self {
+        if self.roles.is_omitted() {
+            self.roles = IfcList::empty().into();
+        }
+
+        self.roles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(role.into().into_id(ifc).id());
+
+        self
+    }
+
+    pub fn add_address<A: Address>(mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) -> Self {
         if self.addresses.is_omitted() {
             self.addresses = IfcList::empty().into();
         }
@@ -86,6 +92,8 @@ impl Person {
             .unwrap()
             .0
             .push(address.into().into_id(ifc).id());
+
+        self
     }
 
     pub fn empty() -> Self {

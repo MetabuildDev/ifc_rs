@@ -42,6 +42,26 @@ pub struct Context {
     pub units_in_context: OptionalParameter<Id>,
 }
 
+impl Context {
+    pub fn new(
+        root: Root,
+        object_type: OptionalParameter<Label>,
+        long_name: OptionalParameter<Label>,
+        phase: OptionalParameter<Label>,
+        representation_context: IfcList<Id>,
+        units_in_context: OptionalParameter<Id>,
+    ) -> Self {
+        Self {
+            root,
+            object_type,
+            long_name,
+            phase,
+            representation_context,
+            units_in_context,
+        }
+    }
+}
+
 impl Deref for Context {
     type Target = Root;
 
