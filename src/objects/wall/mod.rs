@@ -80,6 +80,8 @@ impl IfcType for Wall {}
 
 #[cfg(test)]
 pub mod test {
+    use std::fs::write;
+
     use glam::DVec3;
     use winnow::Parser;
 
@@ -247,6 +249,8 @@ pub mod test {
 
         println!("{}", ifc.data);
         println!();
-        print_wall_hierarchy(&ifc)
+        print_wall_hierarchy(&ifc);
+
+        write("wall-test.ifc", ifc.to_string()).unwrap();
     }
 }

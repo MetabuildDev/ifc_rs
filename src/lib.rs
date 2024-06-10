@@ -2,7 +2,7 @@
 
 use anyhow::{anyhow, Result};
 use parser::IFCParse;
-use std::{fs, path::Path};
+use std::{fmt::Display, fs, path::Path};
 use winnow::{seq, Parser};
 
 use meta::{
@@ -35,6 +35,23 @@ pub struct IFC {
     pub footer: Footer,
 }
 
+impl IFC {
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
+        let contents = fs::read_to_string(path)?;
+        let mut s = contents.as_str();
+
+        let me = seq!(Self {
+            header: Header::parse(),
+            data: DataMap::parse(),
+            footer: Footer::parse(),
+        })
+        .parse_next(&mut s)
+        .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
+
+        Ok(me)
+    }
+}
+
 impl Default for IFC {
     fn default() -> Self {
         Self {
@@ -55,20 +72,9 @@ impl Default for IFC {
     }
 }
 
-impl IFC {
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
-        let contents = fs::read_to_string(path)?;
-        let mut s = contents.as_str();
-
-        let me = seq!(Self {
-            header: Header::parse(),
-            data: DataMap::parse(),
-            footer: Footer::parse(),
-        })
-        .parse_next(&mut s)
-        .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
-
-        Ok(me)
+impl Display for IFC {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}\n{}\n{}", self.header, self.data, self.footer)
     }
 }
 
