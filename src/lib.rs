@@ -24,6 +24,7 @@ pub mod material;
 pub mod meta;
 pub mod objects;
 pub mod parser;
+pub mod prelude;
 pub mod relations;
 pub mod units;
 

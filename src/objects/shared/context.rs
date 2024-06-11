@@ -1,10 +1,14 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::id::Id;
+use crate::geometry::representation_context::GeometricRepresentationContext;
+use crate::id::{Id, IdOr};
 use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::IFCParse;
 use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
+use crate::units::assignment::UnitAssigment;
+use crate::IFC;
 
 use super::root::Root;
 
@@ -62,11 +66,57 @@ impl Context {
     }
 }
 
+pub trait ContextBuilder: Sized {
+    fn context_mut(&mut self) -> &mut Context;
+
+    fn object_type(mut self, object_type: impl Into<Label>) -> Self {
+        self.context_mut().object_type = object_type.into().into();
+        self
+    }
+
+    fn long_name(mut self, long_name: impl Into<Label>) -> Self {
+        self.context_mut().long_name = long_name.into().into();
+        self
+    }
+
+    fn phase(mut self, phase: impl Into<Label>) -> Self {
+        self.context_mut().phase = phase.into().into();
+        self
+    }
+
+    fn add_context(
+        mut self,
+        representation_context: impl Into<IdOr<GeometricRepresentationContext>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.context_mut()
+            .representation_context
+            .0
+            .push(representation_context.into().into_id(ifc).id());
+        self
+    }
+
+    fn unit_assignment(
+        mut self,
+        unit_assignment: impl Into<IdOr<UnitAssigment>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.context_mut().units_in_context = unit_assignment.into().into_id(ifc).id().into();
+        self
+    }
+}
+
 impl Deref for Context {
     type Target = Root;
 
     fn deref(&self) -> &Self::Target {
         &self.root
+    }
+}
+
+impl DerefMut for Context {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.root
     }
 }
 

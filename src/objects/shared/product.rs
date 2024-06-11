@@ -1,9 +1,16 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use crate::{
-    geometry::point::Point3D,
+    geometry::{
+        local_placement::LocalPlacement, point::Point3D,
+        product_definition_shape::ProductDefinitionShape,
+    },
     id::{Id, IdOr},
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
+    IFC,
 };
 
 use super::object::Object;
@@ -42,16 +49,35 @@ pub struct Product {
 }
 
 impl Product {
-    pub fn new(
-        object: Object,
-        object_placement: OptionalParameter<IdOr<Point3D>>,
-        representation: OptionalParameter<Id>,
-    ) -> Self {
+    pub fn new(object: Object) -> Self {
         Self {
             object,
-            object_placement,
-            representation,
+            object_placement: OptionalParameter::omitted(),
+            representation: OptionalParameter::omitted(),
         }
+    }
+}
+
+pub trait ProductBuilder: Sized {
+    fn product_mut(&mut self) -> &mut Product;
+
+    fn object_placement(
+        mut self,
+        object_placement: impl Into<IdOr<LocalPlacement>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.product_mut().object_placement =
+            IdOr::Id(object_placement.into().into_id(ifc).id()).into();
+        self
+    }
+
+    fn representation(
+        mut self,
+        representation: impl Into<IdOr<ProductDefinitionShape>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.product_mut().representation = representation.into().into_id(ifc).id().into();
+        self
     }
 }
 
@@ -60,6 +86,12 @@ impl Deref for Product {
 
     fn deref(&self) -> &Self::Target {
         &self.object
+    }
+}
+
+impl DerefMut for Product {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.object
     }
 }
 

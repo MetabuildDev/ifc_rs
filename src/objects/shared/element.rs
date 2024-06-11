@@ -1,9 +1,9 @@
-use std::{fmt::Display, ops::Deref};
-
-use crate::{
-    id::Id,
-    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
 };
+
+use crate::parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser};
 
 use super::product::Product;
 
@@ -16,12 +16,24 @@ pub struct Element {
     /// The tag (or label) identifier at the particular instance of a product,
     /// e.g. the serial number, or the position number. It is the identifier
     /// at the occurrence level.
-    pub tag: OptionalParameter<Id>,
+    pub tag: OptionalParameter<Label>,
 }
 
 impl Element {
-    pub fn new(product: Product, tag: OptionalParameter<Id>) -> Self {
-        Self { product, tag }
+    pub fn new(product: Product) -> Self {
+        Self {
+            product,
+            tag: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait ElementBuilder: Sized {
+    fn element_mut(&mut self) -> &mut Element;
+
+    fn tag(mut self, tag: impl Into<Label>) -> Self {
+        self.element_mut().tag = tag.into().into();
+        self
     }
 }
 
@@ -30,6 +42,12 @@ impl Deref for Element {
 
     fn deref(&self) -> &Self::Target {
         &self.product
+    }
+}
+
+impl DerefMut for Element {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.product
     }
 }
 

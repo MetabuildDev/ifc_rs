@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use crate::parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser};
 
@@ -18,8 +21,20 @@ pub struct SpatialElement {
 }
 
 impl SpatialElement {
-    pub fn new(product: Product, long_name: OptionalParameter<Label>) -> Self {
-        Self { product, long_name }
+    pub fn new(product: Product) -> Self {
+        Self {
+            product,
+            long_name: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait SpatialElementBuilder: Sized {
+    fn spatial_element_mut(&mut self) -> &mut SpatialElement;
+
+    fn long_name(mut self, long_name: impl Into<Label>) -> Self {
+        self.spatial_element_mut().long_name = long_name.into().into();
+        self
     }
 }
 
@@ -28,6 +43,12 @@ impl Deref for SpatialElement {
 
     fn deref(&self) -> &Self::Target {
         &self.product
+    }
+}
+
+impl DerefMut for SpatialElement {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.product
     }
 }
 

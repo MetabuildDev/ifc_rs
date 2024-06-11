@@ -1,15 +1,19 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use super::{
     address::PostalAddress,
-    owner_history::OwnerHistory,
     shared::{
-        composition_type_enum::CompositionTypeEnum, object::Object, product::Product, root::Root,
-        spatial_element::SpatialElement, spatial_structure_element::SpatialStructureElement,
+        object::{Object, ObjectBuilder},
+        product::{Product, ProductBuilder},
+        root::{Root, RootBuilder},
+        spatial_element::{SpatialElement, SpatialElementBuilder},
+        spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
     },
 };
 use crate::{
-    geometry::{local_placement::LocalPlacement, product_definition_shape::ProductDefinitionShape},
     id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
@@ -42,47 +46,64 @@ pub struct Building {
 }
 
 impl Building {
-    pub fn new<'a>(
-        global_id: impl Into<Label>,
-        owner_history: impl Into<Option<IdOr<OwnerHistory>>>,
-        name: impl Into<Option<&'a str>>,
-        description: impl Into<Option<&'a str>>,
-        object_type: impl Into<Option<&'a str>>,
-        object_placement: impl Into<Option<IdOr<LocalPlacement>>>,
-        representation: impl Into<Option<IdOr<ProductDefinitionShape>>>,
-        composition_type_enum: impl Into<Option<CompositionTypeEnum>>,
-        elevation_of_ref_height: impl Into<Option<f64>>,
-        elevation_of_terrain: impl Into<Option<f64>>,
-        building_address: impl Into<Option<IdOr<PostalAddress>>>,
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+        Self {
+            spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
+                Product::new(Object::new(Root::new(global_id.into()))),
+            )),
+            elevation_of_ref_height: OptionalParameter::omitted(),
+            elevation_of_terrain: OptionalParameter::omitted(),
+            building_address: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn elevation_of_ref_height(mut self, elevation_of_ref_height: f64) -> Self {
+        self.elevation_of_ref_height = IfcFloat(elevation_of_ref_height).into();
+        self
+    }
+
+    pub fn elevation_of_terrain(mut self, elevation_of_terrain: f64) -> Self {
+        self.elevation_of_terrain = IfcFloat(elevation_of_terrain).into();
+        self
+    }
+
+    pub fn building_address(
+        mut self,
+        postal_address: impl Into<IdOr<PostalAddress>>,
         ifc: &mut IFC,
     ) -> Self {
-        Self {
-            spatial_element_structure: SpatialStructureElement::new(
-                SpatialElement::new(
-                    Product::new(
-                        Object::new(
-                            Root::new(
-                                global_id.into(),
-                                owner_history.into().map(|h| h.into_id(ifc).id()).into(),
-                                name.into().map(|s| s.into()).into(),
-                                description.into().map(|s| s.into()).into(),
-                            ),
-                            object_type.into().map(|s| s.into()).into(),
-                        ),
-                        object_placement
-                            .into()
-                            .map(|p| IdOr::Id(p.into_id(ifc).id()))
-                            .into(),
-                        representation.into().map(|r| r.into_id(ifc).id()).into(),
-                    ),
-                    OptionalParameter::omitted(),
-                ),
-                composition_type_enum.into().into(),
-            ),
-            elevation_of_ref_height: elevation_of_ref_height.into().map(|f| f.into()).into(),
-            elevation_of_terrain: elevation_of_terrain.into().map(|f| f.into()).into(),
-            building_address: building_address.into().map(|a| a.into_id(ifc).id()).into(),
-        }
+        self.building_address = postal_address.into().into_id(ifc).id().into();
+        self
+    }
+}
+
+impl RootBuilder for Building {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl ObjectBuilder for Building {
+    fn object_mut(&mut self) -> &mut Object {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl ProductBuilder for Building {
+    fn product_mut(&mut self) -> &mut Product {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl SpatialElementBuilder for Building {
+    fn spatial_element_mut(&mut self) -> &mut SpatialElement {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl SpatialStructureElementBuilder for Building {
+    fn spatial_structure_element_mut(&mut self) -> &mut SpatialStructureElement {
+        &mut self.spatial_element_structure
     }
 }
 
@@ -91,6 +112,12 @@ impl Deref for Building {
 
     fn deref(&self) -> &Self::Target {
         &self.spatial_element_structure
+    }
+}
+
+impl DerefMut for Building {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.spatial_element_structure
     }
 }
 

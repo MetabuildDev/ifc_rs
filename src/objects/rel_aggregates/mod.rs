@@ -32,6 +32,25 @@ pub struct RelAggregates {
     pub related_objects: IfcList<Id>,
 }
 
+impl RelAggregates {
+    // pub fn new(
+    //     global_id: Label,
+    //     owner_history: OptionalParameter<Id>,
+    //     name: OptionalParameter<Label>,
+    //     description: OptionalParameter<Label>,
+    //     relating_object: OptionalParameter<Id>,
+    //     related_objects: IfcList<Id>,
+    // ) -> Self {
+    //     Self {
+    //         root,
+    //         relating_object,
+    //         related_objects,
+    //     }
+    // }
+
+    // pub fn
+}
+
 impl Deref for RelAggregates {
     type Target = Root;
 

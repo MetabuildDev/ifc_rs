@@ -4,7 +4,12 @@ use comma::Comma;
 use label::Label;
 use optional::OptionalParameter;
 
-use crate::{id::Id, parser::*};
+use crate::{
+    id::{Id, IdOr},
+    objects::owner_history::OwnerHistory,
+    parser::*,
+    IFC,
+};
 
 /// IfcRoot is the most abstract and root class for all entity definitions
 /// that roots in the kernel or in subsequent layers of the IFC specification.
@@ -33,18 +38,36 @@ pub struct Root {
 }
 
 impl Root {
-    pub fn new(
-        global_id: Label,
-        owner_history: OptionalParameter<Id>,
-        name: OptionalParameter<Label>,
-        description: OptionalParameter<Label>,
-    ) -> Self {
+    pub fn new(global_id: Label) -> Self {
         Self {
             global_id,
-            owner_history,
-            name,
-            description,
+            owner_history: OptionalParameter::omitted(),
+            name: OptionalParameter::omitted(),
+            description: OptionalParameter::omitted(),
         }
+    }
+}
+
+pub trait RootBuilder: Sized {
+    fn root_mut(&mut self) -> &mut Root;
+
+    fn owner_history(
+        mut self,
+        owner_history: impl Into<IdOr<OwnerHistory>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.root_mut().owner_history = owner_history.into().into_id(ifc).id().into();
+        self
+    }
+
+    fn name(mut self, name: impl Into<Label>) -> Self {
+        self.root_mut().name = name.into().into();
+        self
+    }
+
+    fn description(mut self, description: impl Into<Label>) -> Self {
+        self.root_mut().description = description.into().into();
+        self
     }
 }
 

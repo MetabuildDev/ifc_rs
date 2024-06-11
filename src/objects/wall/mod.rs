@@ -1,15 +1,18 @@
 mod deserialize;
 mod serialize;
 
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use super::{
-    owner_history::OwnerHistory,
-    shared::{element::Element, object::Object, product::Product, root::Root},
+    shared::{
+        element::{Element, ElementBuilder},
+        object::{Object, ObjectBuilder},
+        product::{Product, ProductBuilder},
+        root::{Root, RootBuilder},
+    },
     walltype::WallType,
 };
 use crate::{
-    geometry::{local_placement::LocalPlacement, product_definition_shape::ProductDefinitionShape},
     id::IdOr,
     ifc_type::IfcType,
     parser::{label::Label, optional::OptionalParameter},
@@ -32,39 +35,44 @@ pub struct Wall {
 }
 
 impl Wall {
-    pub fn new<'a>(
-        global_id: impl Into<Label>,
-        owner_history: impl Into<Option<IdOr<OwnerHistory>>>,
-        name: impl Into<Option<&'a str>>,
-        description: impl Into<Option<&'a str>>,
-        object_type: impl Into<Option<&'a str>>,
-        object_placement: impl Into<Option<IdOr<LocalPlacement>>>,
-        representation: impl Into<Option<IdOr<ProductDefinitionShape>>>,
-        predefined_type: impl Into<Option<IdOr<WallType>>>,
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+        Self {
+            element: Element::new(Product::new(Object::new(Root::new(global_id.into())))),
+            predefined_type: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn predefined_type(
+        mut self,
+        predefined_type: impl Into<IdOr<WallType>>,
         ifc: &mut IFC,
     ) -> Self {
-        Self {
-            element: Element::new(
-                Product::new(
-                    Object::new(
-                        Root::new(
-                            global_id.into(),
-                            owner_history.into().map(|h| h.into_id(ifc).id()).into(),
-                            name.into().map(|s| s.into()).into(),
-                            description.into().map(|s| s.into()).into(),
-                        ),
-                        object_type.into().map(|s| s.into()).into(),
-                    ),
-                    object_placement
-                        .into()
-                        .map(|p| IdOr::Id(p.into_id(ifc).id()))
-                        .into(),
-                    representation.into().map(|r| r.into_id(ifc).id()).into(),
-                ),
-                OptionalParameter::omitted(),
-            ),
-            predefined_type: predefined_type.into().into(),
-        }
+        self.predefined_type = predefined_type.into().into_id(ifc).into();
+        self
+    }
+}
+
+impl RootBuilder for Wall {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.element
+    }
+}
+
+impl ObjectBuilder for Wall {
+    fn object_mut(&mut self) -> &mut Object {
+        &mut self.element
+    }
+}
+
+impl ProductBuilder for Wall {
+    fn product_mut(&mut self) -> &mut Product {
+        &mut self.element
+    }
+}
+
+impl ElementBuilder for Wall {
+    fn element_mut(&mut self) -> &mut Element {
+        &mut self.element
     }
 }
 
@@ -73,6 +81,12 @@ impl Deref for Wall {
 
     fn deref(&self) -> &Self::Target {
         &self.element
+    }
+}
+
+impl DerefMut for Wall {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.element
     }
 }
 
@@ -98,6 +112,7 @@ pub mod test {
     use crate::objects::owner_history::OwnerHistory;
     use crate::objects::person::Person;
     use crate::objects::person_and_org::PersonAndOrganization;
+    use crate::objects::shared::{product::ProductBuilder, root::RootBuilder};
     use crate::objects::wall::Wall;
     use crate::parser::timestamp::IfcTimestamp;
     use crate::parser::IFCParse;
@@ -181,10 +196,6 @@ pub mod test {
                 }
             }
 
-            if let Some(tag) = wall.tag.custom().map(|&id| ifc.data.get_untyped(id)) {
-                println!("\ttag: {tag}");
-            }
-
             if let Some(id_or) = wall.predefined_type.custom() {
                 match id_or {
                     IdOr::Id(id) => println!("\twall_type: {}", ifc.data.get_untyped(*id)),
@@ -231,17 +242,10 @@ pub mod test {
 
         let representation = new_product_definition_shape(&mut ifc, axis_id);
 
-        let wall = Wall::new(
-            "global_id_example",
-            IdOr::from(owner_history),
-            "example_name",
-            "example_description",
-            "example_object_type",
-            IdOr::from(local_placement),
-            IdOr::from(representation),
-            None,
-            &mut ifc,
-        );
+        let wall = Wall::new("global_id_example")
+            .owner_history(owner_history, &mut ifc)
+            .object_placement(local_placement, &mut ifc)
+            .representation(representation, &mut ifc);
 
         ifc.data.insert_new(wall);
 

@@ -15,6 +15,7 @@ pub mod organization;
 pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
+pub mod prelude;
 pub mod project;
 pub mod rel_aggregates;
 pub mod rel_associates_material;

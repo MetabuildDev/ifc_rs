@@ -1,3 +1,4 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
 use crate::parser::comma::Comma;
@@ -21,8 +22,20 @@ pub struct Object {
 }
 
 impl Object {
-    pub fn new(root: Root, object_type: OptionalParameter<Label>) -> Self {
-        Self { root, object_type }
+    pub fn new(root: Root) -> Self {
+        Self {
+            root,
+            object_type: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait ObjectBuilder: Sized {
+    fn object_mut(&mut self) -> &mut Object;
+
+    fn object_type(mut self, object_type: impl Into<Label>) -> Self {
+        self.object_mut().object_type = object_type.into().into();
+        self
     }
 }
 
@@ -31,6 +44,12 @@ impl Deref for Object {
 
     fn deref(&self) -> &Self::Target {
         &self.root
+    }
+}
+
+impl DerefMut for Object {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.root
     }
 }
 

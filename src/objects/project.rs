@@ -1,17 +1,15 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::geometry::representation_context::GeometricRepresentationContext;
-use crate::id::IdOr;
 use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
+use crate::parser::optional::OptionalParameter;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
-use crate::units::assignment::UnitAssigment;
-use crate::IFC;
+use crate::prelude::{ContextBuilder, RootBuilder};
 
-use super::owner_history::OwnerHistory;
 use super::shared::context::Context;
 use super::shared::root::Root;
 
@@ -29,38 +27,29 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn new<'a>(
-        global_id: impl Into<Label>,
-        owner_history: impl Into<Option<IdOr<OwnerHistory>>>,
-        name: impl Into<Option<&'a str>>,
-        description: impl Into<Option<&'a str>>,
-        object_type: impl Into<Option<&'a str>>,
-        long_name: impl Into<Option<&'a str>>,
-        phase: impl Into<Option<&'a str>>,
-        representation_context: impl IntoIterator<Item = IdOr<GeometricRepresentationContext>>,
-        units_in_context: impl Into<Option<IdOr<UnitAssigment>>>,
-        ifc: &mut IFC,
-    ) -> Self {
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
         Self {
             context: Context::new(
-                Root::new(
-                    global_id.into(),
-                    owner_history.into().map(|h| h.into_id(ifc).id()).into(),
-                    name.into().map(|s| s.into()).into(),
-                    description.into().map(|s| s.into()).into(),
-                ),
-                object_type.into().map(|s| s.into()).into(),
-                long_name.into().map(|s| s.into()).into(),
-                phase.into().map(|s| s.into()).into(),
-                IfcList(
-                    representation_context
-                        .into_iter()
-                        .map(|id_or| id_or.into_id(ifc).id())
-                        .collect(),
-                ),
-                units_in_context.into().map(|u| u.into_id(ifc).id()).into(),
+                Root::new(global_id.into()),
+                OptionalParameter::omitted(),
+                OptionalParameter::omitted(),
+                OptionalParameter::omitted(),
+                IfcList(Vec::new()),
+                OptionalParameter::omitted(),
             ),
         }
+    }
+}
+
+impl ContextBuilder for Project {
+    fn context_mut(&mut self) -> &mut Context {
+        &mut self.context
+    }
+}
+
+impl RootBuilder for Project {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.context
     }
 }
 
@@ -69,6 +58,12 @@ impl Deref for Project {
 
     fn deref(&self) -> &Self::Target {
         &self.context
+    }
+}
+
+impl DerefMut for Project {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.context
     }
 }
 
