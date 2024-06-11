@@ -11,21 +11,9 @@ use crate::parser::{p_quote_word, IFCParse, IFCParser};
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Label(pub String);
 
-impl From<String> for Label {
-    fn from(value: String) -> Self {
-        Self(value)
-    }
-}
-
-impl From<&String> for Label {
-    fn from(value: &String) -> Self {
-        Self(value.clone())
-    }
-}
-
-impl From<&str> for Label {
-    fn from(value: &str) -> Self {
-        Self(value.to_string())
+impl<S: AsRef<str>> From<S> for Label {
+    fn from(value: S) -> Self {
+        Self(value.as_ref().to_string())
     }
 }
 
