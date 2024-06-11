@@ -11,7 +11,7 @@ use meta::{
     header::{
         description::{FileDescription, ImplementationLevel},
         details::FileDetails,
-        schema::FileSchemas,
+        schema::{FileSchema, FileSchemas},
         Header,
     },
     version::Version,
@@ -63,7 +63,7 @@ impl Default for IFC {
                     implementation_level: ImplementationLevel::_2_1,
                 },
                 name: FileDetails::default(),
-                schema: FileSchemas(Vec::new()),
+                schema: FileSchemas(vec![FileSchema::IFC4x2]),
             },
             data: Default::default(),
             footer: Footer {

@@ -56,7 +56,11 @@ impl Display for FileDetails {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "'{name}'", name = self.name.0)?;
         write!(f, ",")?;
-        write!(f, "'{time}'", time = self.timestamp.0)?;
+        write!(
+            f,
+            "'{time}'",
+            time = self.timestamp.0.format("%Y-%m-%dT%H:%M:%S")
+        )?;
         write!(f, ",")?;
         write!(
             f,

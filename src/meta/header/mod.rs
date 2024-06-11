@@ -60,8 +60,15 @@ pub mod details {
 
     #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct FileName(pub String);
-    #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct TimeStamp(pub chrono::DateTime<Utc>);
+
+    impl Default for TimeStamp {
+        fn default() -> Self {
+            Self(Utc::now())
+        }
+    }
+
     #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct Author(pub String);
     #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
