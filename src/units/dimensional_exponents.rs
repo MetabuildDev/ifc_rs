@@ -27,7 +27,7 @@ type ExponentType = i32;
 /// # EXAMPLE
 /// A velocity of 2 millimetres per second has a length exponent of 1 and a time exponent of -1.
 /// The remaining exponents are equal to 0.
-pub struct DimensionalExponent {
+pub struct DimensionalExponents {
     /// The power of the length base quantity.
     pub length: ExponentType,
     /// The power of the mass base quantity.
@@ -44,11 +44,11 @@ pub struct DimensionalExponent {
     pub luminouse_intensity: ExponentType,
 }
 
-impl Display for DimensionalExponent {
+impl Display for DimensionalExponents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "IFCDIMENSIONALEXPONENT({},{},{},{},{},{},{});",
+            "IFCDIMENSIONALEXPONENTS({},{},{},{},{},{},{});",
             self.length,
             self.mass,
             self.time,
@@ -60,16 +60,16 @@ impl Display for DimensionalExponent {
     }
 }
 
-impl IfcType for DimensionalExponent {}
+impl IfcType for DimensionalExponents {}
 
-impl IFCParse for DimensionalExponent {
+impl IFCParse for DimensionalExponents {
     fn parse<'a>() -> impl super::IFCParser<'a, Self>
     where
         Self: Sized,
     {
         winnow::seq! {
             Self {
-                _: p_space_or_comment_surrounded("IFCDIMENSIONALEXPONENT("),
+                _: p_space_or_comment_surrounded("IFCDIMENSIONALEXPONENTS("),
                 length: dec_int,
                 _: Comma::parse(),
                 mass: dec_int,
@@ -93,14 +93,14 @@ impl IFCParse for DimensionalExponent {
 mod test {
     use winnow::Parser;
 
-    use super::DimensionalExponent;
+    use super::DimensionalExponents;
     use crate::units::IFCParse;
 
     #[test]
     fn dimensional_exponent_round_trip() {
-        let example = "IFCDIMENSIONALEXPONENT(0,0,0,0,0,0,0);";
+        let example = "IFCDIMENSIONALEXPONENTS(0,0,0,0,0,0,0);";
 
-        let parsed = DimensionalExponent::parse().parse(example).unwrap();
+        let parsed = DimensionalExponents::parse().parse(example).unwrap();
         let str = parsed.to_string();
 
         assert_eq!(example, str);

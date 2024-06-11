@@ -1,6 +1,6 @@
 pub mod assignment;
 pub mod conversion_based_unit;
-pub mod dimensional_exponent;
+pub mod dimensional_exponents;
 pub mod name;
 pub mod prefix;
 pub mod prelude;
@@ -25,6 +25,7 @@ impl Units {
             assignment::UnitAssigment::parse_any(),
             conversion_based_unit::ConversionBasedUnit::parse_any(),
             si_unit::SiUnit::parse_any(),
+            dimensional_exponents::DimensionalExponents::parse_any(),
         ))
     }
 }
