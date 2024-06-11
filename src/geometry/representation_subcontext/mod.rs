@@ -35,11 +35,39 @@ use super::representation_context::GeometricRepresentationContext;
 pub struct GeometricRepresentationSubContext {
     // first six fields inherited from IfcGeometricRepresentationContext
     //
+    /// The optional identifier of the representation context as used within a project.
     pub context_identifier: OptionalParameter<Label>,
+    /// The description of the type of a representation context. The supported values for context
+    /// type are to be specified by implementers agreements.
     pub context_type: OptionalParameter<Label>,
+    /// The integer dimension count of the coordinate space modeled in a geometric representation
+    /// context.
     pub coord_space_dimension: OptionalParameter<DimensionCount>,
+    /// Value of the model precision for geometric models. It is a double value (REAL), typically
+    /// in 1E-5 to 1E-8 range, that indicates the tolerance under which two given points are still
+    /// assumed to be identical. The value can be used e.g. to sets the maximum distance from an
+    /// edge curve to the underlying face surface in brep models.
     pub precision: OptionalParameter<IfcFloat>,
+    /// Establishment of the engineering coordinate system (often referred to as the world
+    /// coordinate system in CAD) for all representation contexts used by the project.
+    ///
+    /// NOTE  It can be used to provide better numeric stability if the placement of the
+    /// building(s) is far away from the origin. In most cases however it would be set to origin:
+    /// (0.,0.,0.) and directions x(1.,0.,0.), y(0.,1.,0.), z(0.,0.,1.).
+    ///
+    /// If an geographic placement is provided using IfcMapConversion then the
+    /// WorldCoordinateSystem atttibute is used to define the offset between the zero point of the
+    /// local engineering coordinate system and the geographic reference point to which the
+    /// IfcMapConversion offset relates. In preferred practise both points (also called "project
+    /// base point" and "survey point") should be coincidental. However it is possible to offset
+    /// the geographic reference point from the local zero point.
     pub world_coord_system: OptionalParameter<Id>,
+    ///	Direction of the true north, or geographic northing direction, relative to the underlying
+    ///	project coordinate system. It is given by a 2 dimensional direction within the xy-plane of
+    ///	the project coordinate system. If not present, it defaults to 0. 1., meaning that the
+    ///	positive Y axis of the project coordinate system equals the geographic northing direction.
+    ///
+    /// NOTE  If a geographic placement is provided using IfcMapConversion then the true north is for information only. In case of inconsistency, the value provided with IfcMapConversion shall take precedence.
     pub true_north: OptionalParameter<Id>,
 
     /// Parent context from which the sub context derives its world coordinate
