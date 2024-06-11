@@ -11,6 +11,7 @@ use super::{
         root::{Root, RootBuilder},
     },
     walltype::WallType,
+    Structure,
 };
 use crate::{
     id::IdOr,
@@ -91,6 +92,7 @@ impl DerefMut for Wall {
 }
 
 impl IfcType for Wall {}
+impl Structure for Wall {}
 
 #[cfg(test)]
 pub mod test {
@@ -219,28 +221,22 @@ pub mod test {
         );
         let application_id = ifc.data.insert_new(application);
 
-        let owner_history = OwnerHistory::new(
-            PersonAndOrganization::new(
-                person_id.clone(),
-                Organization::new(None, "organization_name", None),
-                Vec::new(),
-                &mut ifc,
-            ),
-            application_id.clone(),
-            None,
-            ChangeAction::Added,
-            None,
-            person_id,
-            application_id,
-            IfcTimestamp::now(),
+        let person_and_org = PersonAndOrganization::new(
+            person_id.clone(),
+            Organization::new(None, "organization_name", None),
+            Vec::new(),
             &mut ifc,
         );
+
+        let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
+            .owning_user(person_and_org, &mut ifc)
+            .owning_application(application_id, &mut ifc);
 
         let axis = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
         let axis_id = ifc.data.insert_new(axis);
         let local_placement = LocalPlacement::new(axis_id.clone(), &mut ifc);
 
-        let representation = new_product_definition_shape(&mut ifc, axis_id);
+        let representation = new_product_definition_shape(&mut ifc, axis_id.into());
 
         let wall = Wall::new("global_id_example")
             .owner_history(owner_history, &mut ifc)

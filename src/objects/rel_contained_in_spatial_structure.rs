@@ -1,14 +1,19 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::Id;
+use crate::id::IdOr;
 use crate::ifc_type::IfcType;
 use crate::parser::comma::Comma;
+use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::RootBuilder;
+use crate::IFC;
 
 use super::shared::root::Root;
+use super::Structure;
 
 /// This objectified relationship, IfcRelContainedInSpatialStructure,
 /// is used to assign elements to a certain level of the spatial project
@@ -29,6 +34,38 @@ pub struct RelContainedInSpatialStructure {
     /// contained. Any element can only be contained within one
     /// element of the project spatial structure.
     pub relating_structure: Id,
+}
+
+impl RelContainedInSpatialStructure {
+    pub fn new<S: Structure>(
+        global_id: impl Into<Label>,
+        relating_structure: impl Into<IdOr<S>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            root: Root::new(global_id.into()),
+            related_elements: IfcList::empty(),
+            relating_structure: relating_structure.into().into_id(ifc).id(),
+        }
+    }
+
+    pub fn relate_structure<S: Structure>(
+        mut self,
+        structure: impl Into<IdOr<S>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.related_elements
+            .0
+            .push(structure.into().into_id(ifc).id());
+
+        self
+    }
+}
+
+impl RootBuilder for RelContainedInSpatialStructure {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.root
+    }
 }
 
 impl Deref for RelContainedInSpatialStructure {

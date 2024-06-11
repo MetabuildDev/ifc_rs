@@ -47,14 +47,14 @@ pub struct GeometricRepresentationContext {
 }
 
 impl GeometricRepresentationContext {
-    pub fn new(
+    pub fn new<A: AxisPlacement>(
         context_type: impl Into<Label>,
         coord_space_dimension: DimensionCount,
         precision: impl Into<Option<f64>>,
-        world_coord_system: IdOr<impl AxisPlacement>,
+        world_coord_system: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
-        let id = world_coord_system.into_id(ifc);
+        let id = world_coord_system.into().into_id(ifc);
 
         Self {
             context_identifier: OptionalParameter::omitted(),

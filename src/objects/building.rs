@@ -12,6 +12,7 @@ use super::{
         spatial_element::{SpatialElement, SpatialElementBuilder},
         spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
     },
+    Structure,
 };
 use crate::{
     id::{Id, IdOr},
@@ -155,6 +156,7 @@ impl Display for Building {
 }
 
 impl IfcType for Building {}
+impl Structure for Building {}
 
 #[cfg(test)]
 mod test {

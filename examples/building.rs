@@ -2,10 +2,13 @@ use glam::DVec3;
 use ifc4::{
     geometry::{
         axis::Axis3D, dimension_count::DimensionCount, geometric_projection::GeometricProjection,
-        point::Point3D, representation_context::GeometricRepresentationContext,
+        local_placement::LocalPlacement, point::Point3D, polyline::PolyLine,
+        product_definition_shape::ProductDefinitionShape,
+        representation_context::GeometricRepresentationContext,
         representation_subcontext::GeometricRepresentationSubContext,
+        shape_representation::ShapeRepresentation,
     },
-    id::IdOr,
+    id::TypedId,
     parser::timestamp::IfcTimestamp,
     prelude::*,
     units::{
@@ -33,10 +36,10 @@ fn main() {
     let world_root_id = ifc.data.insert_new(world_root);
 
     let context = GeometricRepresentationContext::new(
-        "Model",
+        "ExampleContext",
         DimensionCount::Three,
         0.01,
-        world_root_id,
+        world_root_id.id_or(),
         &mut ifc,
     );
     let context_id = ifc.data.insert_new(context);
@@ -49,12 +52,45 @@ fn main() {
         &mut ifc,
     );
 
-    let project = Project::new("project_example_id")
-        .owner_history(owner_history.clone(), &mut ifc)
+    let project = Project::new("ExampleProject")
+        .owner_history(owner_history.id(), &mut ifc)
         .unit_assignment(unit_assignment, &mut ifc)
         .add_context(context_id, &mut ifc);
 
-    let building = Building::new("Building_example_id").owner_history(owner_history, &mut ifc);
+    let building = Building::new("ExampleBuilding").owner_history(owner_history.id(), &mut ifc);
+    let building_id = ifc.data.insert_new(building);
+
+    let project_building_relation = RelAggregates::new("ProjectBuildingLink")
+        .relate_project_with_buildings(project, [building_id.id().into()], &mut ifc);
+    ifc.data.insert_new(project_building_relation);
+
+    let shape_repr = ShapeRepresentation::new(sub_context, &mut ifc).add_item(
+        PolyLine::from_3d(
+            [
+                DVec3::new(0.0, 0.0, 0.0).into(),
+                DVec3::new(1.0, 0.0, 0.0).into(),
+                DVec3::new(1.0, 1.0, 0.0).into(),
+                DVec3::new(0.0, 1.0, 0.0).into(),
+            ]
+            .into_iter(),
+            &mut ifc,
+        ),
+        &mut ifc,
+    );
+
+    let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, &mut ifc);
+
+    let local_placement = LocalPlacement::new(world_root_id, &mut ifc);
+
+    let wall = Wall::new("ExampleWall")
+        .owner_history(owner_history.id(), &mut ifc)
+        .object_placement(local_placement, &mut ifc)
+        .representation(product_shape, &mut ifc);
+
+    let spatial_relation =
+        RelContainedInSpatialStructure::new("BuildingWallLink", building_id, &mut ifc)
+            .relate_structure(wall, &mut ifc);
+    ifc.data.insert_new(spatial_relation);
 
     write("examples/building_example.ifc", ifc.to_string()).unwrap();
 }
@@ -64,7 +100,7 @@ fn create_person_and_applicaton(
     person_name: &str,
     application_name: &str,
     application_id: &str,
-) -> (IdOr<Person>, IdOr<Application>) {
+) -> (TypedId<Person>, TypedId<Application>) {
     let person = Person::empty().id(person_name).given_name(person_name);
     let person_id = ifc.data.insert_new(person);
 
@@ -83,25 +119,22 @@ fn create_person_and_applicaton(
 fn create_owner_history(
     ifc: &mut IFC,
     organization_name: &str,
-    person: IdOr<Person>,
-    application: IdOr<Application>,
-) -> IdOr<OwnerHistory> {
-    let owner_history = OwnerHistory::new(
-        PersonAndOrganization::new(
-            person.clone(),
-            Organization::new(None, organization_name, None),
-            Vec::new(),
-            ifc,
-        ),
-        application.clone(),
-        None,
-        ChangeAction::Added,
-        None,
-        person,
-        application,
-        IfcTimestamp::now(),
+    person: TypedId<Person>,
+    application: TypedId<Application>,
+) -> TypedId<OwnerHistory> {
+    let person_and_org = PersonAndOrganization::new(
+        person.clone(),
+        Organization::new(None, organization_name, None),
+        Vec::new(),
         ifc,
     );
+
+    let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
+        .owning_user(person_and_org, ifc)
+        .owning_application(application.id_or(), ifc)
+        .last_modified_date(IfcTimestamp::now())
+        .last_modifying_user(person, ifc)
+        .last_modifying_application(application, ifc);
 
     ifc.data.insert_new(owner_history)
 }

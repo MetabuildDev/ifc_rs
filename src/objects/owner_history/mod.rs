@@ -24,13 +24,13 @@ pub struct OwnerHistory {
     /// Note that IFC includes the concept of ownership transfer from one
     /// user to another and therefore distinguishes between the Owning User
     /// and Creating User.
-    pub owning_user: Id,
+    pub owning_user: OptionalParameter<Id>,
     /// Direct reference to the application which currently "Owns" this object
     /// on behalf of the owning user, who uses this application.
     /// Note that IFC includes the concept of ownership transfer from one
     /// app to another and therefore distinguishes between the Owning
     /// Application and Creating Application.
-    pub owning_application: Id,
+    pub owning_application: OptionalParameter<Id>,
     /// Enumeration that defines the current access state of the object.
     pub state: OptionalParameter<AccessState>,
     /// Enumeration that defines the actions associated with changes made to
@@ -47,36 +47,64 @@ pub struct OwnerHistory {
 }
 
 impl OwnerHistory {
-    pub fn new(
-        owning_user: impl Into<IdOr<PersonAndOrganization>>,
-        owning_application: impl Into<IdOr<Application>>,
-        state: impl Into<Option<AccessState>>,
-        change_action: ChangeAction,
-        last_modified_date: impl Into<Option<IfcTimestamp>>,
-        last_modifying_user: impl Into<Option<IdOr<Person>>>,
-        last_modifying_application: impl Into<Option<IdOr<Application>>>,
-        creation_date: IfcTimestamp,
-        ifc: &mut IFC,
-    ) -> Self {
-        let owning_user_id = owning_user.into().into_id(ifc);
-        let owning_application_id = owning_application.into().into_id(ifc);
-
+    pub fn new(change_action: ChangeAction, creation_date: IfcTimestamp) -> Self {
         Self {
-            owning_user: owning_user_id.id(),
-            owning_application: owning_application_id.id(),
-            state: state.into().into(),
+            owning_user: OptionalParameter::omitted(),
+            owning_application: OptionalParameter::omitted(),
+            state: OptionalParameter::omitted(),
             change_action,
-            last_modified_date: last_modified_date.into().into(),
-            last_modifying_user: last_modifying_user
-                .into()
-                .map(|i| i.into_id(ifc).id())
-                .into(),
-            last_modifying_application: last_modifying_application
-                .into()
-                .map(|i| i.into_id(ifc).id())
-                .into(),
+            last_modified_date: OptionalParameter::omitted(),
+            last_modifying_user: OptionalParameter::omitted(),
+            last_modifying_application: OptionalParameter::omitted(),
             creation_date,
         }
+    }
+
+    pub fn owning_user(
+        mut self,
+        owning_user: impl Into<IdOr<PersonAndOrganization>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.owning_user = owning_user.into().into_id(ifc).id().into();
+        self
+    }
+
+    pub fn owning_application(
+        mut self,
+        owning_application: impl Into<IdOr<Application>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.owning_application = owning_application.into().into_id(ifc).id().into();
+        self
+    }
+
+    pub fn state(mut self, state: AccessState) -> Self {
+        self.state = state.into();
+        self
+    }
+
+    pub fn last_modified_date(mut self, last_modified_date: IfcTimestamp) -> Self {
+        self.last_modified_date = last_modified_date.into();
+        self
+    }
+
+    pub fn last_modifying_user(
+        mut self,
+        last_modifying_user: impl Into<IdOr<Person>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.last_modifying_user = last_modifying_user.into().into_id(ifc).id().into();
+        self
+    }
+
+    pub fn last_modifying_application(
+        mut self,
+        last_modifying_application: impl Into<IdOr<Application>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.last_modifying_application =
+            last_modifying_application.into().into_id(ifc).id().into();
+        self
     }
 }
 

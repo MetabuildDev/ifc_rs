@@ -26,6 +26,8 @@ pub mod shared;
 pub mod wall;
 pub mod walltype;
 
+pub trait Structure: IfcType {}
+
 pub struct Objects;
 
 impl Objects {

@@ -30,3 +30,4 @@ pub use super::shared::{
 };
 pub use super::wall::Wall;
 pub use super::walltype::{type_enum::WallTypeEnum, WallType};
+pub use super::Structure;

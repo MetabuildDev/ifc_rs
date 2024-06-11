@@ -60,25 +60,30 @@ pub struct ShapeRepresentation {
 }
 
 impl ShapeRepresentation {
-    pub fn new(
-        context: impl Into<IdOr<GeometricRepresentationSubContext>>,
-        identifier: impl Into<Label>,
-        repr_type: impl Into<Label>,
-        ifc: &mut IFC,
-    ) -> Self {
-        let context_id = context.into().into_id(ifc);
-
+    pub fn new(context: impl Into<IdOr<GeometricRepresentationSubContext>>, ifc: &mut IFC) -> Self {
         Self {
-            context_of_items: context_id.id(),
-            representation_identifier: identifier.into().into(),
-            representation_type: repr_type.into().into(),
-            items: IfcList(Vec::new()),
+            context_of_items: context.into().into_id(ifc).id(),
+            representation_identifier: OptionalParameter::omitted(),
+            representation_type: OptionalParameter::omitted(),
+            items: IfcList::empty(),
         }
     }
 
-    pub fn add_item<ITEM: ShapeItem>(&mut self, item: ITEM, ifc: &mut IFC) {
+    pub fn identifier(mut self, identifier: impl Into<Label>) -> Self {
+        self.representation_identifier = identifier.into().into();
+        self
+    }
+
+    pub fn repr_type(mut self, repr_type: impl Into<Label>) -> Self {
+        self.representation_type = repr_type.into().into();
+        self
+    }
+
+    pub fn add_item<ITEM: ShapeItem>(mut self, item: ITEM, ifc: &mut IFC) -> Self {
         let item_id = ifc.data.insert_new(item);
         self.items.0.push(item_id.id());
+
+        self
     }
 
     pub fn items<'a>(&'a self, ifc: &'a IFC) -> impl Iterator<Item = ShapeItems<'a>> {

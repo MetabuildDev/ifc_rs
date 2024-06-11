@@ -4,7 +4,7 @@ mod serialize;
 use std::collections::BTreeMap;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{Id, TypedId},
     ifc_type::IfcType,
 };
 
@@ -14,7 +14,7 @@ use crate::{
 pub struct DataMap(BTreeMap<Id, Box<dyn IfcType>>);
 
 impl DataMap {
-    pub fn insert_new<T: IfcType + 'static>(&mut self, value: T) -> IdOr<T> {
+    pub fn insert_new<T: IfcType + 'static>(&mut self, value: T) -> TypedId<T> {
         let new_id = self
             .0
             .keys()
@@ -25,7 +25,7 @@ impl DataMap {
 
         self.insert(new_id, value);
 
-        IdOr::Id(new_id)
+        TypedId::new(new_id)
     }
 
     pub fn insert<T: IfcType + 'static>(&mut self, id: Id, value: T) -> Option<Box<dyn IfcType>> {

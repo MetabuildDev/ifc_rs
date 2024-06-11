@@ -2,7 +2,7 @@ pub mod deserialize;
 pub mod serialize;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     IFC,
@@ -36,22 +36,34 @@ pub struct ProductDefinitionShape {
 }
 
 impl ProductDefinitionShape {
-    pub fn new<NAME: Into<Label>, DESC: Into<Label>>(
-        name: impl Into<Option<NAME>>,
-        description: impl Into<Option<DESC>>,
-        represenations: impl IntoIterator<Item = ShapeRepresentation>,
+    pub fn new() -> Self {
+        Self {
+            name: OptionalParameter::omitted(),
+            description: OptionalParameter::omitted(),
+            representations: IfcList::empty(),
+        }
+    }
+
+    pub fn name(mut self, name: impl Into<Label>) -> Self {
+        self.name = name.into().into();
+        self
+    }
+
+    pub fn description(mut self, description: impl Into<Label>) -> Self {
+        self.description = description.into().into();
+        self
+    }
+
+    pub fn add_representation(
+        mut self,
+        representation: impl Into<IdOr<ShapeRepresentation>>,
         ifc: &mut IFC,
     ) -> Self {
-        let id = represenations
-            .into_iter()
-            .map(|reprs| ifc.data.insert_new(reprs).id())
-            .collect();
+        self.representations
+            .0
+            .push(representation.into().into_id(ifc).id());
 
-        Self {
-            name: name.into().map(|s| s.into()).into(),
-            description: description.into().map(|s| s.into()).into(),
-            representations: IfcList(id),
-        }
+        self
     }
 }
 
@@ -95,26 +107,21 @@ pub mod test {
             ifc,
         );
 
-        let shapes = vec![{
-            let mut s = ShapeRepresentation::new(sub_context, "first_shape", "", ifc);
-            s.add_item(
-                PolyLine::from_3d(
-                    [
-                        DVec3::new(0.0, 0.0, 0.0).into(),
-                        DVec3::new(1.0, 0.0, 0.0).into(),
-                        DVec3::new(1.0, 1.0, 0.0).into(),
-                        DVec3::new(0.0, 1.0, 0.0).into(),
-                    ]
-                    .into_iter(),
-                    ifc,
-                ),
+        let shape = ShapeRepresentation::new(sub_context, ifc).add_item(
+            PolyLine::from_3d(
+                [
+                    DVec3::new(0.0, 0.0, 0.0).into(),
+                    DVec3::new(1.0, 0.0, 0.0).into(),
+                    DVec3::new(1.0, 1.0, 0.0).into(),
+                    DVec3::new(0.0, 1.0, 0.0).into(),
+                ]
+                .into_iter(),
                 ifc,
-            );
+            ),
+            ifc,
+        );
 
-            s
-        }];
-
-        ProductDefinitionShape::new::<&str, &str>(None, None, shapes, ifc)
+        ProductDefinitionShape::new().add_representation(shape, ifc)
     }
 
     #[test]
@@ -124,7 +131,7 @@ pub mod test {
         let axis = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
         let axis_id = ifc.data.insert_new(axis);
 
-        let shape = new_product_definition_shape(&mut ifc, axis_id);
+        let shape = new_product_definition_shape(&mut ifc, axis_id.into());
         ifc.data.insert_new(shape);
 
         println!("{}", ifc.data);
