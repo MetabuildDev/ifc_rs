@@ -1,6 +1,13 @@
-use glam::DVec3;
-use ifc4::prelude::*;
+use glam::{DVec2, DVec3};
+use ifc4::{objects::shared::rel_associates::RelAssociatesBuilder, prelude::*};
 use std::fs::write;
+
+struct VerticalWallParameter {
+    pub height: f64,
+    pub thickness: f64,
+    pub start: f64,
+    pub length: f64,
+}
 
 fn main() {
     let mut ifc = IFC::default();
@@ -19,61 +26,99 @@ fn main() {
     let world_root = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
     let world_root_id = ifc.data.insert_new(world_root);
 
-    let context = GeometricRepresentationContext::new(
-        "ExampleContext",
-        DimensionCount::Three,
-        0.01,
-        world_root_id.id_or(),
-        &mut ifc,
-    );
+    let context =
+        GeometricRepresentationContext::new(DimensionCount::Three, world_root_id.id_or(), &mut ifc)
+            .context_identifier("ExampleContext");
     let context_id = ifc.data.insert_new(context);
 
     let project = Project::new("ExampleProject")
         .owner_history(owner_history.id(), &mut ifc)
         .unit_assignment(unit_assignment, &mut ifc)
         .add_context(context_id.id(), &mut ifc);
+    let project_id = ifc.data.insert_new(project);
 
     let building = Building::new("ExampleBuilding").owner_history(owner_history.id(), &mut ifc);
     let building_id = ifc.data.insert_new(building);
 
     let project_building_relation = RelAggregates::new("ProjectBuildingLink")
-        .relate_project_with_buildings(project, [building_id.id().into()], &mut ifc);
+        .relate_project_with_buildings(project_id.id(), [building_id.id().into()], &mut ifc);
     ifc.data.insert_new(project_building_relation);
 
     let sub_context = GeometricRepresentationSubContext::derive(
         context_id.id(),
-        None,
         GeometricProjection::ModelView,
-        None,
         &mut ifc,
     );
 
-    let shape_repr = ShapeRepresentation::new(sub_context, &mut ifc).add_item(
-        PolyLine::from_3d(
-            [
-                DVec3::new(0.0, 0.0, 0.0).into(),
-                DVec3::new(1.0, 0.0, 0.0).into(),
-                DVec3::new(1.0, 1.0, 0.0).into(),
-                DVec3::new(0.0, 1.0, 0.0).into(),
-            ]
-            .into_iter(),
-            &mut ifc,
-        ),
+    let wall = create_wall(
         &mut ifc,
+        "ExampleWall",
+        VerticalWallParameter {
+            height: 2.0,
+            thickness: 0.02,
+            start: 0.0,
+            length: 4.0,
+        },
+        owner_history.id(),
+        world_root_id.id_or(),
+        sub_context,
     );
+    let wall_id = ifc.data.insert_new(wall);
 
-    let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, &mut ifc);
-
-    let local_placement = LocalPlacement::new(world_root_id, &mut ifc);
-
-    let wall = Wall::new("ExampleWall")
+    let wall_type = WallType::new("ExampleWallTypeId", WallTypeEnum::NotDefined)
         .owner_history(owner_history.id(), &mut ifc)
-        .object_placement(local_placement, &mut ifc)
-        .representation(product_shape, &mut ifc);
+        .name("ExampleWallTypeName")
+        .owner_history(owner_history.id(), &mut ifc);
+    let wall_type_id = ifc.data.insert_new(wall_type);
+
+    let wall_type_project_relation = RelDeclares::new("ProjectToWallType", project_id, &mut ifc)
+        .relate_definition(wall_type_id.id_or(), &mut ifc);
+    ifc.data.insert_new(wall_type_project_relation);
+
+    let wall_wall_type_relation =
+        RelDefinesByType::new("WallToWallType", wall_type_id.id_or(), &mut ifc)
+            .relate_obj(wall_id.id_or(), &mut ifc);
+    ifc.data.insert_new(wall_wall_type_relation);
+
+    let material = Material::new("ExampleMaterial");
+    let material_layer = MaterialLayer::new(0.02, false)
+        .material(material, &mut ifc)
+        .name("ExampleMaterialLayer");
+    let material_layer_set = MaterialLayerSet::new()
+        .name("ExampleMaterialLayerSet")
+        .add_layer(material_layer, &mut ifc);
+    let material_layer_set_id = ifc.data.insert_new(material_layer_set);
+
+    let material_layer_set_usage = MaterialLayerSetUsage::new(
+        material_layer_set_id.id(),
+        LayerSetDirectionEnum::Axis2,
+        DirectionSenseEnum::Positive,
+        0.0,
+        &mut ifc,
+    );
+
+    let material_wall_association = RelAssociatesMaterial::new(
+        "MaterialWallAssociation",
+        material_layer_set_usage,
+        &mut ifc,
+    )
+    .relate_wall(wall_id.id_or(), &mut ifc)
+    .owner_history(owner_history.id(), &mut ifc);
+    ifc.data.insert_new(material_wall_association);
+
+    let wall_type_material_association = RelAssociatesMaterial::new(
+        "MaterialWallTypeAssociation",
+        material_layer_set_id,
+        &mut ifc,
+    )
+    .relate_wall_type(wall_type_id.id_or(), &mut ifc)
+    .owner_history(owner_history.id(), &mut ifc);
+    ifc.data.insert_new(wall_type_material_association);
 
     let spatial_relation =
         RelContainedInSpatialStructure::new("BuildingWallLink", building_id, &mut ifc)
-            .relate_structure(wall, &mut ifc);
+            .relate_structure(wall_id, &mut ifc)
+            .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(spatial_relation);
 
     write("examples/building_example.ifc", ifc.to_string()).unwrap();
@@ -121,4 +166,60 @@ fn create_owner_history(
         .last_modifying_application(application, ifc);
 
     ifc.data.insert_new(owner_history)
+}
+
+fn create_wall(
+    ifc: &mut IFC,
+    id: &str,
+    wall_parameter: VerticalWallParameter,
+    owner_history: impl Into<IdOr<OwnerHistory>>,
+    placement: IdOr<Axis3D>,
+    sub_context: impl Into<IdOr<GeometricRepresentationSubContext>>,
+) -> Wall {
+    let shape_repr = ShapeRepresentation::new(sub_context, ifc)
+        .add_item(
+            PolyLine::from_3d(
+                [
+                    DVec3::new(wall_parameter.start, 0.0, 0.0).into(),
+                    DVec3::new(wall_parameter.start + wall_parameter.length, 0.0, 0.0).into(),
+                ]
+                .into_iter(),
+                ifc,
+            ),
+            ifc,
+        )
+        .add_item(
+            ExtrudedAreaSolid::new(
+                RectangleProfileDef::new(
+                    ProfileType::Area,
+                    wall_parameter.length,
+                    wall_parameter.thickness,
+                )
+                // center of the rectangle
+                .position(
+                    Axis2D::new(
+                        Point2D::from(DVec2::new(
+                            wall_parameter.start + wall_parameter.length * 0.5,
+                            wall_parameter.thickness * 0.5,
+                        )),
+                        ifc,
+                    ),
+                    ifc,
+                ),
+                // vertical wall (z-up)
+                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                wall_parameter.height,
+                ifc,
+            ),
+            ifc,
+        );
+
+    let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, ifc);
+
+    let local_placement = LocalPlacement::new(placement, ifc);
+
+    Wall::new(id)
+        .owner_history(owner_history, ifc)
+        .object_placement(local_placement, ifc)
+        .representation(product_shape, ifc)
 }

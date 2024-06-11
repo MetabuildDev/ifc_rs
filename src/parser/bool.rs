@@ -17,6 +17,16 @@ impl IfcBool {
         &[".TRUE.", ".FALSE.", ".UNKNOWN.", ".T.", ".F.", ".U."];
 }
 
+impl From<bool> for IfcBool {
+    fn from(value: bool) -> Self {
+        if value {
+            Self::True
+        } else {
+            Self::False
+        }
+    }
+}
+
 impl FromStr for IfcBool {
     type Err = String;
 

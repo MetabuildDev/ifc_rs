@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use crate::{
     id::Id,
@@ -30,11 +33,42 @@ pub struct TypeProduct {
     pub tag: OptionalParameter<Label>,
 }
 
+impl TypeProduct {
+    pub fn new(type_object: TypeObject) -> Self {
+        Self {
+            type_object,
+            representation_maps: OptionalParameter::omitted(),
+            tag: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait TypeProductBuilder: Sized {
+    fn type_product_mut(&mut self) -> &mut TypeProduct;
+
+    // TODO
+    // fn representation_maps(mut self, representation_maps: impl Into<IdOr< /* TODO */ >>, ifc: &mut IFC) -> Self {
+    //     self.type_product_mut().representation_maps = representation_maps.into().into_id(ifc).id().into();
+    //     self
+    // }
+
+    fn tag(mut self, tag: impl Into<Label>) -> Self {
+        self.type_product_mut().tag = tag.into().into();
+        self
+    }
+}
+
 impl Deref for TypeProduct {
     type Target = TypeObject;
 
     fn deref(&self) -> &Self::Target {
         &self.type_object
+    }
+}
+
+impl DerefMut for TypeProduct {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.type_object
     }
 }
 

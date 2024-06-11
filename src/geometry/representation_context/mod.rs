@@ -48,9 +48,7 @@ pub struct GeometricRepresentationContext {
 
 impl GeometricRepresentationContext {
     pub fn new<A: AxisPlacement>(
-        context_type: impl Into<Label>,
         coord_space_dimension: DimensionCount,
-        precision: impl Into<Option<f64>>,
         world_coord_system: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
@@ -58,12 +56,36 @@ impl GeometricRepresentationContext {
 
         Self {
             context_identifier: OptionalParameter::omitted(),
-            context_type: OptionalParameter::Custom(context_type.into()),
+            context_type: OptionalParameter::omitted(),
             coord_space_dimension,
-            precision: OptionalParameter::from(precision.into().map(|f| f.into())),
+            precision: OptionalParameter::omitted(),
             world_coord_system: id.id(),
             true_north: OptionalParameter::omitted(),
         }
+    }
+
+    pub fn context_identifier(mut self, id: impl Into<Label>) -> Self {
+        self.context_identifier = id.into().into();
+        self
+    }
+
+    pub fn context_type(mut self, context_type: impl Into<Label>) -> Self {
+        self.context_type = context_type.into().into();
+        self
+    }
+
+    pub fn precision(mut self, precision: f64) -> Self {
+        self.precision = IfcFloat(precision).into();
+        self
+    }
+
+    pub fn true_north<A: AxisPlacement>(
+        mut self,
+        direction: impl Into<IdOr<A>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.true_north = direction.into().into_id(ifc).id().into();
+        self
     }
 }
 

@@ -1,12 +1,14 @@
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
         bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
         optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    prelude::Material,
+    IFC,
 };
 
 /// IfcMaterialLayer is a single and identifiable part of an element which is
@@ -63,6 +65,45 @@ pub struct MaterialLayer {
     /// element has to be set and maintained by software applications
     /// in relation to the material layers in connected elements.
     pub priority: OptionalParameter<IfcInteger>,
+}
+
+impl MaterialLayer {
+    pub fn new(layer_thickness: f64, is_ventilated: bool) -> Self {
+        Self {
+            material: OptionalParameter::omitted(),
+            layer_thickness: IfcFloat(layer_thickness),
+            is_ventilated: is_ventilated.into(),
+            name: OptionalParameter::omitted(),
+            description: OptionalParameter::omitted(),
+            category: OptionalParameter::omitted(),
+            priority: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn material(mut self, material: impl Into<IdOr<Material>>, ifc: &mut IFC) -> Self {
+        self.material = material.into().into_id(ifc).id().into();
+        self
+    }
+
+    pub fn name(mut self, name: impl Into<Label>) -> Self {
+        self.name = name.into().into();
+        self
+    }
+
+    pub fn description(mut self, description: impl Into<Label>) -> Self {
+        self.description = description.into().into();
+        self
+    }
+
+    pub fn category(mut self, category: impl Into<Label>) -> Self {
+        self.category = category.into().into();
+        self
+    }
+
+    pub fn priority(mut self, priority: i64) -> Self {
+        self.priority = IfcInteger(priority).into();
+        self
+    }
 }
 
 impl IFCParse for MaterialLayer {

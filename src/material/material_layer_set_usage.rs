@@ -1,12 +1,15 @@
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
+    objects::rel_associates_material::RelatableMaterial,
     parser::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    prelude::MaterialLayerSet,
+    IFC,
 };
 
 use super::{
@@ -63,6 +66,29 @@ pub struct MaterialLayerSetUsage {
     pub reference_extent: OptionalParameter<IfcFloat>,
 }
 
+impl MaterialLayerSetUsage {
+    pub fn new(
+        spatial_element_structure: impl Into<IdOr<MaterialLayerSet>>,
+        layer_set_direction: LayerSetDirectionEnum,
+        direction_sense: DirectionSenseEnum,
+        offset_from_reference_line: f64,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            spatial_element_structure: spatial_element_structure.into().into_id(ifc).id(),
+            layer_set_direction,
+            direction_sense,
+            offset_from_reference_line: offset_from_reference_line.into(),
+            reference_extent: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn reference_extent(mut self, extent: f64) -> Self {
+        self.reference_extent = IfcFloat(extent).into();
+        self
+    }
+}
+
 impl IFCParse for MaterialLayerSetUsage {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
@@ -100,6 +126,7 @@ impl Display for MaterialLayerSetUsage {
 }
 
 impl IfcType for MaterialLayerSetUsage {}
+impl RelatableMaterial for MaterialLayerSetUsage {}
 
 #[cfg(test)]
 mod test {

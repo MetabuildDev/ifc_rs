@@ -22,3 +22,9 @@ impl Display for IfcInteger {
         write!(f, "{}", self.0)
     }
 }
+
+impl From<i64> for IfcInteger {
+    fn from(value: i64) -> Self {
+        Self(value)
+    }
+}

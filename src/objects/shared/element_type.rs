@@ -1,3 +1,4 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
 use crate::parser::comma::Comma;
@@ -24,11 +25,35 @@ pub struct ElementType {
     pub element_type: OptionalParameter<Label>,
 }
 
+impl ElementType {
+    pub fn new(type_product: TypeProduct) -> Self {
+        Self {
+            type_product,
+            element_type: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait ElementTypeBuilder: Sized {
+    fn element_type_mut(&mut self) -> &mut ElementType;
+
+    fn element_type(mut self, element_type: impl Into<Label>) -> Self {
+        self.element_type_mut().element_type = element_type.into().into();
+        self
+    }
+}
+
 impl Deref for ElementType {
     type Target = TypeProduct;
 
     fn deref(&self) -> &Self::Target {
         &self.type_product
+    }
+}
+
+impl DerefMut for ElementType {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.type_product
     }
 }
 

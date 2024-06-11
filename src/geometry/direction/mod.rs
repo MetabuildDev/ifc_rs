@@ -1,6 +1,8 @@
 mod deserialize;
 mod serialize;
 
+use glam::{DVec2, DVec3};
+
 use crate::{
     ifc_type::IfcType,
     parser::ifc_float::{IfcDVec2, IfcDVec3},
@@ -16,6 +18,12 @@ use crate::{
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Direction2D(IfcDVec2);
 
+impl From<DVec2> for Direction2D {
+    fn from(value: DVec2) -> Self {
+        Self(IfcDVec2(value))
+    }
+}
+
 impl IfcType for Direction2D {}
 
 /// The IfcDirection provides a direction in two or three dimensional space depending on the number
@@ -28,5 +36,11 @@ impl IfcType for Direction2D {}
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcdirection.htm
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Direction3D(IfcDVec3);
+
+impl From<DVec3> for Direction3D {
+    fn from(value: DVec3) -> Self {
+        Self(IfcDVec3(value))
+    }
+}
 
 impl IfcType for Direction3D {}

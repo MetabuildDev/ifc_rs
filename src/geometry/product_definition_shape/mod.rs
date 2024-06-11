@@ -91,21 +91,11 @@ pub mod test {
         ifc: &mut IFC,
         world_coord_system: IdOr<Axis3D>,
     ) -> ProductDefinitionShape {
-        let context = GeometricRepresentationContext::new(
-            "Model",
-            DimensionCount::Three,
-            0.01,
-            world_coord_system,
-            ifc,
-        );
+        let context =
+            GeometricRepresentationContext::new(DimensionCount::Three, world_coord_system, ifc);
 
-        let sub_context = GeometricRepresentationSubContext::derive(
-            context,
-            None,
-            GeometricProjection::ModelView,
-            None,
-            ifc,
-        );
+        let sub_context =
+            GeometricRepresentationSubContext::derive(context, GeometricProjection::ModelView, ifc);
 
         let shape = ShapeRepresentation::new(sub_context, ifc).add_item(
             PolyLine::from_3d(

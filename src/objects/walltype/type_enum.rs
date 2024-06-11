@@ -66,11 +66,11 @@ pub enum WallTypeEnum {
 
     /// User-defined wall element.
     #[strum(to_string = ".USERDEFINED.")]
-    Userdefined,
+    UserDefined,
 
     /// Undefined wall element.
     #[strum(to_string = ".NOTDEFINED.")]
-    Notdefined,
+    NotDefined,
 }
 
 impl IFCParse for WallTypeEnum {

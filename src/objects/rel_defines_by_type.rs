@@ -1,12 +1,16 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::Id;
+use crate::id::IdOr;
 use crate::ifc_type::IfcType;
 use crate::parser::comma::Comma;
+use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::RootBuilder;
+use crate::IFC;
 
 use super::shared::root::Root;
 
@@ -25,6 +29,31 @@ pub struct RelDefinesByType {
 
     /// Reference to the type (or style) information for that object or set of objects.
     pub relating_type: Id,
+}
+
+impl RelDefinesByType {
+    pub fn new<OBJ: IfcType>(
+        id: impl Into<Label>,
+        relating_type: impl Into<IdOr<OBJ>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            root: Root::new(id.into()),
+            related_objects: IfcList::empty(),
+            relating_type: relating_type.into().into_id(ifc).id(),
+        }
+    }
+
+    pub fn relate_obj<OBJ: IfcType>(mut self, object: impl Into<IdOr<OBJ>>, ifc: &mut IFC) -> Self {
+        self.related_objects.0.push(object.into().into_id(ifc).id());
+        self
+    }
+}
+
+impl RootBuilder for RelDefinesByType {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.root
+    }
 }
 
 impl Deref for RelDefinesByType {

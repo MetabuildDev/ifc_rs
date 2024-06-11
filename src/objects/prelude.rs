@@ -18,15 +18,15 @@ pub use super::shared::{
     composition_type_enum::CompositionTypeEnum,
     context::{Context, ContextBuilder},
     element::{Element, ElementBuilder},
-    element_type::ElementType,
+    element_type::{ElementType, ElementTypeBuilder},
     object::{Object, ObjectBuilder},
     product::{Product, ProductBuilder},
     rel_associates::RelAssociates,
     root::{Root, RootBuilder},
     spatial_element::{SpatialElement, SpatialElementBuilder},
     spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
-    type_object::TypeObject,
-    type_product::TypeProduct,
+    type_object::{TypeObject, TypeObjectBuilder},
+    type_product::{TypeProduct, TypeProductBuilder},
 };
 pub use super::wall::Wall;
 pub use super::walltype::{type_enum::WallTypeEnum, WallType};

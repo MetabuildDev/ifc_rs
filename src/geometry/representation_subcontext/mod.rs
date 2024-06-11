@@ -66,16 +66,9 @@ pub struct GeometricRepresentationSubContext {
 impl GeometricRepresentationSubContext {
     pub fn derive(
         context: impl Into<IdOr<GeometricRepresentationContext>>,
-        target_scale: impl Into<Option<f64>>,
         target_view: GeometricProjection,
-        context_type: impl Into<Option<Label>>,
         ifc: &mut IFC,
     ) -> Self {
-        let id = match context.into() {
-            IdOr::Id(id) => id,
-            IdOr::Custom(context) => ifc.data.insert_new(context).id(),
-        };
-
         Self {
             context_identifier: OptionalParameter::inherited(),
             context_type: OptionalParameter::inherited(),
@@ -84,11 +77,21 @@ impl GeometricRepresentationSubContext {
             world_coord_system: OptionalParameter::inherited(),
             true_north: OptionalParameter::inherited(),
 
-            parent_context: id,
-            target_scale: OptionalParameter::from(target_scale.into().map(|f| f.into())),
+            parent_context: context.into().into_id(ifc).id(),
+            target_scale: OptionalParameter::omitted(),
             target_view,
-            user_defined_target_view: OptionalParameter::from(context_type.into()),
+            user_defined_target_view: OptionalParameter::omitted(),
         }
+    }
+
+    pub fn target_scale(mut self, scale: f64) -> Self {
+        self.target_scale = IfcFloat(scale).into();
+        self
+    }
+
+    pub fn user_defined_target_view(mut self, user_defined_target_view: impl Into<Label>) -> Self {
+        self.user_defined_target_view = user_defined_target_view.into().into();
+        self
     }
 }
 
