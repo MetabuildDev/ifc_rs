@@ -1,10 +1,13 @@
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    IFC,
 };
+
+use super::si_unit::SiUnit;
 
 /// IfcUnitAssignment indicates a set of units which may be assigned. Within an
 /// IfcUnitAssigment each unit definition shall be unique; that is, there shall
@@ -16,6 +19,14 @@ use crate::{
 pub struct UnitAssigment {
     /// Units to be included within a unit assignment.
     pub units: IfcList<Id>,
+}
+
+impl UnitAssigment {
+    pub fn new(units: impl IntoIterator<Item = IdOr<SiUnit>>, ifc: &mut IFC) -> Self {
+        Self {
+            units: IfcList(units.into_iter().map(|u| u.into_id(ifc).id()).collect()),
+        }
+    }
 }
 
 impl IFCParse for UnitAssigment {

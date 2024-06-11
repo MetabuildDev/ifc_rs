@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use crate::parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser};
 
@@ -19,11 +22,35 @@ pub struct SpatialStructureElement {
     pub composition_type: OptionalParameter<CompositionTypeEnum>,
 }
 
+impl SpatialStructureElement {
+    pub fn new(spatial_element: SpatialElement) -> Self {
+        Self {
+            spatial_element,
+            composition_type: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait SpatialStructureElementBuilder: Sized {
+    fn spatial_structure_element_mut(&mut self) -> &mut SpatialStructureElement;
+
+    fn composition_type(mut self, composition_type: CompositionTypeEnum) -> Self {
+        self.spatial_structure_element_mut().composition_type = composition_type.into();
+        self
+    }
+}
+
 impl Deref for SpatialStructureElement {
     type Target = SpatialElement;
 
     fn deref(&self) -> &Self::Target {
         &self.spatial_element
+    }
+}
+
+impl DerefMut for SpatialStructureElement {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.spatial_element
     }
 }
 

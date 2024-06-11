@@ -1,15 +1,16 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
-    parser::{
-        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
-        IFCParser,
-    },
+    parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    prelude::{Root, RootBuilder},
+    IFC,
 };
 
-use super::shared::rel_associates::RelAssociates;
+use super::shared::rel_associates::{RelAssociates, RelAssociatesBuilder};
+
+pub trait RelatableMaterial: IfcType {}
 
 /// The aggregation relationship IfcRelAggregates is a special type of
 /// the general composition/decomposition (or whole/part) relationship
@@ -21,7 +22,32 @@ pub struct RelAssociatesMaterial {
     rel_associates: RelAssociates,
 
     /// Material definition assigned to the elements or element types.
-    pub relating_material: OptionalParameter<Id>,
+    pub relating_material: Id,
+}
+
+impl RelAssociatesMaterial {
+    pub fn new<R: RelatableMaterial>(
+        id: impl Into<Label>,
+        material_layer_set: impl Into<IdOr<R>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            rel_associates: RelAssociates::new(Root::new(id.into())),
+            relating_material: material_layer_set.into().into_id(ifc).id(),
+        }
+    }
+}
+
+impl RelAssociatesBuilder for RelAssociatesMaterial {
+    fn rel_associates_mut(&mut self) -> &mut RelAssociates {
+        &mut self.rel_associates
+    }
+}
+
+impl RootBuilder for RelAssociatesMaterial {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.rel_associates
+    }
 }
 
 impl Deref for RelAssociatesMaterial {
@@ -40,7 +66,7 @@ impl IFCParse for RelAssociatesMaterial {
 
                 rel_associates: RelAssociates::parse(),
                 _: Comma::parse(),
-                relating_material: OptionalParameter::parse(),
+                relating_material: Id::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

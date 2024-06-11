@@ -39,55 +39,6 @@ pub struct Person {
 }
 
 impl Person {
-    pub fn new<'a, R>(
-        id: impl Into<Option<&'a str>>,
-        family_name: impl Into<Option<&'a str>>,
-        given_name: impl Into<Option<&'a str>>,
-        middle_names: impl Into<Option<&'a [&'a str]>>,
-        prefix_titles: impl Into<Option<&'a [&'a str]>>,
-        suffix_titles: impl Into<Option<&'a [&'a str]>>,
-        roles: impl Into<Option<R>>,
-        ifc: &mut IFC,
-    ) -> Self
-    where
-        R: IntoIterator<Item = IdOr<ActorRole>>,
-    {
-        Self {
-            id: id.into().map(|s| s.into()).into(),
-            family_name: family_name.into().map(|s| s.into()).into(),
-            given_name: given_name.into().map(|s| s.into()).into(),
-            middle_names: middle_names
-                .into()
-                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
-                .into(),
-            prefix_titles: prefix_titles
-                .into()
-                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
-                .into(),
-            suffix_titles: suffix_titles
-                .into()
-                .map(|s| IfcList(s.iter().map(|&s| s.into()).collect()))
-                .into(),
-            roles: roles
-                .into()
-                .map(|roles| IfcList(roles.into_iter().map(|r| r.into_id(ifc).id()).collect()))
-                .into(),
-            addresses: OptionalParameter::omitted(),
-        }
-    }
-
-    pub fn add_address<A: Address>(&mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) {
-        if self.addresses.is_omitted() {
-            self.addresses = IfcList::empty().into();
-        }
-
-        self.addresses
-            .custom_mut()
-            .unwrap()
-            .0
-            .push(address.into().into_id(ifc).id());
-    }
-
     pub fn empty() -> Self {
         Self {
             id: OptionalParameter::omitted(),
@@ -99,6 +50,91 @@ impl Person {
             roles: OptionalParameter::omitted(),
             addresses: OptionalParameter::omitted(),
         }
+    }
+
+    pub fn id(mut self, id: impl Into<Label>) -> Self {
+        self.id = id.into().into();
+        self
+    }
+
+    pub fn family_name(mut self, family_name: impl Into<Label>) -> Self {
+        self.family_name = family_name.into().into();
+        self
+    }
+
+    pub fn given_name(mut self, given_name: impl Into<Label>) -> Self {
+        self.given_name = given_name.into().into();
+        self
+    }
+
+    pub fn add_middle_name(mut self, middle_name: impl Into<Label>) -> Self {
+        if self.middle_names.is_omitted() {
+            self.middle_names = OptionalParameter::Custom(IfcList::empty());
+        }
+
+        self.middle_names
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(middle_name.into());
+
+        self
+    }
+
+    pub fn add_suffix_title(mut self, suffix_title: impl Into<Label>) -> Self {
+        if self.suffix_titles.is_omitted() {
+            self.suffix_titles = OptionalParameter::Custom(IfcList::empty());
+        }
+
+        self.suffix_titles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(suffix_title.into());
+
+        self
+    }
+
+    pub fn add_prefix_title(mut self, prefix_title: impl Into<Label>) -> Self {
+        if self.prefix_titles.is_omitted() {
+            self.prefix_titles = OptionalParameter::Custom(IfcList::empty());
+        }
+
+        self.prefix_titles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(prefix_title.into());
+
+        self
+    }
+
+    pub fn add_role(mut self, role: impl Into<IdOr<ActorRole>>, ifc: &mut IFC) -> Self {
+        if self.roles.is_omitted() {
+            self.roles = IfcList::empty().into();
+        }
+
+        self.roles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(role.into().into_id(ifc).id());
+
+        self
+    }
+
+    pub fn add_address<A: Address>(mut self, address: impl Into<IdOr<A>>, ifc: &mut IFC) -> Self {
+        if self.addresses.is_omitted() {
+            self.addresses = IfcList::empty().into();
+        }
+
+        self.addresses
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(address.into().into_id(ifc).id());
+
+        self
     }
 }
 

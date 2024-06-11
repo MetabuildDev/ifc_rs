@@ -23,7 +23,6 @@ impl PolyLine {
         Self {
             points: IfcList(
                 points
-                    .into_iter()
                     .map(|point| ifc.data.insert_new(point).id())
                     .collect(),
             ),
@@ -34,7 +33,6 @@ impl PolyLine {
         Self {
             points: IfcList(
                 points
-                    .into_iter()
                     .map(|point| ifc.data.insert_new(point).id())
                     .collect(),
             ),

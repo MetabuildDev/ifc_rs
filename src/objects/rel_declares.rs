@@ -1,13 +1,18 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::Id;
+use crate::id::IdOr;
 use crate::ifc_type::IfcType;
 use crate::parser::comma::Comma;
+use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::RootBuilder;
+use crate::IFC;
 
+use super::project::Project;
 use super::shared::root::Root;
 
 /// The objectified relationship IfcRelDeclares handles the declaration of
@@ -25,6 +30,33 @@ pub struct RelDeclares {
     /// Set of object or property definitions that are assigned to a context and
     /// to which the unit and representation context definitions of that context apply.
     pub related_definitions: IfcList<Id>,
+}
+
+impl RelDeclares {
+    pub fn new(id: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
+        Self {
+            root: Root::new(id.into()),
+            relating_context: project.into().into_id(ifc).id(),
+            related_definitions: IfcList::empty(),
+        }
+    }
+
+    pub fn relate_definition<OBJ: IfcType>(
+        mut self,
+        defintion: impl Into<IdOr<OBJ>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.related_definitions
+            .0
+            .push(defintion.into().into_id(ifc).id());
+        self
+    }
+}
+
+impl RootBuilder for RelDeclares {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.root
+    }
 }
 
 impl Deref for RelDeclares {

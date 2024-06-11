@@ -1,11 +1,17 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
 use crate::ifc_type::IfcType;
+use crate::parser::label::Label;
+use crate::parser::list::IfcList;
+use crate::parser::optional::OptionalParameter;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::{ContextBuilder, RootBuilder};
 
 use super::shared::context::Context;
+use super::shared::root::Root;
 
 /// IfcProject indicates the undertaking of some design, engineering,
 /// construction, or maintenance activities leading towards a product.
@@ -20,11 +26,44 @@ pub struct Project {
     context: Context,
 }
 
+impl Project {
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+        Self {
+            context: Context::new(
+                Root::new(global_id.into()),
+                OptionalParameter::omitted(),
+                OptionalParameter::omitted(),
+                OptionalParameter::omitted(),
+                IfcList(Vec::new()),
+                OptionalParameter::omitted(),
+            ),
+        }
+    }
+}
+
+impl ContextBuilder for Project {
+    fn context_mut(&mut self) -> &mut Context {
+        &mut self.context
+    }
+}
+
+impl RootBuilder for Project {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.context
+    }
+}
+
 impl Deref for Project {
     type Target = Context;
 
     fn deref(&self) -> &Self::Target {
         &self.context
+    }
+}
+
+impl DerefMut for Project {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.context
     }
 }
 

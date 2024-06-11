@@ -13,6 +13,7 @@ pub mod geometric_projection;
 pub mod local_placement;
 pub mod point;
 pub mod polyline;
+pub mod prelude;
 pub mod product_definition_shape;
 pub mod profile_type;
 pub mod rectangle_profile_def;

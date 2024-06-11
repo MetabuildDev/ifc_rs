@@ -1,10 +1,13 @@
+use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::id::Id;
+use crate::id::{Id, IdOr};
 use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::{Wall, WallType};
+use crate::IFC;
 
 use super::root::Root;
 
@@ -23,11 +26,46 @@ pub struct RelAssociates {
     pub related_objects: IfcList<Id>,
 }
 
+impl RelAssociates {
+    pub fn new(root: Root) -> Self {
+        Self {
+            root,
+            related_objects: IfcList::empty(),
+        }
+    }
+}
+
+pub trait RelAssociatesBuilder: Sized {
+    fn rel_associates_mut(&mut self) -> &mut RelAssociates;
+
+    fn relate_wall_type(mut self, wall_type: impl Into<IdOr<WallType>>, ifc: &mut IFC) -> Self {
+        self.rel_associates_mut()
+            .related_objects
+            .0
+            .push(wall_type.into().into_id(ifc).id());
+        self
+    }
+
+    fn relate_wall(mut self, wall: impl Into<IdOr<Wall>>, ifc: &mut IFC) -> Self {
+        self.rel_associates_mut()
+            .related_objects
+            .0
+            .push(wall.into().into_id(ifc).id());
+        self
+    }
+}
+
 impl Deref for RelAssociates {
     type Target = Root;
 
     fn deref(&self) -> &Self::Target {
         &self.root
+    }
+}
+
+impl DerefMut for RelAssociates {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.root
     }
 }
 

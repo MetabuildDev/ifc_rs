@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, marker::PhantomData};
 
 use winnow::{
     ascii::dec_uint,
@@ -30,6 +30,32 @@ impl Display for Id {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct TypedId<T: IfcType> {
+    id: Id,
+    t: PhantomData<T>,
+}
+
+impl<T: IfcType> TypedId<T> {
+    pub fn new(id: Id) -> Self {
+        Self { id, t: PhantomData }
+    }
+
+    pub fn id(&self) -> Id {
+        self.id
+    }
+
+    pub fn id_or(&self) -> IdOr<T> {
+        IdOr::Id(self.id)
+    }
+}
+
+impl<T: IfcType> Into<IdOr<T>> for TypedId<T> {
+    fn into(self) -> IdOr<T> {
+        IdOr::Id(self.id)
+    }
+}
+
 #[derive(Debug, Clone)]
 pub enum IdOr<T> {
     // e.g. #01
@@ -48,10 +74,10 @@ impl<T> IdOr<T> {
 }
 
 impl<T: IfcType> IdOr<T> {
-    pub fn into_id(self, ifc: &mut IFC) -> IdOr<T> {
+    pub(crate) fn into_id(self, ifc: &mut IFC) -> IdOr<T> {
         match self {
             Self::Id(_) => self,
-            Self::Custom(t) => ifc.data.insert_new(t),
+            Self::Custom(t) => ifc.data.insert_new(t).into(),
         }
     }
 }

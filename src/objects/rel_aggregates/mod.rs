@@ -1,15 +1,17 @@
 use std::{fmt::Display, ops::Deref};
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
-        comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
-        IFCParse, IFCParser,
+        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
+        p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    prelude::RootBuilder,
+    IFC,
 };
 
-use super::shared::root::Root;
+use super::{building::Building, project::Project, shared::root::Root};
 
 /// The aggregation relationship IfcRelAggregates is a special type of
 /// the general composition/decomposition (or whole/part) relationship
@@ -30,6 +32,38 @@ pub struct RelAggregates {
     /// parts in the whole/part relationship. No order is implied
     /// between the parts.
     pub related_objects: IfcList<Id>,
+}
+
+impl RelAggregates {
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+        Self {
+            root: Root::new(global_id.into()),
+            relating_object: OptionalParameter::omitted(),
+            related_objects: IfcList::empty(),
+        }
+    }
+
+    pub fn relate_project_with_buildings(
+        mut self,
+        project: impl Into<IdOr<Project>>,
+        buildings: impl IntoIterator<Item = IdOr<Building>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.relating_object = project.into().into_id(ifc).id().into();
+
+        self.related_objects.0 = buildings
+            .into_iter()
+            .map(|id_or| id_or.into_id(ifc).id())
+            .collect();
+
+        self
+    }
+}
+
+impl RootBuilder for RelAggregates {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.root
+    }
 }
 
 impl Deref for RelAggregates {

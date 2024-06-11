@@ -11,6 +11,7 @@ pub mod material;
 pub mod material_layer;
 pub mod material_layer_set;
 pub mod material_layer_set_usage;
+pub mod prelude;
 
 pub struct Materials;
 

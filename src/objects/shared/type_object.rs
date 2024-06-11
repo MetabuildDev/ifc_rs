@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
 use crate::{
     id::Id,
@@ -37,11 +40,34 @@ pub struct TypeObject {
     pub has_property_sets: OptionalParameter<Id>,
 }
 
+impl TypeObject {
+    pub fn new(root: Root) -> Self {
+        Self {
+            root,
+            applicable_occurence: OptionalParameter::omitted(),
+            has_property_sets: OptionalParameter::omitted(),
+        }
+    }
+}
+
+pub trait TypeObjectBuilder: Sized {
+    fn type_object_mut(&mut self) -> &mut TypeObject;
+
+    // TODO
+    // fn applicable_occurence(mut self, )
+}
+
 impl Deref for TypeObject {
     type Target = Root;
 
     fn deref(&self) -> &Self::Target {
         &self.root
+    }
+}
+
+impl DerefMut for TypeObject {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.root
     }
 }
 

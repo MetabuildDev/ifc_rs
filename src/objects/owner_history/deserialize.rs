@@ -1,7 +1,6 @@
 use winnow::{combinator::delimited, Parser};
 
 use crate::{
-    id::Id,
     objects::{change_action::ChangeAction, owner_history::OwnerHistory},
     parser::{
         comma::Comma, optional::OptionalParameter, timestamp::IfcTimestamp, IFCParse, IFCParser,
@@ -13,9 +12,9 @@ impl IFCParse for OwnerHistory {
         delimited(
             "IFCOWNERHISTORY(",
             (
-                Id::parse(),
+                OptionalParameter::parse(),
                 Comma::parse(),
-                Id::parse(),
+                OptionalParameter::parse(),
                 Comma::parse(),
                 OptionalParameter::parse(),
                 Comma::parse(),

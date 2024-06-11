@@ -1,12 +1,15 @@
 use std::fmt::Display;
 
 use crate::{
-    id::Id,
+    id::{Id, IdOr},
     ifc_type::IfcType,
+    objects::rel_associates_material::RelatableMaterial,
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    prelude::MaterialLayer,
+    IFC,
 };
 
 /// The IfcMaterialLayerSet is a designation by which materials of an element
@@ -24,6 +27,31 @@ pub struct MaterialLayerSet {
 
     /// Definition of the IfcMaterialLayerSet in descriptive terms.
     pub description: OptionalParameter<Label>,
+}
+
+impl MaterialLayerSet {
+    pub fn new() -> Self {
+        Self {
+            material_layers: IfcList::empty(),
+            layer_set_name: OptionalParameter::omitted(),
+            description: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn name(mut self, name: impl Into<Label>) -> Self {
+        self.layer_set_name = name.into().into();
+        self
+    }
+
+    pub fn description(mut self, description: impl Into<Label>) -> Self {
+        self.description = description.into().into();
+        self
+    }
+
+    pub fn add_layer(mut self, layer: impl Into<IdOr<MaterialLayer>>, ifc: &mut IFC) -> Self {
+        self.material_layers.0.push(layer.into().into_id(ifc).id());
+        self
+    }
 }
 
 impl IFCParse for MaterialLayerSet {
@@ -55,6 +83,7 @@ impl Display for MaterialLayerSet {
 }
 
 impl IfcType for MaterialLayerSet {}
+impl RelatableMaterial for MaterialLayerSet {}
 
 #[cfg(test)]
 mod test {

@@ -2,9 +2,15 @@ use std::ops::Deref;
 
 use type_enum::WallTypeEnum;
 
-use crate::ifc_type::IfcType;
+use crate::{
+    ifc_type::IfcType,
+    parser::label::Label,
+    prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
+};
 
-use super::shared::element_type::ElementType;
+use super::shared::{
+    element_type::ElementType, type_object::TypeObjectBuilder, type_product::TypeProductBuilder,
+};
 
 mod deserialize;
 mod serialize;
@@ -24,6 +30,39 @@ pub struct WallType {
     /// Identifies the predefined types of a wall element from which
     /// the type required may be set.
     pub predefined_type: WallTypeEnum,
+}
+
+impl WallType {
+    pub fn new(id: impl Into<Label>, predefined_type: WallTypeEnum) -> Self {
+        Self {
+            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(id.into())))),
+            predefined_type,
+        }
+    }
+}
+
+impl ElementTypeBuilder for WallType {
+    fn element_type_mut(&mut self) -> &mut ElementType {
+        &mut self.element_type
+    }
+}
+
+impl TypeProductBuilder for WallType {
+    fn type_product_mut(&mut self) -> &mut TypeProduct {
+        &mut self.element_type
+    }
+}
+
+impl TypeObjectBuilder for WallType {
+    fn type_object_mut(&mut self) -> &mut TypeObject {
+        &mut self.element_type
+    }
+}
+
+impl RootBuilder for WallType {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.element_type
+    }
 }
 
 impl Deref for WallType {

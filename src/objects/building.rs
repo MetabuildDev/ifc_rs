@@ -1,12 +1,27 @@
-use std::{fmt::Display, ops::Deref};
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+};
 
-use super::{address::PostalAddress, shared::spatial_structure_element::SpatialStructureElement};
+use super::{
+    address::PostalAddress,
+    shared::{
+        object::{Object, ObjectBuilder},
+        product::{Product, ProductBuilder},
+        root::{Root, RootBuilder},
+        spatial_element::{SpatialElement, SpatialElementBuilder},
+        spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
+    },
+    Structure,
+};
 use crate::{
+    id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{
-        comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
+        comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
+    IFC,
 };
 
 /// A building represents a structure that provides shelter for its occupants
@@ -28,7 +43,69 @@ pub struct Building {
     pub elevation_of_terrain: OptionalParameter<IfcFloat>,
 
     /// Address given to the building for postal purposes.
-    pub building_address: OptionalParameter<PostalAddress>,
+    pub building_address: OptionalParameter<Id>,
+}
+
+impl Building {
+    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+        Self {
+            spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
+                Product::new(Object::new(Root::new(global_id.into()))),
+            )),
+            elevation_of_ref_height: OptionalParameter::omitted(),
+            elevation_of_terrain: OptionalParameter::omitted(),
+            building_address: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn elevation_of_ref_height(mut self, elevation_of_ref_height: f64) -> Self {
+        self.elevation_of_ref_height = IfcFloat(elevation_of_ref_height).into();
+        self
+    }
+
+    pub fn elevation_of_terrain(mut self, elevation_of_terrain: f64) -> Self {
+        self.elevation_of_terrain = IfcFloat(elevation_of_terrain).into();
+        self
+    }
+
+    pub fn building_address(
+        mut self,
+        postal_address: impl Into<IdOr<PostalAddress>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.building_address = postal_address.into().into_id(ifc).id().into();
+        self
+    }
+}
+
+impl RootBuilder for Building {
+    fn root_mut(&mut self) -> &mut Root {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl ObjectBuilder for Building {
+    fn object_mut(&mut self) -> &mut Object {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl ProductBuilder for Building {
+    fn product_mut(&mut self) -> &mut Product {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl SpatialElementBuilder for Building {
+    fn spatial_element_mut(&mut self) -> &mut SpatialElement {
+        &mut self.spatial_element_structure
+    }
+}
+
+impl SpatialStructureElementBuilder for Building {
+    fn spatial_structure_element_mut(&mut self) -> &mut SpatialStructureElement {
+        &mut self.spatial_element_structure
+    }
 }
 
 impl Deref for Building {
@@ -36,6 +113,12 @@ impl Deref for Building {
 
     fn deref(&self) -> &Self::Target {
         &self.spatial_element_structure
+    }
+}
+
+impl DerefMut for Building {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.spatial_element_structure
     }
 }
 
@@ -73,6 +156,7 @@ impl Display for Building {
 }
 
 impl IfcType for Building {}
+impl Structure for Building {}
 
 #[cfg(test)]
 mod test {

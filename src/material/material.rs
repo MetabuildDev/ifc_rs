@@ -25,6 +25,26 @@ pub struct Material {
     pub category: OptionalParameter<Label>,
 }
 
+impl Material {
+    pub fn new(name: impl Into<Label>) -> Self {
+        Self {
+            material: name.into().into(),
+            description: OptionalParameter::omitted(),
+            category: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn description(mut self, description: impl Into<Label>) -> Self {
+        self.description = description.into().into();
+        self
+    }
+
+    pub fn category(mut self, category: impl Into<Label>) -> Self {
+        self.category = category.into().into();
+        self
+    }
+}
+
 impl IFCParse for Material {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {

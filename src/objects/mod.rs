@@ -15,6 +15,7 @@ pub mod organization;
 pub mod owner_history;
 pub mod person;
 pub mod person_and_org;
+pub mod prelude;
 pub mod project;
 pub mod rel_aggregates;
 pub mod rel_associates_material;
@@ -24,6 +25,8 @@ pub mod rel_defines_by_type;
 pub mod shared;
 pub mod wall;
 pub mod walltype;
+
+pub trait Structure: IfcType {}
 
 pub struct Objects;
 

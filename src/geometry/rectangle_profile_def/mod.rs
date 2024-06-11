@@ -1,9 +1,12 @@
 mod deserialize;
 mod serialize;
 
+use crate::id::IdOr;
 use crate::ifc_type::IfcType;
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
+use crate::prelude::AxisPlacement;
+use crate::IFC;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
 use super::profile_type::ProfileType;
@@ -19,6 +22,32 @@ pub struct RectangleProfileDef {
     position: OptionalParameter<Id>,
     x_dim: IfcFloat,
     y_dim: IfcFloat,
+}
+
+impl RectangleProfileDef {
+    pub fn new(profile_type: ProfileType, x_dim: f64, y_dim: f64) -> Self {
+        Self {
+            profile_type,
+            profile_name: OptionalParameter::omitted(),
+            position: OptionalParameter::omitted(),
+            x_dim: x_dim.into(),
+            y_dim: y_dim.into(),
+        }
+    }
+
+    pub fn profile_name(mut self, name: impl Into<Label>) -> Self {
+        self.profile_name = name.into().into();
+        self
+    }
+
+    pub fn position<A: AxisPlacement>(
+        mut self,
+        position: impl Into<IdOr<A>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        self.position = position.into().into_id(ifc).id().into();
+        self
+    }
 }
 
 impl IfcType for RectangleProfileDef {}

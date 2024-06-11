@@ -1,8 +1,8 @@
 use std::{fmt::Display, ops::Deref};
 
 use super::{
-    name::IfcUnitName, optional::OptionalParameter, prefix::IfcPrefix,
-    shared::named_unit::NamedUnit, IFCParse, IFCParser,
+    name::IfcUnitName, optional::OptionalParameter, place_holder::Inherited, prefix::IfcPrefix,
+    shared::named_unit::NamedUnit, unit_enum::IfcUnitEnum, IFCParse, IFCParser,
 };
 use crate::{
     ifc_type::IfcType,
@@ -21,6 +21,23 @@ pub struct SiUnit {
 
     /// The word, or group of words, by which the SI unit is referred to.
     pub name: IfcUnitName,
+}
+
+impl SiUnit {
+    pub fn new(
+        unit_type: impl Into<Option<IfcUnitEnum>>,
+        prefix: impl Into<Option<IfcPrefix>>,
+        name: IfcUnitName,
+    ) -> Self {
+        Self {
+            named_unit: NamedUnit {
+                dimensions: OptionalParameter::Inherited(Inherited),
+                unit_type: unit_type.into().into(),
+            },
+            prefix: prefix.into().into(),
+            name,
+        }
+    }
 }
 
 impl Deref for SiUnit {
