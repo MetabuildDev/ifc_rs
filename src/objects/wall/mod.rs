@@ -224,7 +224,6 @@ pub mod test {
         let person_and_org = PersonAndOrganization::new(
             person_id.clone(),
             Organization::new(None, "organization_name", None),
-            Vec::new(),
             &mut ifc,
         );
 

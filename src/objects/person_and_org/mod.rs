@@ -28,20 +28,27 @@ impl PersonAndOrganization {
     pub fn new(
         the_person: impl Into<IdOr<Person>>,
         the_organization: impl Into<IdOr<Organization>>,
-        roles: impl IntoIterator<Item = ActorRole>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
             the_person: the_person.into().into_id(ifc).id(),
             the_organization: the_organization.into().into_id(ifc).id(),
-            roles: IfcList(
-                roles
-                    .into_iter()
-                    .map(|r| ifc.data.insert_new(r).id())
-                    .collect(),
-            )
-            .into(),
+            roles: OptionalParameter::omitted(),
         }
+    }
+
+    pub fn add_role(mut self, role: impl Into<IdOr<ActorRole>>, ifc: &mut IFC) -> Self {
+        if self.roles.is_omitted() {
+            self.roles = IfcList::empty().into();
+        }
+
+        self.roles
+            .custom_mut()
+            .unwrap()
+            .0
+            .push(role.into().into_id(ifc).id());
+
+        self
     }
 }
 

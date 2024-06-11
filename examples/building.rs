@@ -173,7 +173,6 @@ fn create_owner_history(
     let person_and_org = PersonAndOrganization::new(
         person.clone(),
         Organization::new(None, organization_name, None),
-        Vec::new(),
         ifc,
     );
 
