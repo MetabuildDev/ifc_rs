@@ -12,44 +12,55 @@ struct VerticalWallParameter {
 fn main() {
     let mut ifc = IFC::default();
 
+    // create person and application info
     let (person, application) =
         create_person_and_applicaton(&mut ifc, "Max", "BuildingExample", "BuildingExample");
 
+    // create owner_history info
     let owner_history = create_owner_history(&mut ifc, "ExampleOrganization", person, application);
 
+    // create measurement units used for this project
     let length = SiUnit::new(IfcUnitEnum::LengthUnit, None, IfcUnitName::Metre);
     let angle = SiUnit::new(IfcUnitEnum::PlaneAngleUnit, None, IfcUnitName::Radian);
     let time = SiUnit::new(IfcUnitEnum::TimeUnit, None, IfcUnitName::Second);
 
+    // collect measurement units
     let unit_assignment = UnitAssigment::new([length.into(), angle.into(), time.into()], &mut ifc);
 
+    // create world root coordinate
     let world_root = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
     let world_root_id = ifc.data.insert_new(world_root);
 
+    // create geometry context
     let context =
         GeometricRepresentationContext::new(DimensionCount::Three, world_root_id.id_or(), &mut ifc)
             .context_identifier("ExampleContext");
     let context_id = ifc.data.insert_new(context);
 
+    // create project
     let project = Project::new("ExampleProject")
         .owner_history(owner_history.id(), &mut ifc)
         .unit_assignment(unit_assignment, &mut ifc)
         .add_context(context_id.id(), &mut ifc);
     let project_id = ifc.data.insert_new(project);
 
+    // create building
     let building = Building::new("ExampleBuilding").owner_history(owner_history.id(), &mut ifc);
     let building_id = ifc.data.insert_new(building);
 
+    // create relation between project and building
     let project_building_relation = RelAggregates::new("ProjectBuildingLink")
         .relate_project_with_buildings(project_id.id(), [building_id.id().into()], &mut ifc);
     ifc.data.insert_new(project_building_relation);
 
+    // create subcontext for our model (wall)
     let sub_context = GeometricRepresentationSubContext::derive(
         context_id.id(),
         GeometricProjection::ModelView,
         &mut ifc,
     );
 
+    // create wall with parameters
     let wall = create_wall(
         &mut ifc,
         "ExampleWall",
@@ -65,21 +76,26 @@ fn main() {
     );
     let wall_id = ifc.data.insert_new(wall);
 
+    // create wall type
     let wall_type = WallType::new("ExampleWallTypeId", WallTypeEnum::NotDefined)
         .owner_history(owner_history.id(), &mut ifc)
         .name("ExampleWallTypeName")
         .owner_history(owner_history.id(), &mut ifc);
     let wall_type_id = ifc.data.insert_new(wall_type);
 
+    // relate wall type to project
     let wall_type_project_relation = RelDeclares::new("ProjectToWallType", project_id, &mut ifc)
-        .relate_definition(wall_type_id.id_or(), &mut ifc);
+        .relate_definition(wall_type_id.id_or(), &mut ifc)
+        .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(wall_type_project_relation);
 
+    // relate wall type to wall
     let wall_wall_type_relation =
         RelDefinesByType::new("WallToWallType", wall_type_id.id_or(), &mut ifc)
             .relate_obj(wall_id.id_or(), &mut ifc);
     ifc.data.insert_new(wall_wall_type_relation);
 
+    // create materials
     let material = Material::new("ExampleMaterial");
     let material_layer = MaterialLayer::new(0.02, false)
         .material(material, &mut ifc)
@@ -97,6 +113,7 @@ fn main() {
         &mut ifc,
     );
 
+    // relate material to wall
     let material_wall_association = RelAssociatesMaterial::new(
         "MaterialWallAssociation",
         material_layer_set_usage,
@@ -106,6 +123,7 @@ fn main() {
     .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(material_wall_association);
 
+    // relate material to wall type
     let wall_type_material_association = RelAssociatesMaterial::new(
         "MaterialWallTypeAssociation",
         material_layer_set_id,
@@ -115,6 +133,7 @@ fn main() {
     .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(wall_type_material_association);
 
+    // relate wall to building
     let spatial_relation =
         RelContainedInSpatialStructure::new("BuildingWallLink", building_id, &mut ifc)
             .relate_structure(wall_id, &mut ifc)
