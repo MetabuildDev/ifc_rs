@@ -1,8 +1,8 @@
 use std::{fmt::Display, ops::Deref};
 
 use super::{
-    length_unit::IfcUnitEnum, name::IfcUnitName, optional::OptionalParameter,
-    place_holder::Inherited, prefix::IfcPrefix, shared::named_unit::NamedUnit, IFCParse, IFCParser,
+    name::IfcUnitName, optional::OptionalParameter, place_holder::Inherited, prefix::IfcPrefix,
+    shared::named_unit::NamedUnit, unit_enum::IfcUnitEnum, IFCParse, IFCParser,
 };
 use crate::{
     ifc_type::IfcType,

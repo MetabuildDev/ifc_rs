@@ -3,7 +3,7 @@ use std::fmt::Display;
 use comma::Comma;
 use optional::OptionalParameter;
 
-use crate::{id::Id, parser::*, units::length_unit::IfcUnitEnum};
+use crate::{id::Id, parser::*, units::unit_enum::IfcUnitEnum};
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcnamedunit.htm
 pub struct NamedUnit {

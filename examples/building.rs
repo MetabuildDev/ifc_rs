@@ -1,21 +1,5 @@
 use glam::DVec3;
-use ifc4::{
-    geometry::{
-        axis::Axis3D, dimension_count::DimensionCount, geometric_projection::GeometricProjection,
-        local_placement::LocalPlacement, point::Point3D, polyline::PolyLine,
-        product_definition_shape::ProductDefinitionShape,
-        representation_context::GeometricRepresentationContext,
-        representation_subcontext::GeometricRepresentationSubContext,
-        shape_representation::ShapeRepresentation,
-    },
-    id::TypedId,
-    parser::timestamp::IfcTimestamp,
-    prelude::*,
-    units::{
-        assignment::UnitAssigment, length_unit::IfcUnitEnum, name::IfcUnitName, si_unit::SiUnit,
-    },
-    IFC,
-};
+use ifc4::prelude::*;
 use std::fs::write;
 
 fn main() {
@@ -44,18 +28,10 @@ fn main() {
     );
     let context_id = ifc.data.insert_new(context);
 
-    let sub_context = GeometricRepresentationSubContext::derive(
-        context_id.clone(),
-        None,
-        GeometricProjection::ModelView,
-        None,
-        &mut ifc,
-    );
-
     let project = Project::new("ExampleProject")
         .owner_history(owner_history.id(), &mut ifc)
         .unit_assignment(unit_assignment, &mut ifc)
-        .add_context(context_id, &mut ifc);
+        .add_context(context_id.id(), &mut ifc);
 
     let building = Building::new("ExampleBuilding").owner_history(owner_history.id(), &mut ifc);
     let building_id = ifc.data.insert_new(building);
@@ -63,6 +39,14 @@ fn main() {
     let project_building_relation = RelAggregates::new("ProjectBuildingLink")
         .relate_project_with_buildings(project, [building_id.id().into()], &mut ifc);
     ifc.data.insert_new(project_building_relation);
+
+    let sub_context = GeometricRepresentationSubContext::derive(
+        context_id.id(),
+        None,
+        GeometricProjection::ModelView,
+        None,
+        &mut ifc,
+    );
 
     let shape_repr = ShapeRepresentation::new(sub_context, &mut ifc).add_item(
         PolyLine::from_3d(
