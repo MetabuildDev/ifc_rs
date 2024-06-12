@@ -28,6 +28,8 @@ pub use super::shared::{
     type_object::{TypeObject, TypeObjectBuilder},
     type_product::{TypeProduct, TypeProductBuilder},
 };
+pub use super::slab::Slab;
+pub use super::slabtype::{type_enum::SlabTypeEnum, SlabType};
 pub use super::wall::Wall;
 pub use super::walltype::{type_enum::WallTypeEnum, WallType};
 pub use super::Structure;
