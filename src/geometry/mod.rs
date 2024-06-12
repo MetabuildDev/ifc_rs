@@ -20,6 +20,7 @@ pub mod rectangle_profile_def;
 pub mod representation_context;
 pub mod representation_subcontext;
 pub mod shape_representation;
+pub mod transformations;
 
 pub struct Geometry;
 
