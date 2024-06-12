@@ -178,43 +178,31 @@ impl<'a> IfcBuildingBuilder<'a> {
         let position = Axis3D::new(Point3D::from(wall_information.placement), self.ifc);
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc)
-            .add_item(
-                PolyLine::from_3d(
-                    [
-                        DVec3::new(0.0, 0.0, 0.0).into(),
-                        DVec3::new(wall_information.length, 0.0, 0.0).into(),
-                    ]
-                    .into_iter(),
-                    self.ifc,
-                ),
-                self.ifc,
-            )
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    RectangleProfileDef::new(
-                        ProfileType::Area,
-                        wall_information.length,
-                        wall_thickness,
-                    )
-                    // center of the rectangle
-                    .position(
-                        Axis2D::new(
-                            Point2D::from(DVec2::new(
-                                wall_information.length * 0.5,
-                                wall_thickness * 0.5,
-                            )),
-                            self.ifc,
-                        ),
+        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
+            ExtrudedAreaSolid::new(
+                RectangleProfileDef::new(
+                    ProfileType::Area,
+                    wall_information.length,
+                    wall_thickness,
+                )
+                // center of the rectangle
+                .position(
+                    Axis2D::new(
+                        Point2D::from(DVec2::new(
+                            wall_information.length * 0.5,
+                            wall_thickness * 0.5,
+                        )),
                         self.ifc,
                     ),
-                    // vertical wall (z-up)
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                    wall_information.height,
                     self.ifc,
                 ),
+                // vertical wall (z-up)
+                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                wall_information.height,
                 self.ifc,
-            );
+            ),
+            self.ifc,
+        );
 
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
         let local_placement = LocalPlacement::new(position, self.ifc);
