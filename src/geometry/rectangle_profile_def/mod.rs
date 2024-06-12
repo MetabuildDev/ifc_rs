@@ -17,10 +17,20 @@ use super::profile_type::ProfileType;
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcrectangleprofiledef.htm
 pub struct RectangleProfileDef {
+    /// Defines the type of geometry into which this profile definition shall be resolved, either a
+    /// curve or a surface area. In case of curve the profile should be referenced by a swept
+    /// surface, in case of area the profile should be referenced by a swept area solid.
     profile_type: ProfileType,
+    /// Human-readable name of the profile, for example according to a standard profile table. As
+    /// noted above, machine-readable standardized profile designations should be provided in
+    /// IfcExternalReference.ItemReference.
     profile_name: OptionalParameter<Label>,
+    /// Position coordinate system of the parameterized profile definition. If unspecified, no
+    /// translation and no rotation is applied.
     position: OptionalParameter<Id>,
+    /// The extent of the rectangle in the direction of the x-axis.
     x_dim: IfcFloat,
+    /// The extent of the rectangle in the direction of the y-axis.
     y_dim: IfcFloat,
 }
 

@@ -1,11 +1,12 @@
 pub mod assignment;
 pub mod conversion_based_unit;
-pub mod unit_enum;
+pub mod dimensional_exponents;
 pub mod name;
 pub mod prefix;
 pub mod prelude;
 pub mod shared;
 pub mod si_unit;
+pub mod unit_enum;
 
 use std::str::FromStr;
 
@@ -24,6 +25,7 @@ impl Units {
             assignment::UnitAssigment::parse_any(),
             conversion_based_unit::ConversionBasedUnit::parse_any(),
             si_unit::SiUnit::parse_any(),
+            dimensional_exponents::DimensionalExponents::parse_any(),
         ))
     }
 }
