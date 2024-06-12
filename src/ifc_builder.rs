@@ -137,7 +137,7 @@ pub struct IfcBuildingBuilder<'a> {
 
     walls: HashSet<TypedId<Wall>>,
 
-    wall_to_wall_type: Vec<(TypedId<Wall>, TypedId<WallType>)>,
+    wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
     material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
     material_to_wall_type: HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
 }
@@ -162,7 +162,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
             walls: HashSet::new(),
 
-            wall_to_wall_type: Vec::new(),
+            wall_type_to_wall: HashMap::new(),
             material_to_wall: HashMap::new(),
             material_to_wall_type: HashMap::new(),
         }
@@ -257,7 +257,10 @@ impl<'a> IfcBuildingBuilder<'a> {
         let wall_id = self.ifc.data.insert_new(wall);
 
         self.walls.insert(wall_id);
-        self.wall_to_wall_type.push((wall_id, wall_type));
+        self.wall_type_to_wall
+            .get_mut(&wall_type)
+            .unwrap()
+            .insert(wall_id);
         self.material_to_wall
             .get_mut(&material)
             .unwrap()
@@ -276,6 +279,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         let wall_type_id = self.ifc.data.insert_new(wall_type);
 
+        self.wall_type_to_wall.insert(wall_type_id, HashSet::new());
         self.material_to_wall_type
             .get_mut(&material)
             .unwrap()
@@ -334,11 +338,15 @@ impl<'a> IfcBuildingBuilder<'a> {
 impl<'a> Drop for IfcBuildingBuilder<'a> {
     fn drop(&mut self) {
         // relate wall type to wall
-        for (index, (wall, wall_type)) in self.wall_to_wall_type.iter().enumerate() {
-            let wall_wall_type_relation =
-                RelDefinesByType::new(format!("WallToWallType{index}"), *wall_type, self.ifc)
-                    .relate_obj(*wall, self.ifc)
+        for (index, (wall_type, walls)) in self.wall_type_to_wall.iter().enumerate() {
+            let mut wall_wall_type_relation =
+                RelDefinesByType::new(format!("WallTypeToWall{index}"), *wall_type, self.ifc)
                     .owner_history(self.owner_history, self.ifc);
+
+            for wall in walls {
+                wall_wall_type_relation = wall_wall_type_relation.relate_obj(*wall, self.ifc)
+            }
+
             self.ifc.data.insert_new(wall_wall_type_relation);
         }
 
