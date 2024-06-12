@@ -3,10 +3,9 @@ mod serialize;
 
 use crate::id::{Id, IdOr};
 use crate::ifc_type::IfcType;
+use crate::objects::person_and_org::PersonOrOrg;
 use crate::parser::label::Label;
 use crate::IFC;
-
-use super::person::Person;
 
 ///  IfcApplication holds the information about an IFC compliant application
 ///  developed by an application developer who is a member of buildingSMART.
@@ -26,8 +25,8 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new(
-        application_developer: impl Into<IdOr<Person>>,
+    pub fn new<T: PersonOrOrg>(
+        application_developer: impl Into<IdOr<T>>,
         version: impl Into<Label>,
         application_full_name: impl Into<Label>,
         application_identifier: impl Into<Label>,

@@ -53,3 +53,7 @@ impl PersonAndOrganization {
 }
 
 impl IfcType for PersonAndOrganization {}
+
+pub trait PersonOrOrg: IfcType {}
+impl PersonOrOrg for Person {}
+impl PersonOrOrg for Organization {}
