@@ -13,6 +13,7 @@ use crate::{
     material::Materials,
     objects::Objects,
     parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
+    relations::Relation,
     units::Units,
 };
 
@@ -21,6 +22,7 @@ impl IFCParse for DataMap {
         let p_obj = p_space_or_comment_surrounded(alt((
             Objects::parse(),
             Geometry::parse(),
+            Relation::parse(),
             Units::parse(),
             Materials::parse(),
         )));
