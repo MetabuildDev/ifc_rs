@@ -1,5 +1,5 @@
 use glam::{DVec2, DVec3};
-use ifc4::{objects::shared::rel_associates::RelAssociatesBuilder, prelude::*};
+use ifc4::prelude::*;
 use std::fs::write;
 
 struct VerticalWallParameter {
@@ -79,8 +79,7 @@ fn main() {
     // create wall type
     let wall_type = WallType::new("ExampleWallTypeId", WallTypeEnum::NotDefined)
         .owner_history(owner_history.id(), &mut ifc)
-        .name("ExampleWallTypeName")
-        .owner_history(owner_history.id(), &mut ifc);
+        .name("ExampleWallTypeName");
     let wall_type_id = ifc.data.insert_new(wall_type);
 
     // // relate wall type to project
