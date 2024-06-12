@@ -23,6 +23,8 @@ pub mod rel_contained_in_spatial_structure;
 pub mod rel_declares;
 pub mod rel_defines_by_type;
 pub mod shared;
+pub mod slab;
+pub mod slabtype;
 pub mod wall;
 pub mod walltype;
 
@@ -43,6 +45,8 @@ impl Objects {
             person_and_org::PersonAndOrganization::parse_any(),
             wall::Wall::parse_any(),
             walltype::WallType::parse_any(),
+            slab::Slab::parse_any(),
+            slabtype::SlabType::parse_any(),
             rel_aggregates::RelAggregates::parse_any(),
             building::Building::parse_any(),
             rel_associates_material::RelAssociatesMaterial::parse_any(),
