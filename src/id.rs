@@ -12,7 +12,7 @@ use crate::{
     IFC,
 };
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Id(pub usize);
 
 impl IFCParse for Id {
@@ -30,10 +30,35 @@ impl Display for Id {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialOrd, Ord)]
 pub struct TypedId<T: IfcType> {
     id: Id,
     t: PhantomData<T>,
+}
+
+impl<T: IfcType> Copy for TypedId<T> {}
+
+impl<T: IfcType> Eq for TypedId<T> {}
+
+impl<T: IfcType> std::hash::Hash for TypedId<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+    }
+}
+
+impl<T: IfcType> PartialEq for TypedId<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl<T: IfcType> Clone for TypedId<T> {
+    fn clone(&self) -> Self {
+        Self {
+            id: self.id.clone(),
+            t: PhantomData,
+        }
+    }
 }
 
 impl<T: IfcType> TypedId<T> {
