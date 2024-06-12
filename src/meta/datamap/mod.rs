@@ -1,7 +1,7 @@
 pub mod deserialize;
 mod serialize;
 
-use std::collections::BTreeMap;
+use std::{any::TypeId, collections::BTreeMap};
 
 use crate::{
     id::{Id, TypedId},
@@ -66,6 +66,12 @@ impl DataMap {
         self.0
             .values()
             .filter_map(|ifc_type| ifc_type.downcast_ref())
+    }
+
+    pub fn id_of<T: IfcType>(&self) -> impl Iterator<Item = TypedId<T>> + '_ {
+        self.0.iter().filter_map(|(id, ifc_type)| {
+            (ifc_type.type_id() == TypeId::of::<T>()).then(|| TypedId::new(*id))
+        })
     }
 }
 

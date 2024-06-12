@@ -5,6 +5,7 @@ pub use super::units::prelude::*;
 
 pub use super::{
     id::{Id, IdOr, TypedId},
+    ifc_builder::*,
     IFC,
 };
 

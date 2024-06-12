@@ -21,7 +21,7 @@ pub use super::shared::{
     element_type::{ElementType, ElementTypeBuilder},
     object::{Object, ObjectBuilder},
     product::{Product, ProductBuilder},
-    rel_associates::RelAssociates,
+    rel_associates::{RelAssociates, RelAssociatesBuilder},
     root::{Root, RootBuilder},
     spatial_element::{SpatialElement, SpatialElementBuilder},
     spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
