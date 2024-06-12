@@ -430,6 +430,18 @@ impl<'a> IfcBuildingBuilder<'a> {
 
 impl<'a> Drop for IfcBuildingBuilder<'a> {
     fn drop(&mut self) {
+        let mut spatial_relation: RelContainedInSpatialStructure =
+            RelContainedInSpatialStructure::new(
+                "BuildingToStructureElements",
+                self.building,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
+
+        // TODO: Organise this better
+
+        // walls ----------------------
+
         // relate wall type to wall
         for (index, (wall_type, walls)) in self.wall_type_to_wall.iter().enumerate() {
             let mut wall_wall_type_relation =
@@ -473,20 +485,12 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.ifc.data.insert_new(wall_type_material_association);
         }
 
-        let mut spatial_relation: RelContainedInSpatialStructure =
-            RelContainedInSpatialStructure::new(
-                "BuildingToStructureElements",
-                self.building,
-                self.ifc,
-            )
-            .owner_history(self.owner_history, self.ifc);
-
         // relate building to walls
         for wall in self.walls.iter() {
             spatial_relation = spatial_relation.relate_structure(*wall, self.ifc);
         }
 
-        // slabs
+        // slabs ----------------------
 
         // relate slab type to slab
         for (index, (slab_type, slabs)) in self.slab_type_to_slab.iter().enumerate() {
