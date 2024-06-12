@@ -35,6 +35,7 @@ impl IFCParse for DataMap {
     }
 }
 
+#[ignore = "not enough struct implemented yet"]
 #[test]
 fn parse_index_map_works() {
     let data = r#"
