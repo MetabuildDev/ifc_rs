@@ -118,7 +118,7 @@ fn main() {
         material_layer_set_usage,
         &mut ifc,
     )
-    .relate_wall(wall_id.id_or(), &mut ifc)
+    .relate_obj(wall_id.id_or(), &mut ifc)
     .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(material_wall_association);
 
@@ -128,7 +128,7 @@ fn main() {
         material_layer_set_id,
         &mut ifc,
     )
-    .relate_wall_type(wall_type_id.id_or(), &mut ifc)
+    .relate_obj(wall_type_id.id_or(), &mut ifc)
     .owner_history(owner_history.id(), &mut ifc);
     ifc.data.insert_new(wall_type_material_association);
 

@@ -2,11 +2,11 @@ use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
 use crate::id::{Id, IdOr};
+use crate::ifc_type::IfcType;
 use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
-use crate::prelude::{Wall, WallType};
 use crate::IFC;
 
 use super::root::Root;
@@ -38,19 +38,11 @@ impl RelAssociates {
 pub trait RelAssociatesBuilder: Sized {
     fn rel_associates_mut(&mut self) -> &mut RelAssociates;
 
-    fn relate_wall_type(mut self, wall_type: impl Into<IdOr<WallType>>, ifc: &mut IFC) -> Self {
+    fn relate_obj<OBJ: IfcType>(mut self, object: impl Into<IdOr<OBJ>>, ifc: &mut IFC) -> Self {
         self.rel_associates_mut()
             .related_objects
             .0
-            .push(wall_type.into().into_id(ifc).id());
-        self
-    }
-
-    fn relate_wall(mut self, wall: impl Into<IdOr<Wall>>, ifc: &mut IFC) -> Self {
-        self.rel_associates_mut()
-            .related_objects
-            .0
-            .push(wall.into().into_id(ifc).id());
+            .push(object.into().into_id(ifc).id());
         self
     }
 }

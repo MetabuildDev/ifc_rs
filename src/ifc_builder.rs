@@ -127,6 +127,12 @@ pub struct VerticalWallParameter {
     pub placement: DVec3,
 }
 
+pub struct HorizontalRectSlabParameter {
+    pub width: f64,
+    pub height: f64,
+    pub placement: DVec3,
+}
+
 pub struct IfcBuildingBuilder<'a> {
     ifc: &'a mut IFC,
 
@@ -136,10 +142,15 @@ pub struct IfcBuildingBuilder<'a> {
     building: TypedId<Building>,
 
     walls: HashSet<TypedId<Wall>>,
+    slabs: HashSet<TypedId<Slab>>,
 
     wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
     material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
     material_to_wall_type: HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
+
+    slab_type_to_slab: HashMap<TypedId<SlabType>, HashSet<TypedId<Slab>>>,
+    material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Slab>>>,
+    material_to_slab_type: HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<SlabType>>>,
 }
 
 impl<'a> IfcBuildingBuilder<'a> {
@@ -161,10 +172,15 @@ impl<'a> IfcBuildingBuilder<'a> {
             sub_context,
 
             walls: HashSet::new(),
+            slabs: HashSet::new(),
 
             wall_type_to_wall: HashMap::new(),
             material_to_wall: HashMap::new(),
             material_to_wall_type: HashMap::new(),
+
+            slab_type_to_slab: HashMap::new(),
+            material_to_slab: HashMap::new(),
+            material_to_slab_type: HashMap::new(),
         }
     }
 
@@ -213,6 +229,53 @@ impl<'a> IfcBuildingBuilder<'a> {
             .representation(product_shape, self.ifc);
 
         self.wall(material, wall_type, wall);
+    }
+
+    pub fn horizontal_rect_slab(
+        &mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        slab_type: TypedId<SlabType>,
+        name: &str,
+        slab_information: HorizontalRectSlabParameter,
+    ) {
+        let position = Axis3D::new(Point3D::from(slab_information.placement), self.ifc);
+        let slab_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
+            ExtrudedAreaSolid::new(
+                RectangleProfileDef::new(
+                    ProfileType::Area,
+                    slab_information.width,
+                    slab_information.height,
+                )
+                // center of the rectangle
+                .position(
+                    Axis2D::new(
+                        Point2D::from(DVec2::new(
+                            slab_information.width * 0.5,
+                            slab_information.height * 0.5,
+                        )),
+                        self.ifc,
+                    ),
+                    self.ifc,
+                ),
+                // horizontal slab (z-up)
+                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                slab_thickness,
+                self.ifc,
+            ),
+            self.ifc,
+        );
+
+        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
+        let local_placement = LocalPlacement::new(position, self.ifc);
+
+        let slab = Slab::new(name)
+            .owner_history(self.owner_history, self.ifc)
+            .object_placement(local_placement, self.ifc)
+            .representation(product_shape, self.ifc);
+
+        self.slab(material, slab_type, slab);
     }
 
     fn calculate_material_layer_set_thickness(
@@ -276,6 +339,46 @@ impl<'a> IfcBuildingBuilder<'a> {
         wall_type_id
     }
 
+    fn slab(
+        &mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        slab_type: TypedId<SlabType>,
+        slab: Slab,
+    ) {
+        let slab_id = self.ifc.data.insert_new(slab);
+
+        self.slabs.insert(slab_id);
+        self.slab_type_to_slab
+            .get_mut(&slab_type)
+            .unwrap()
+            .insert(slab_id);
+        self.material_to_slab
+            .get_mut(&material)
+            .unwrap()
+            .insert(slab_id);
+    }
+
+    pub fn slab_type(
+        &mut self,
+        material: TypedId<MaterialLayerSet>,
+        name: &str,
+        slab_type: SlabTypeEnum,
+    ) -> TypedId<SlabType> {
+        let slab_type = SlabType::new(name, slab_type)
+            .owner_history(self.owner_history, self.ifc)
+            .name(name);
+
+        let slab_type_id = self.ifc.data.insert_new(slab_type);
+
+        self.slab_type_to_slab.insert(slab_type_id, HashSet::new());
+        self.material_to_slab_type
+            .get_mut(&material)
+            .unwrap()
+            .insert(slab_type_id);
+
+        slab_type_id
+    }
+
     pub fn material_layer(
         &mut self,
         name: &str,
@@ -302,6 +405,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         let id = self.ifc.data.insert_new(material_layer_set);
         self.material_to_wall_type.insert(id, HashSet::new());
+        self.material_to_slab_type.insert(id, HashSet::new());
 
         id
     }
@@ -318,6 +422,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         let id = self.ifc.data.insert_new(material_layer_set_usage);
         self.material_to_wall.insert(id, HashSet::new());
+        self.material_to_slab.insert(id, HashSet::new());
 
         id
     }
@@ -345,7 +450,7 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
                     .owner_history(self.owner_history, self.ifc);
 
             for wall in walls {
-                material_wall_association = material_wall_association.relate_wall(*wall, self.ifc);
+                material_wall_association = material_wall_association.relate_obj(*wall, self.ifc);
             }
 
             self.ifc.data.insert_new(material_wall_association);
@@ -362,19 +467,73 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
 
             for wall_type in wall_types {
                 wall_type_material_association =
-                    wall_type_material_association.relate_wall_type(*wall_type, self.ifc);
+                    wall_type_material_association.relate_obj(*wall_type, self.ifc);
             }
 
             self.ifc.data.insert_new(wall_type_material_association);
         }
 
-        // relate building to walls
         let mut spatial_relation: RelContainedInSpatialStructure =
-            RelContainedInSpatialStructure::new("BuildingToWall", self.building, self.ifc)
-                .owner_history(self.owner_history, self.ifc);
+            RelContainedInSpatialStructure::new(
+                "BuildingToStructureElements",
+                self.building,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
 
+        // relate building to walls
         for wall in self.walls.iter() {
             spatial_relation = spatial_relation.relate_structure(*wall, self.ifc);
+        }
+
+        // slabs
+
+        // relate slab type to slab
+        for (index, (slab_type, slabs)) in self.slab_type_to_slab.iter().enumerate() {
+            let mut slab_slab_type_relation =
+                RelDefinesByType::new(format!("SlabTypeToSlab{index}"), *slab_type, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for slab in slabs {
+                slab_slab_type_relation = slab_slab_type_relation.relate_obj(*slab, self.ifc)
+            }
+
+            self.ifc.data.insert_new(slab_slab_type_relation);
+        }
+
+        // relate material to slab
+        for (index, (material, slabs)) in self.material_to_slab.iter().enumerate() {
+            let mut material_slab_association =
+                RelAssociatesMaterial::new(format!("MaterialToSlab{index}"), *material, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for slab in slabs {
+                material_slab_association = material_slab_association.relate_obj(*slab, self.ifc);
+            }
+
+            self.ifc.data.insert_new(material_slab_association);
+        }
+
+        // relate material to slab type
+        for (index, (material, slab_types)) in self.material_to_slab_type.iter().enumerate() {
+            let mut slab_type_material_association = RelAssociatesMaterial::new(
+                format!("MaterialToSlabType{index}"),
+                *material,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
+
+            for slab_type in slab_types {
+                slab_type_material_association =
+                    slab_type_material_association.relate_obj(*slab_type, self.ifc);
+            }
+
+            self.ifc.data.insert_new(slab_type_material_association);
+        }
+
+        // relate building to slabs
+        for slab in self.slabs.iter() {
+            spatial_relation = spatial_relation.relate_structure(*slab, self.ifc);
         }
 
         self.ifc.data.insert_new(spatial_relation);
