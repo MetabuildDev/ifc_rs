@@ -41,6 +41,7 @@ impl Geometry {
             representation_subcontext::GeometricRepresentationSubContext::parse_any(),
             shape_representation::ShapeRepresentation::parse_any(),
             local_placement::LocalPlacement::parse_any(),
+            transformations::CartesianTransformationOperator3DnonUniform::parse_any(),
         ))
     }
 }

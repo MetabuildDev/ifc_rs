@@ -12,3 +12,4 @@ pub use super::rectangle_profile_def::RectangleProfileDef;
 pub use super::representation_context::GeometricRepresentationContext;
 pub use super::representation_subcontext::GeometricRepresentationSubContext;
 pub use super::shape_representation::{ShapeItem, ShapeItems, ShapeRepresentation};
+pub use super::transformations::CartesianTransformationOperator3DnonUniform;

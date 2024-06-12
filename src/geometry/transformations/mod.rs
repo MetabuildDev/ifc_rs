@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     id::IdOr,
+    ifc_type::IfcType,
     parser::{comma::Comma, ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse},
     prelude::Direction3D,
 };
@@ -37,6 +38,8 @@ pub struct CartesianTransformationOperator3DnonUniform {
     /// scale factor.
     pub scale_z: IfcFloat,
 }
+
+impl IfcType for CartesianTransformationOperator3DnonUniform {}
 
 impl Display for CartesianTransformationOperator3DnonUniform {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -93,11 +96,11 @@ mod test {
     fn cartesian_transformation_round_trip() {
         let example = "IFCCARTESIANTRANSFORMATIONOPERATOR3DNONUNIFORM(#30,#31,#15,0.5,#28,0.5,1.);";
 
-        let area_unit = CartesianTransformationOperator3DnonUniform::parse()
+        let structured = CartesianTransformationOperator3DnonUniform::parse()
             .parse(example)
             .unwrap();
-        let str_area_unit = area_unit.to_string();
+        let stringified = structured.to_string();
 
-        assert_eq!(example, str_area_unit);
+        assert_eq!(example, stringified);
     }
 }
