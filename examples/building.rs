@@ -194,43 +194,31 @@ fn create_wall(
     placement: IdOr<Axis3D>,
     sub_context: impl Into<IdOr<GeometricRepresentationSubContext>>,
 ) -> Wall {
-    let shape_repr = ShapeRepresentation::new(sub_context, ifc)
-        .add_item(
-            PolyLine::from_3d(
-                [
-                    DVec3::new(wall_parameter.start, 0.0, 0.0).into(),
-                    DVec3::new(wall_parameter.start + wall_parameter.length, 0.0, 0.0).into(),
-                ]
-                .into_iter(),
-                ifc,
-            ),
-            ifc,
-        )
-        .add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    wall_parameter.length,
-                    wall_parameter.thickness,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            wall_parameter.start + wall_parameter.length * 0.5,
-                            wall_parameter.thickness * 0.5,
-                        )),
-                        ifc,
-                    ),
+    let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+        ExtrudedAreaSolid::new(
+            RectangleProfileDef::new(
+                ProfileType::Area,
+                wall_parameter.length,
+                wall_parameter.thickness,
+            )
+            // center of the rectangle
+            .position(
+                Axis2D::new(
+                    Point2D::from(DVec2::new(
+                        wall_parameter.start + wall_parameter.length * 0.5,
+                        wall_parameter.thickness * 0.5,
+                    )),
                     ifc,
                 ),
-                // vertical wall (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                wall_parameter.height,
                 ifc,
             ),
+            // vertical wall (z-up)
+            Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+            wall_parameter.height,
             ifc,
-        );
+        ),
+        ifc,
+    );
 
     let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, ifc);
 
