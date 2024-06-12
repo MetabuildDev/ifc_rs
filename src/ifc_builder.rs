@@ -329,42 +329,44 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         id
     }
+}
 
-    pub fn build(self) {
+impl<'a> Drop for IfcBuildingBuilder<'a> {
+    fn drop(&mut self) {
         // relate wall type to wall
-        for (index, (wall, wall_type)) in self.wall_to_wall_type.into_iter().enumerate() {
+        for (index, (wall, wall_type)) in self.wall_to_wall_type.iter().enumerate() {
             let wall_wall_type_relation =
-                RelDefinesByType::new(format!("WallToWallType{index}"), wall_type, self.ifc)
-                    .relate_obj(wall, self.ifc)
+                RelDefinesByType::new(format!("WallToWallType{index}"), *wall_type, self.ifc)
+                    .relate_obj(*wall, self.ifc)
                     .owner_history(self.owner_history, self.ifc);
             self.ifc.data.insert_new(wall_wall_type_relation);
         }
 
         // relate material to wall
-        for (index, (material, walls)) in self.material_to_wall.into_iter().enumerate() {
+        for (index, (material, walls)) in self.material_to_wall.iter().enumerate() {
             let mut material_wall_association =
-                RelAssociatesMaterial::new(format!("MaterialToWall{index}"), material, self.ifc)
+                RelAssociatesMaterial::new(format!("MaterialToWall{index}"), *material, self.ifc)
                     .owner_history(self.owner_history, self.ifc);
 
             for wall in walls {
-                material_wall_association = material_wall_association.relate_wall(wall, self.ifc);
+                material_wall_association = material_wall_association.relate_wall(*wall, self.ifc);
             }
 
             self.ifc.data.insert_new(material_wall_association);
         }
 
         // relate material to wall type
-        for (index, (material, wall_types)) in self.material_to_wall_type.into_iter().enumerate() {
+        for (index, (material, wall_types)) in self.material_to_wall_type.iter().enumerate() {
             let mut wall_type_material_association = RelAssociatesMaterial::new(
                 format!("MaterialToWallType{index}"),
-                material,
+                *material,
                 self.ifc,
             )
             .owner_history(self.owner_history, self.ifc);
 
             for wall_type in wall_types {
                 wall_type_material_association =
-                    wall_type_material_association.relate_wall_type(wall_type, self.ifc);
+                    wall_type_material_association.relate_wall_type(*wall_type, self.ifc);
             }
 
             self.ifc.data.insert_new(wall_type_material_association);
@@ -375,8 +377,8 @@ impl<'a> IfcBuildingBuilder<'a> {
             RelContainedInSpatialStructure::new("BuildingToWall", self.building, self.ifc)
                 .owner_history(self.owner_history, self.ifc);
 
-        for wall in self.walls {
-            spatial_relation = spatial_relation.relate_structure(wall, self.ifc);
+        for wall in self.walls.iter() {
+            spatial_relation = spatial_relation.relate_structure(*wall, self.ifc);
         }
 
         self.ifc.data.insert_new(spatial_relation);
