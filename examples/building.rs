@@ -83,11 +83,11 @@ fn main() {
         .owner_history(owner_history.id(), &mut ifc);
     let wall_type_id = ifc.data.insert_new(wall_type);
 
-    // relate wall type to project
-    let wall_type_project_relation = RelDeclares::new("ProjectToWallType", project_id, &mut ifc)
-        .relate_definition(wall_type_id.id_or(), &mut ifc)
-        .owner_history(owner_history.id(), &mut ifc);
-    ifc.data.insert_new(wall_type_project_relation);
+    // // relate wall type to project
+    // let wall_type_project_relation = RelDeclares::new("ProjectToWallType", project_id, &mut ifc)
+    //     .relate_definition(wall_type_id.id_or(), &mut ifc)
+    //     .owner_history(owner_history.id(), &mut ifc);
+    // ifc.data.insert_new(wall_type_project_relation);
 
     // relate wall type to wall
     let wall_wall_type_relation =
