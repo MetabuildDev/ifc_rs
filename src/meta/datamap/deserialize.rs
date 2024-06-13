@@ -12,7 +12,7 @@ use crate::{
     ifc_type::IfcType,
     material::Materials,
     objects::Objects,
-    parser::{p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{dummy::Dummy, p_space_or_comment_surrounded, IFCParse, IFCParser},
     relations::Relation,
     units::Units,
 };
@@ -25,6 +25,7 @@ impl IFCParse for DataMap {
             Relation::parse(),
             Units::parse(),
             Materials::parse(),
+            Dummy::parse_any(),
         )));
         let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
         let p_line_spaced = p_space_or_comment_surrounded(p_line);
