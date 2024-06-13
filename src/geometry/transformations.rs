@@ -5,6 +5,7 @@ use crate::{
     ifc_type::IfcType,
     parser::{comma::Comma, ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse},
     prelude::Direction3D,
+    IFC,
 };
 
 use super::point::Point3D;
@@ -37,6 +38,29 @@ pub struct CartesianTransformationOperator3DnonUniform {
     /// The scaling value specified for the transformation along the axis 3. This is normally the z
     /// scale factor.
     pub scale_z: IfcFloat,
+}
+
+impl CartesianTransformationOperator3DnonUniform {
+    pub fn new(
+        axis_x: impl Into<IdOr<Direction3D>>,
+        axis_y: impl Into<IdOr<Direction3D>>,
+        local_origin: impl Into<IdOr<Point3D>>,
+        scale: f64,
+        axis_z: impl Into<IdOr<Direction3D>>,
+        scale_y: f64,
+        scale_z: f64,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            axis_x: axis_x.into().into_id(ifc),
+            axis_y: axis_y.into().into_id(ifc),
+            local_origin: local_origin.into().into_id(ifc),
+            scale: IfcFloat(scale),
+            axis_z: axis_z.into().into_id(ifc),
+            scale_y: IfcFloat(scale_y),
+            scale_z: IfcFloat(scale_z),
+        }
+    }
 }
 
 impl IfcType for CartesianTransformationOperator3DnonUniform {}
