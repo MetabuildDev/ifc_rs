@@ -15,7 +15,7 @@ use super::{
 use crate::{
     id::IdOr,
     ifc_type::IfcType,
-    objects::slabtype::SlabType,
+    objects::{rel_associates_material::MaterialRelatable, slabtype::SlabType},
     parser::{label::Label, optional::OptionalParameter},
     IFC,
 };
@@ -113,6 +113,7 @@ impl DerefMut for Slab {
 
 impl IfcType for Slab {}
 impl Structure for Slab {}
+impl MaterialRelatable for Slab {}
 
 #[cfg(test)]
 pub mod test {

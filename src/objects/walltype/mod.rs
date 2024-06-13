@@ -4,6 +4,7 @@ use type_enum::WallTypeEnum;
 
 use crate::{
     ifc_type::IfcType,
+    objects::rel_associates_material::MaterialRelatable,
     parser::label::Label,
     prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
 };
@@ -74,6 +75,7 @@ impl Deref for WallType {
 }
 
 impl IfcType for WallType {}
+impl MaterialRelatable for WallType {}
 
 #[cfg(test)]
 mod test {

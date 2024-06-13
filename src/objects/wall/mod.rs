@@ -16,6 +16,7 @@ use super::{
 use crate::{
     id::IdOr,
     ifc_type::IfcType,
+    objects::rel_associates_material::MaterialRelatable,
     parser::{label::Label, optional::OptionalParameter},
     IFC,
 };
@@ -93,6 +94,7 @@ impl DerefMut for Wall {
 
 impl IfcType for Wall {}
 impl Structure for Wall {}
+impl MaterialRelatable for Wall {}
 
 #[cfg(test)]
 pub mod test {
