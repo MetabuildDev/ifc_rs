@@ -4,6 +4,7 @@ use type_enum::SlabTypeEnum;
 
 use crate::{
     ifc_type::IfcType,
+    objects::rel_associates_material::MaterialRelatable,
     parser::label::Label,
     prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
 };
@@ -90,6 +91,7 @@ impl Deref for SlabType {
 }
 
 impl IfcType for SlabType {}
+impl MaterialRelatable for SlabType {}
 
 #[cfg(test)]
 mod test {

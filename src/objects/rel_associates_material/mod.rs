@@ -10,7 +10,11 @@ use crate::{
 
 use super::shared::rel_associates::{RelAssociates, RelAssociatesBuilder};
 
+/// Material set usages & material sets which can be related to.
 pub trait RelatableMaterial: IfcType {}
+
+/// Objects which can be related to materials
+pub trait MaterialRelatable: IfcType {}
 
 /// The aggregation relationship IfcRelAggregates is a special type of
 /// the general composition/decomposition (or whole/part) relationship
@@ -38,7 +42,7 @@ impl RelAssociatesMaterial {
     }
 }
 
-impl RelAssociatesBuilder for RelAssociatesMaterial {
+impl<T: MaterialRelatable> RelAssociatesBuilder<T> for RelAssociatesMaterial {
     fn rel_associates_mut(&mut self) -> &mut RelAssociates {
         &mut self.rel_associates
     }

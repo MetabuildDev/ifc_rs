@@ -45,6 +45,23 @@ fn main() {
                 placement: DVec3::new(0.0, 0.0, 0.0),
             },
         );
+
+        let slab_type = building_builder.slab_type(
+            material_layer_set,
+            "ExampleSlabType",
+            SlabTypeEnum::NotDefined,
+        );
+
+        building_builder.horizontal_rect_slab(
+            material_layer_set_usage,
+            slab_type,
+            "ExampleSlab",
+            HorizontalRectSlabParameter {
+                width: 4.0,
+                height: 4.0,
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
     }
 
     std::fs::write("examples/builder_example.ifc", builder.build()).unwrap();
