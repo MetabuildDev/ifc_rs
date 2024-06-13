@@ -455,7 +455,7 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.ifc.data.insert_new(wall_wall_type_relation);
         }
 
-        // relate material to wall
+        // relate material set usage to wall
         for (index, (material, walls)) in self.material_to_wall.iter().enumerate() {
             let mut material_wall_association =
                 RelAssociatesMaterial::new(format!("MaterialToWall{index}"), *material, self.ifc)
@@ -468,7 +468,7 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.ifc.data.insert_new(material_wall_association);
         }
 
-        // relate material to wall type
+        // relate material set to wall type
         for (index, (material, wall_types)) in self.material_to_wall_type.iter().enumerate() {
             let mut wall_type_material_association = RelAssociatesMaterial::new(
                 format!("MaterialToWallType{index}"),
@@ -505,7 +505,7 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.ifc.data.insert_new(slab_slab_type_relation);
         }
 
-        // relate material to slab
+        // relate material set usage to slab
         for (index, (material, slabs)) in self.material_to_slab.iter().enumerate() {
             let mut material_slab_association =
                 RelAssociatesMaterial::new(format!("MaterialToSlab{index}"), *material, self.ifc)
@@ -518,7 +518,7 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.ifc.data.insert_new(material_slab_association);
         }
 
-        // relate material to slab type
+        // relate material set to slab type
         for (index, (material, slab_types)) in self.material_to_slab_type.iter().enumerate() {
             let mut slab_type_material_association = RelAssociatesMaterial::new(
                 format!("MaterialToSlabType{index}"),
