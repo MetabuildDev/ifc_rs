@@ -15,9 +15,10 @@ use super::{
 use crate::{
     id::{IdOr, TypedId},
     ifc_type::IfcType,
-    objects::{rel_associates_material::MaterialRelatable, slabtype::SlabType},
+    objects::slabtype::SlabType,
     parser::{label::Label, optional::OptionalParameter},
     prelude::{ProductDefinitionShape, TransformableType},
+    relations::rel_associates_material::MaterialRelatable,
     IFC,
 };
 

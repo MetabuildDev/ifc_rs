@@ -7,11 +7,9 @@ use crate::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    prelude::RootBuilder,
+    prelude::{Building, Project, Root, RootBuilder},
     IFC,
 };
-
-use super::{building::Building, project::Project, shared::root::Root};
 
 /// The aggregation relationship IfcRelAggregates is a special type of
 /// the general composition/decomposition (or whole/part) relationship

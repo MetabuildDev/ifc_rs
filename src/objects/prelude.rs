@@ -9,11 +9,7 @@ pub use super::owner_history::OwnerHistory;
 pub use super::person::Person;
 pub use super::person_and_org::PersonAndOrganization;
 pub use super::project::Project;
-pub use super::rel_aggregates::RelAggregates;
-pub use super::rel_associates_material::RelAssociatesMaterial;
-pub use super::rel_contained_in_spatial_structure::RelContainedInSpatialStructure;
-pub use super::rel_declares::RelDeclares;
-pub use super::rel_defines_by_type::RelDefinesByType;
+
 pub use super::shared::{
     composition_type_enum::CompositionTypeEnum,
     context::{Context, ContextBuilder},

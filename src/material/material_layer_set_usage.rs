@@ -3,12 +3,12 @@ use std::fmt::Display;
 use crate::{
     id::{Id, IdOr},
     ifc_type::IfcType,
-    objects::rel_associates_material::RelatableMaterial,
     parser::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
     prelude::MaterialLayerSet,
+    relations::rel_associates_material::RelatableMaterial,
     IFC,
 };
 

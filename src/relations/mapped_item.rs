@@ -5,11 +5,9 @@ use crate::{
     id::{IdOr, TypedId},
     ifc_type::IfcType,
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
-    prelude::ProductDefinitionShape,
+    prelude::{ProductDefinitionShape, RepresentationMap, ShapeItem},
     IFC,
 };
-
-use super::{representation_map::RepresentationMap, shape_representation::ShapeItem};
 
 pub trait TransformableType: IfcType {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>>;
@@ -19,27 +17,27 @@ pub trait TransformableType: IfcType {
 /// / shared cell / macro definition). The instance is inserted by applying a Cartesian
 /// transformation operator as the MappingTarget.
 ///
-///     NOTE  A mapped item is a subtype of representation item. It enables a representation to be
-///     used as a representation item in one or more other representations. The mapped item allows
-///     for the definition of a representation using other representations.
+///   NOTE  A mapped item is a subtype of representation item. It enables a representation to be
+///   used as a representation item in one or more other representations. The mapped item allows
+///   for the definition of a representation using other representations.
 ///
-///     EXAMPLE  An IfcMappedItem can reuse other mapped items (ako nested blocks), doing so the
-///     IfcRepresentationMap is based on an IfcShapeRepresentation including one or more
-///     IfcMappedItem's.
+///   EXAMPLE  An IfcMappedItem can reuse other mapped items (ako nested blocks), doing so the
+///   IfcRepresentationMap is based on an IfcShapeRepresentation including one or more
+///   IfcMappedItem's.
 ///
-///     NOTE  Definition according to ISO/CD 10303-43:1992 A mapped item is a type of
-///     representation item that specifies the mapping of a representation as an element of the
-///     items of a second representation.
+///   NOTE  Definition according to ISO/CD 10303-43:1992 A mapped item is a type of
+///   representation item that specifies the mapping of a representation as an element of the
+///   items of a second representation.
 ///
-///     NOTE  Entity adapted from mapped_item defined in ISO 10303-43.
+///   NOTE  Entity adapted from mapped_item defined in ISO 10303-43.
 ///
-///     HISTORY  New entity in IFC2x.
+///   HISTORY  New entity in IFC2x.
 ///
 /// Informal Propositions:
 ///
-///     A mapped item shall not be self-defining by participating in the definition of the
-///     representation being mapped. The dimensionality of the mapping source and the mapping
-///     target has to be the same, if the mapping source is a geometric representation item.
+///   A mapped item shall not be self-defining by participating in the definition of the
+///   representation being mapped. The dimensionality of the mapping source and the mapping
+///   target has to be the same, if the mapping source is a geometric representation item.
 pub struct MappedItem {
     /// A representation map that is the source of the mapped item. It can be seen as a block (or
     /// cell or marco) definition.

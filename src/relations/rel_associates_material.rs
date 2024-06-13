@@ -4,11 +4,9 @@ use crate::{
     id::{Id, IdOr},
     ifc_type::IfcType,
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
-    prelude::{Root, RootBuilder},
+    prelude::{RelAssociates, RelAssociatesBuilder, Root, RootBuilder},
     IFC,
 };
-
-use super::shared::rel_associates::{RelAssociates, RelAssociatesBuilder};
 
 /// Material set usages & material sets which can be related to.
 pub trait RelatableMaterial: IfcType {}

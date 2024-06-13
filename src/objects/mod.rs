@@ -17,11 +17,6 @@ pub mod person;
 pub mod person_and_org;
 pub mod prelude;
 pub mod project;
-pub mod rel_aggregates;
-pub mod rel_associates_material;
-pub mod rel_contained_in_spatial_structure;
-pub mod rel_declares;
-pub mod rel_defines_by_type;
 pub mod shared;
 pub mod slab;
 pub mod slabtype;
@@ -47,13 +42,8 @@ impl Objects {
             walltype::WallType::parse_any(),
             slab::Slab::parse_any(),
             slabtype::SlabType::parse_any(),
-            rel_aggregates::RelAggregates::parse_any(),
             building::Building::parse_any(),
-            rel_associates_material::RelAssociatesMaterial::parse_any(),
-            rel_contained_in_spatial_structure::RelContainedInSpatialStructure::parse_any(),
             project::Project::parse_any(),
-            rel_declares::RelDeclares::parse_any(),
-            rel_defines_by_type::RelDefinesByType::parse_any(),
         ))
     }
 }

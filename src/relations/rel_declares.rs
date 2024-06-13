@@ -9,11 +9,10 @@ use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::Project;
+use crate::prelude::Root;
 use crate::prelude::RootBuilder;
 use crate::IFC;
-
-use super::project::Project;
-use super::shared::root::Root;
 
 /// The objectified relationship IfcRelDeclares handles the declaration of
 /// objects (subtypes of IfcObject) or properties (subtypes of

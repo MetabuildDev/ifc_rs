@@ -13,7 +13,6 @@ pub mod extruded_area_solid;
 pub mod geometric_projection;
 pub mod indexed_poly_curve;
 pub mod local_placement;
-pub mod mapped_item;
 pub mod point;
 pub mod point_list;
 pub mod polyline;
@@ -22,7 +21,6 @@ pub mod product_definition_shape;
 pub mod profile_type;
 pub mod rectangle_profile_def;
 pub mod representation_context;
-pub mod representation_map;
 pub mod representation_subcontext;
 pub mod shape_representation;
 pub mod transformations;
@@ -50,8 +48,6 @@ impl Geometry {
             representation_subcontext::GeometricRepresentationSubContext::parse_any(),
             shape_representation::ShapeRepresentation::parse_any(),
             local_placement::LocalPlacement::parse_any(),
-            mapped_item::MappedItem::parse_any(),
-            representation_map::RepresentationMap::parse_any(),
             transformations::CartesianTransformationOperator3DnonUniform::parse_any(),
         ))
     }

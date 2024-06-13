@@ -9,10 +9,9 @@ use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::Root;
 use crate::prelude::RootBuilder;
 use crate::IFC;
-
-use super::shared::root::Root;
 
 /// The objectified relationship IfcRelDefinesByType defines the relationship
 /// between an object type and object occurrences. The IfcRelDefinesByType is

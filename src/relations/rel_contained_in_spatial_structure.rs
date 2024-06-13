@@ -9,11 +9,10 @@ use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
+use crate::prelude::Root;
 use crate::prelude::RootBuilder;
+use crate::prelude::Structure;
 use crate::IFC;
-
-use super::shared::root::Root;
-use super::Structure;
 
 /// This objectified relationship, IfcRelContainedInSpatialStructure,
 /// is used to assign elements to a certain level of the spatial project

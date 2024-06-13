@@ -4,9 +4,9 @@ use type_enum::WallTypeEnum;
 
 use crate::{
     ifc_type::IfcType,
-    objects::rel_associates_material::MaterialRelatable,
     parser::label::Label,
     prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
+    relations::rel_associates_material::MaterialRelatable,
 };
 
 use super::shared::{
