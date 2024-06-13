@@ -4,7 +4,8 @@ use crate::{
     id::IdOr,
     ifc_type::IfcType,
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
-    prelude::{Axis2D, ShapeRepresentation},
+    prelude::{Axis3D, ShapeRepresentation},
+    IFC,
 };
 
 /// An IfcRepresentationMap defines the base definition (also referred to as block, cell or macro)
@@ -32,12 +33,25 @@ use crate::{
 ///     HISTORY  New entity in IFC2x.
 pub struct RepresentationMap {
     /// An axis2 placement that defines the position about which the mapped representation is mapped.
-    pub origin: IdOr<Axis2D>,
+    pub origin: IdOr<Axis3D>,
     // FIXME: This should be more general. The docs state that this can be anything that's
     // specializing the [IfcRepresentation](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrepresentation.htm).
     // See issue #46
     /// A representation that is mapped to at least one mapped item.
     pub representation: IdOr<ShapeRepresentation>,
+}
+
+impl RepresentationMap {
+    pub fn new(
+        origin: impl Into<IdOr<Axis3D>>,
+        representation: impl Into<IdOr<ShapeRepresentation>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            origin: origin.into().into_id(ifc),
+            representation: representation.into().into_id(ifc),
+        }
+    }
 }
 
 impl IfcType for RepresentationMap {}

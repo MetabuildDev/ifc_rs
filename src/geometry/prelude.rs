@@ -4,7 +4,7 @@ pub use super::direction::{Direction2D, Direction3D};
 pub use super::extruded_area_solid::ExtrudedAreaSolid;
 pub use super::geometric_projection::GeometricProjection;
 pub use super::local_placement::LocalPlacement;
-pub use super::mapped_item::MappedItem;
+pub use super::mapped_item::{MappedItem, TransformableType};
 pub use super::point::{CartesianPoint, Point2D, Point3D, PointType};
 pub use super::polyline::PolyLine;
 pub use super::product_definition_shape::ProductDefinitionShape;

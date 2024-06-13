@@ -13,10 +13,11 @@ use super::{
     Structure,
 };
 use crate::{
-    id::IdOr,
+    id::{IdOr, TypedId},
     ifc_type::IfcType,
     objects::{rel_associates_material::MaterialRelatable, slabtype::SlabType},
     parser::{label::Label, optional::OptionalParameter},
+    prelude::{ProductDefinitionShape, TransformableType},
     IFC,
 };
 
@@ -114,6 +115,12 @@ impl DerefMut for Slab {
 impl IfcType for Slab {}
 impl Structure for Slab {}
 impl MaterialRelatable for Slab {}
+
+impl TransformableType for Slab {
+    fn shape(&self) -> Option<TypedId<ProductDefinitionShape>> {
+        self.representation.custom().map(|id| TypedId::new(*id))
+    }
+}
 
 #[cfg(test)]
 pub mod test {

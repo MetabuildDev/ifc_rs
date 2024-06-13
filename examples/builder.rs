@@ -38,12 +38,28 @@ fn main() {
         building_builder.vertical_wall(
             material_layer_set_usage,
             wall_type,
-            "ExampleWall",
+            "ExampleWallDefault",
             VerticalWallParameter {
                 height: 2.0,
                 length: 4.0,
                 placement: DVec3::new(0.0, 0.0, 0.0),
             },
+        );
+
+        let wall = building_builder.vertical_wall(
+            material_layer_set_usage,
+            wall_type,
+            "ExampleWallRotated",
+            VerticalWallParameter {
+                height: 2.0,
+                length: 4.0,
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
+
+        building_builder.add_transformation(
+            wall,
+            TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
         );
 
         let slab_type = building_builder.slab_type(

@@ -2,12 +2,18 @@ use std::fmt::Display;
 
 use crate::{
     geometry::transformations::CartesianTransformationOperator3DnonUniform,
-    id::IdOr,
+    id::{IdOr, TypedId},
     ifc_type::IfcType,
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
+    prelude::ProductDefinitionShape,
+    IFC,
 };
 
-use super::representation_map::RepresentationMap;
+use super::{representation_map::RepresentationMap, shape_representation::ShapeItem};
+
+pub trait TransformableType: IfcType {
+    fn shape(&self) -> Option<TypedId<ProductDefinitionShape>>;
+}
 
 /// The IfcMappedItem is the inserted instance of a source definition (to be compared with a block
 /// / shared cell / macro definition). The instance is inserted by applying a Cartesian
@@ -46,7 +52,21 @@ pub struct MappedItem {
     pub target: IdOr<CartesianTransformationOperator3DnonUniform>,
 }
 
+impl MappedItem {
+    pub fn new(
+        source: impl Into<IdOr<RepresentationMap>>,
+        target: impl Into<IdOr<CartesianTransformationOperator3DnonUniform>>,
+        ifc: &mut IFC,
+    ) -> Self {
+        Self {
+            source: source.into().into_id(ifc),
+            target: target.into().into_id(ifc),
+        }
+    }
+}
+
 impl IfcType for MappedItem {}
+impl ShapeItem for MappedItem {}
 
 impl Display for MappedItem {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

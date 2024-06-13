@@ -96,6 +96,17 @@ impl<T> IdOr<T> {
             Self::Custom(_) => panic!("IdOr: called Id on Custom"),
         }
     }
+
+    pub fn mapped_into<I>(self) -> IdOr<I>
+    where
+        T: Into<I>,
+        I: IfcType,
+    {
+        match self {
+            Self::Id(id) => IdOr::Id(id),
+            Self::Custom(t) => IdOr::Custom(t.into()),
+        }
+    }
 }
 
 impl<T: IfcType> IdOr<T> {

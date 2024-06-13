@@ -59,6 +59,7 @@ fn main() {
         GeometricProjection::ModelView,
         &mut ifc,
     );
+    let sub_context_id = ifc.data.insert_new(sub_context);
 
     // create wall with parameters
     let wall = create_wall(
@@ -72,7 +73,7 @@ fn main() {
         },
         owner_history.id(),
         world_root_id.id_or(),
-        sub_context,
+        sub_context_id,
     );
     let wall_id = ifc.data.insert_new(wall);
 
@@ -191,7 +192,7 @@ fn create_wall(
     wall_parameter: VerticalWallParameter,
     owner_history: impl Into<IdOr<OwnerHistory>>,
     placement: IdOr<Axis3D>,
-    sub_context: impl Into<IdOr<GeometricRepresentationSubContext>>,
+    sub_context: TypedId<GeometricRepresentationSubContext>,
 ) -> Wall {
     let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
         ExtrudedAreaSolid::new(
@@ -219,7 +220,41 @@ fn create_wall(
         ifc,
     );
 
-    let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, ifc);
+    let shape_repr_id = ifc.data.insert_new(shape_repr);
+
+    let x = DVec3::new(1.0, 1.0, 0.0);
+    let y = DVec3::new(-1.0, 1.0, 0.0);
+    let z = DVec3::new(0.0, 0.0, 1.0);
+    let origin = DVec3::new(0.0, 0.0, 0.0);
+    let scale = 1.0;
+    let scale_y = 1.0;
+    let scale_z = 1.0;
+
+    let transformation = CartesianTransformationOperator3DnonUniform::new(
+        Direction3D::from(x),
+        Direction3D::from(y),
+        Point3D::from(origin),
+        scale,
+        Direction3D::from(z),
+        scale_y,
+        scale_z,
+        ifc,
+    );
+
+    let representation_map = RepresentationMap::new(
+        Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), ifc),
+        shape_repr_id,
+        ifc,
+    );
+
+    let transformation_shape = ShapeRepresentation::new(sub_context, ifc).add_item(
+        MappedItem::new(representation_map, transformation, ifc),
+        ifc,
+    );
+
+    let product_shape = ProductDefinitionShape::new()
+        .add_representation(shape_repr_id, ifc)
+        .add_representation(transformation_shape, ifc);
 
     let local_placement = LocalPlacement::new(placement, ifc);
 

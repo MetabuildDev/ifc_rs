@@ -14,10 +14,11 @@ use super::{
     Structure,
 };
 use crate::{
-    id::IdOr,
+    id::{IdOr, TypedId},
     ifc_type::IfcType,
     objects::rel_associates_material::MaterialRelatable,
     parser::{label::Label, optional::OptionalParameter},
+    prelude::{ProductDefinitionShape, TransformableType},
     IFC,
 };
 
@@ -95,6 +96,12 @@ impl DerefMut for Wall {
 impl IfcType for Wall {}
 impl Structure for Wall {}
 impl MaterialRelatable for Wall {}
+
+impl TransformableType for Wall {
+    fn shape(&self) -> Option<TypedId<ProductDefinitionShape>> {
+        self.representation.custom().map(|id| TypedId::new(*id))
+    }
+}
 
 #[cfg(test)]
 pub mod test {
