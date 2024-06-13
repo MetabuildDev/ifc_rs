@@ -1,4 +1,4 @@
-use glam::DVec3;
+use glam::{DVec2, DVec3};
 use ifc4::prelude::*;
 
 fn main() {
@@ -68,13 +68,30 @@ fn main() {
             SlabTypeEnum::NotDefined,
         );
 
-        building_builder.horizontal_rect_slab(
+        // building_builder.horizontal_rect_slab(
+        //     material_layer_set_usage,
+        //     slab_type,
+        //     "ExampleSlab",
+        //     HorizontalRectSlabParameter {
+        //         width: 4.0,
+        //         height: 4.0,
+        //         placement: DVec3::new(0.0, 0.0, 0.0),
+        //     },
+        // );
+
+        building_builder.horizontal_arbitrary_slab(
             material_layer_set_usage,
             slab_type,
             "ExampleSlab",
-            HorizontalRectSlabParameter {
-                width: 4.0,
-                height: 4.0,
+            HorizontalArbitrarySlabParameter {
+                coords: vec![
+                    DVec2::ZERO,
+                    DVec2::new(0.0, 4.0),
+                    DVec2::new(2.0, 6.0),
+                    DVec2::new(4.0, 4.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::ZERO,
+                ],
                 placement: DVec3::new(0.0, 0.0, 0.0),
             },
         );

@@ -5,14 +5,17 @@ use crate::{
     parser::{IFCParse, IFCParser},
 };
 
+pub mod arbitrary_closed_profile_def;
 pub mod axis;
 pub mod dimension_count;
 pub mod direction;
 pub mod extruded_area_solid;
 pub mod geometric_projection;
+pub mod indexed_poly_curve;
 pub mod local_placement;
 pub mod mapped_item;
 pub mod point;
+pub mod point_list;
 pub mod polyline;
 pub mod prelude;
 pub mod product_definition_shape;
@@ -29,13 +32,17 @@ pub struct Geometry;
 impl Geometry {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
+            arbitrary_closed_profile_def::ArbitraryClosedProfileDef::parse_any(),
             axis::Axis2D::parse_any(),
             axis::Axis3D::parse_any(),
             direction::Direction2D::parse_any(),
             direction::Direction3D::parse_any(),
             extruded_area_solid::ExtrudedAreaSolid::parse_any(),
+            indexed_poly_curve::IndexedPolyCurve::parse_any(),
             point::Point2D::parse_any(),
             point::Point3D::parse_any(),
+            point_list::PointList2D::parse_any(),
+            point_list::PointList3D::parse_any(),
             polyline::PolyLine::parse_any(),
             product_definition_shape::ProductDefinitionShape::parse_any(),
             rectangle_profile_def::RectangleProfileDef::parse_any(),

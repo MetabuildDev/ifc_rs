@@ -133,6 +133,11 @@ pub struct HorizontalRectSlabParameter {
     pub placement: DVec3,
 }
 
+pub struct HorizontalArbitrarySlabParameter {
+    pub coords: Vec<DVec2>,
+    pub placement: DVec3,
+}
+
 // omit scale for now
 pub struct TransformParameter {
     translation: DVec3,
@@ -279,6 +284,45 @@ impl<'a> IfcBuildingBuilder<'a> {
             .representation(product_shape, self.ifc);
 
         self.wall(material, wall_type, wall)
+    }
+
+    pub fn horizontal_arbitrary_slab(
+        &mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        slab_type: TypedId<SlabType>,
+        name: &str,
+        slab_information: HorizontalArbitrarySlabParameter,
+    ) {
+        let position = Axis3D::new(Point3D::from(slab_information.placement), self.ifc);
+        let slab_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
+            ExtrudedAreaSolid::new(
+                ArbitraryClosedProfileDef::new(
+                    ProfileType::Area,
+                    IndexedPolyCurve::new(
+                        PointList2D::new(slab_information.coords.into_iter()),
+                        self.ifc,
+                    ),
+                    self.ifc,
+                ),
+                // horizontal slab (z-up)
+                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                slab_thickness,
+                self.ifc,
+            ),
+            self.ifc,
+        );
+
+        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
+        let local_placement = LocalPlacement::new(position, self.ifc);
+
+        let slab = Slab::new(name)
+            .owner_history(self.owner_history, self.ifc)
+            .object_placement(local_placement, self.ifc)
+            .representation(product_shape, self.ifc);
+
+        self.slab(material, slab_type, slab);
     }
 
     pub fn horizontal_rect_slab(

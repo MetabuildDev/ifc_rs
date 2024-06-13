@@ -1,6 +1,7 @@
+use crate::geometry::rectangle_profile_def::ProfileDef;
 use crate::id::IdOr;
 use crate::ifc_type::IfcType;
-use crate::prelude::{Axis3D, Direction3D, RectangleProfileDef};
+use crate::prelude::{Axis3D, Direction3D};
 use crate::{id::Id, parser::ifc_float::IfcFloat};
 use crate::{parser::*, IFC};
 use comma::Comma;
@@ -38,8 +39,8 @@ pub struct ExtrudedAreaSolid {
 }
 
 impl ExtrudedAreaSolid {
-    pub fn new(
-        swept_area: impl Into<IdOr<RectangleProfileDef>>,
+    pub fn new<P: ProfileDef>(
+        swept_area: impl Into<IdOr<P>>,
         extruded_direction: impl Into<IdOr<Direction3D>>,
         depth: f64,
         ifc: &mut IFC,

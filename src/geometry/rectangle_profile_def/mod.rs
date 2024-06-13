@@ -62,6 +62,10 @@ impl RectangleProfileDef {
 
 impl IfcType for RectangleProfileDef {}
 
+// TODO: move trait somewhere more general
+pub trait ProfileDef: IfcType {}
+impl ProfileDef for RectangleProfileDef {}
+
 #[cfg(test)]
 mod test {
     use winnow::Parser;

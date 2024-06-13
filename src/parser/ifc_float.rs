@@ -68,6 +68,12 @@ impl Deref for IfcDVec2 {
     }
 }
 
+impl From<DVec2> for IfcDVec2 {
+    fn from(value: DVec2) -> Self {
+        Self(value)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct IfcDVec3(pub(crate) DVec3);
 
@@ -96,6 +102,12 @@ impl Deref for IfcDVec3 {
     type Target = DVec3;
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+
+impl From<DVec3> for IfcDVec3 {
+    fn from(value: DVec3) -> Self {
+        Self(value)
     }
 }
 
