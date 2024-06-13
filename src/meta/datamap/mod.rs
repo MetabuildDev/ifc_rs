@@ -28,26 +28,31 @@ impl DataMap {
         TypedId::new(new_id)
     }
 
-    pub fn insert<T: IfcType + 'static>(&mut self, id: Id, value: T) -> Option<Box<dyn IfcType>> {
-        self.0.insert(id, Box::new(value))
+    pub fn insert<T: IfcType + 'static>(
+        &mut self,
+        id: impl Into<Id>,
+        value: T,
+    ) -> Option<Box<dyn IfcType>> {
+        self.0.insert(id.into(), Box::new(value))
     }
 
-    pub fn insert_if_not_exists<T: Default + IfcType + 'static>(&mut self, id: Id) {
-        if !self.contains(id) {
+    pub fn insert_if_not_exists<T: Default + IfcType + 'static>(&mut self, id: impl Into<Id>) {
+        let id = id.into();
+        if !self.contains(&id) {
             self.insert(id, T::default());
         }
     }
 
-    pub fn remove(&mut self, id: Id) -> Option<Box<dyn IfcType>> {
-        self.0.remove(&id)
+    pub fn remove(&mut self, id: impl Into<Id>) -> Option<Box<dyn IfcType>> {
+        self.0.remove(&id.into())
     }
 
-    pub fn get<T: IfcType>(&self, id: Id) -> &T {
+    pub fn get<T: IfcType>(&self, id: impl Into<Id>) -> &T {
         self.get_untyped(id).downcast_ref().unwrap()
     }
 
-    pub fn get_untyped(&self, id: Id) -> &Box<dyn IfcType> {
-        self.0.get(&id).unwrap()
+    pub fn get_untyped(&self, id: impl Into<Id>) -> &Box<dyn IfcType> {
+        self.0.get(&id.into()).unwrap()
     }
 
     pub fn get_mut<T: IfcType>(&mut self, id: Id) -> &mut T {
@@ -68,8 +73,8 @@ impl DataMap {
         )
     }
 
-    pub fn contains(&self, id: Id) -> bool {
-        self.0.contains_key(&id)
+    pub fn contains(&self, id: &Id) -> bool {
+        self.0.contains_key(id)
     }
 
     pub fn find_all_of_type<T: IfcType>(&self) -> impl Iterator<Item = &T> {

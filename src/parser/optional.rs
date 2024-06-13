@@ -66,6 +66,7 @@ impl<T: IFCParse> From<Option<T>> for OptionalParameter<T> {
         }
     }
 }
+
 impl<T: IFCParse> From<T> for OptionalParameter<T> {
     fn from(value: T) -> Self {
         Self::Custom(value)

@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
-use crate::geometry::arbitrary_closed_profile_def::ArbitraryClosedProfileDef;
+use crate::geometry::{
+    arbitrary_closed_profile_def::ArbitraryClosedProfileDef, indexed_poly_curve::Curve,
+};
 
-impl Display for ArbitraryClosedProfileDef {
+impl<C: Curve> Display for ArbitraryClosedProfileDef<C> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

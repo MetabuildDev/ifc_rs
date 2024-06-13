@@ -3,11 +3,11 @@ mod serialize;
 
 use crate::geometry::indexed_poly_curve::Curve;
 use crate::geometry::rectangle_profile_def::ProfileDef;
-use crate::id::IdOr;
+use crate::id::{IdOr, TypedId};
 use crate::ifc_type::IfcType;
 use crate::parser::label::Label;
+use crate::parser::optional::OptionalParameter;
 use crate::IFC;
-use crate::{id::Id, parser::optional::OptionalParameter};
 
 use super::profile_type::ProfileType;
 
@@ -17,7 +17,7 @@ use super::profile_type::ProfileType;
 /// boundary from which the surface or solid can be constructed.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcarbitraryclosedprofiledef.htm
-pub struct ArbitraryClosedProfileDef {
+pub struct ArbitraryClosedProfileDef<C: Curve> {
     /// Defines the type of geometry into which this profile definition shall be resolved, either a
     /// curve or a surface area. In case of curve the profile should be referenced by a swept
     /// surface, in case of area the profile should be referenced by a swept area solid.
@@ -27,20 +27,15 @@ pub struct ArbitraryClosedProfileDef {
     /// IfcExternalReference.ItemReference.
     profile_name: OptionalParameter<Label>,
     /// `IfcCurve` Bounded curve, defining the outer boundaries of the arbitrary profile.
-    // TODO: this should be `TypeId<C: Curve>` see issue #57
-    outer_curve: Id,
+    outer_curve: TypedId<C>,
 }
 
-impl ArbitraryClosedProfileDef {
-    pub fn new<C: Curve>(
-        profile_type: ProfileType,
-        outer_curve: impl Into<IdOr<C>>,
-        ifc: &mut IFC,
-    ) -> Self {
+impl<C: Curve> ArbitraryClosedProfileDef<C> {
+    pub fn new(profile_type: ProfileType, outer_curve: impl Into<IdOr<C>>, ifc: &mut IFC) -> Self {
         Self {
             profile_type,
             profile_name: OptionalParameter::omitted(),
-            outer_curve: outer_curve.into().into_id(ifc).id(),
+            outer_curve: outer_curve.into().or_insert(ifc),
         }
     }
 
@@ -50,8 +45,8 @@ impl ArbitraryClosedProfileDef {
     }
 }
 
-impl IfcType for ArbitraryClosedProfileDef {}
-impl ProfileDef for ArbitraryClosedProfileDef {}
+impl<C: Curve> IfcType for ArbitraryClosedProfileDef<C> {}
+impl<C: Curve> ProfileDef for ArbitraryClosedProfileDef<C> {}
 
 #[cfg(test)]
 mod test {
@@ -59,13 +54,15 @@ mod test {
 
     use crate::geometry::arbitrary_closed_profile_def::ArbitraryClosedProfileDef;
     use crate::parser::IFCParse;
+    use crate::prelude::IndexedPolyCurve;
 
     #[test]
     fn arbitrary_closed_profile_def_round_trip() {
         let example = "IFCARBITRARYCLOSEDPROFILEDEF(.AREA.,$,#25);";
 
-        let profile_def: ArbitraryClosedProfileDef =
-            ArbitraryClosedProfileDef::parse().parse(example).unwrap();
+        let profile_def = ArbitraryClosedProfileDef::<IndexedPolyCurve>::parse()
+            .parse(example)
+            .unwrap();
         let str_profile_def = format!("{profile_def}");
 
         assert_eq!(example, str_profile_def);

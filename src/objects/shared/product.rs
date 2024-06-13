@@ -67,7 +67,7 @@ pub trait ProductBuilder: Sized {
         ifc: &mut IFC,
     ) -> Self {
         self.product_mut().object_placement =
-            IdOr::Id(object_placement.into().into_id(ifc).id()).into();
+            IdOr::Id(object_placement.into().or_insert(ifc).id()).into();
         self
     }
 
@@ -76,7 +76,7 @@ pub trait ProductBuilder: Sized {
         representation: impl Into<IdOr<ProductDefinitionShape>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.product_mut().representation = representation.into().into_id(ifc).id().into();
+        self.product_mut().representation = representation.into().or_insert(ifc).id().into();
         self
     }
 }

@@ -75,7 +75,7 @@ impl MaterialLayerSetUsage {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            spatial_element_structure: spatial_element_structure.into().into_id(ifc).id(),
+            spatial_element_structure: spatial_element_structure.into().or_insert(ifc).id(),
             layer_set_direction,
             direction_sense,
             offset_from_reference_line: offset_from_reference_line.into(),

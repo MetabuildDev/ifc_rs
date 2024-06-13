@@ -73,7 +73,7 @@ impl Building {
         postal_address: impl Into<IdOr<PostalAddress>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.building_address = postal_address.into().into_id(ifc).id().into();
+        self.building_address = postal_address.into().or_insert(ifc).id().into();
         self
     }
 }

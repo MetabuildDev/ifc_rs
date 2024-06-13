@@ -31,8 +31,8 @@ impl PersonAndOrganization {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            the_person: the_person.into().into_id(ifc).id(),
-            the_organization: the_organization.into().into_id(ifc).id(),
+            the_person: the_person.into().or_insert(ifc).id(),
+            the_organization: the_organization.into().or_insert(ifc).id(),
             roles: OptionalParameter::omitted(),
         }
     }
@@ -46,7 +46,7 @@ impl PersonAndOrganization {
             .custom_mut()
             .unwrap()
             .0
-            .push(role.into().into_id(ifc).id());
+            .push(role.into().or_insert(ifc).id());
 
         self
     }

@@ -55,7 +55,7 @@ impl RectangleProfileDef {
         position: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.position = position.into().into_id(ifc).id().into();
+        self.position = position.into().or_insert(ifc).id().into();
         self
     }
 }

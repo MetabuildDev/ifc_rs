@@ -46,15 +46,15 @@ impl ExtrudedAreaSolid {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            swept_area: swept_area.into().into_id(ifc).id(),
+            swept_area: swept_area.into().or_insert(ifc).id(),
             position: OptionalParameter::omitted(),
-            extruded_direction: extruded_direction.into().into_id(ifc).id(),
+            extruded_direction: extruded_direction.into().or_insert(ifc).id(),
             depth: depth.into(),
         }
     }
 
     pub fn position(mut self, position: impl Into<IdOr<Axis3D>>, ifc: &mut IFC) -> Self {
-        self.position = position.into().into_id(ifc).id().into();
+        self.position = position.into().or_insert(ifc).id().into();
         self
     }
 }

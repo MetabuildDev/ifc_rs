@@ -35,7 +35,7 @@ impl RelAssociatesMaterial {
     ) -> Self {
         Self {
             rel_associates: RelAssociates::new(Root::new(id.into())),
-            relating_material: material_layer_set.into().into_id(ifc).id(),
+            relating_material: material_layer_set.into().or_insert(ifc).id(),
         }
     }
 }

@@ -57,8 +57,8 @@ impl MappedItem {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            source: source.into().into_id(ifc),
-            target: target.into().into_id(ifc),
+            source: source.into().or_insert(ifc).into(),
+            target: target.into().or_insert(ifc).into(),
         }
     }
 }

@@ -52,7 +52,7 @@ impl GeometricRepresentationContext {
         world_coord_system: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
-        let id = world_coord_system.into().into_id(ifc);
+        let id = world_coord_system.into().or_insert(ifc);
 
         Self {
             context_identifier: OptionalParameter::omitted(),
@@ -84,7 +84,7 @@ impl GeometricRepresentationContext {
         direction: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.true_north = direction.into().into_id(ifc).id().into();
+        self.true_north = direction.into().or_insert(ifc).id().into();
         self
     }
 }

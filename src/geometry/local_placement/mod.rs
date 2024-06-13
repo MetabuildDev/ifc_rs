@@ -36,7 +36,7 @@ impl LocalPlacement {
     pub fn new<A: AxisPlacement>(relative_placement: impl Into<IdOr<A>>, ifc: &mut IFC) -> Self {
         Self {
             placement_rel_to: OptionalParameter::omitted(),
-            relative_placement: relative_placement.into().into_id(ifc).id(),
+            relative_placement: relative_placement.into().or_insert(ifc).id(),
         }
     }
 
@@ -45,7 +45,7 @@ impl LocalPlacement {
         placement_rel_to: impl Into<IdOr<A>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.placement_rel_to = placement_rel_to.into().into_id(ifc).id().into();
+        self.placement_rel_to = placement_rel_to.into().or_insert(ifc).id().into();
         self
     }
 }

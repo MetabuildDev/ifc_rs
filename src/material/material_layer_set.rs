@@ -49,7 +49,7 @@ impl MaterialLayerSet {
     }
 
     pub fn add_layer(mut self, layer: impl Into<IdOr<MaterialLayer>>, ifc: &mut IFC) -> Self {
-        self.material_layers.0.push(layer.into().into_id(ifc).id());
+        self.material_layers.0.push(layer.into().or_insert(ifc).id());
         self
     }
 }

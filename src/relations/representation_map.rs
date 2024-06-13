@@ -48,8 +48,8 @@ impl RepresentationMap {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            origin: origin.into().into_id(ifc),
-            representation: representation.into().into_id(ifc),
+            origin: origin.into().or_insert(ifc).into(),
+            representation: representation.into().or_insert(ifc).into(),
         }
     }
 }

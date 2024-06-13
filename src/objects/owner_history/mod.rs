@@ -65,7 +65,7 @@ impl OwnerHistory {
         owning_user: impl Into<IdOr<PersonAndOrganization>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_user = owning_user.into().into_id(ifc).id().into();
+        self.owning_user = owning_user.into().or_insert(ifc).id().into();
         self
     }
 
@@ -74,7 +74,7 @@ impl OwnerHistory {
         owning_application: impl Into<IdOr<Application>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_application = owning_application.into().into_id(ifc).id().into();
+        self.owning_application = owning_application.into().or_insert(ifc).id().into();
         self
     }
 
@@ -93,7 +93,7 @@ impl OwnerHistory {
         last_modifying_user: impl Into<IdOr<Person>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.last_modifying_user = last_modifying_user.into().into_id(ifc).id().into();
+        self.last_modifying_user = last_modifying_user.into().or_insert(ifc).id().into();
         self
     }
 
@@ -103,7 +103,7 @@ impl OwnerHistory {
         ifc: &mut IFC,
     ) -> Self {
         self.last_modifying_application =
-            last_modifying_application.into().into_id(ifc).id().into();
+            last_modifying_application.into().or_insert(ifc).id().into();
         self
     }
 }

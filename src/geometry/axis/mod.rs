@@ -1,9 +1,15 @@
 mod deserialize;
 mod serialize;
 
-use crate::{id::Id, ifc_type::IfcType, parser::optional::OptionalParameter, IFC};
+use crate::{
+    id::TypedId,
+    ifc_type::IfcType,
+    parser::optional::OptionalParameter,
+    prelude::{Direction2D, Direction3D},
+    IFC,
+};
 
-use super::point::CartesianPoint;
+use super::point::{Point2D, Point3D};
 
 pub trait AxisPlacement: IfcType {}
 
@@ -18,18 +24,18 @@ pub trait AxisPlacement: IfcType {}
 pub struct Axis2D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.
-    pub location: Id,
+    pub location: TypedId<Point2D>,
     ///	The direction used to determine the direction of the local X axis. If a value is omited
     ///	that it defaults to [1.0, 0.0].
-    pub local_x: OptionalParameter<Id>,
+    pub local_x: OptionalParameter<TypedId<Direction2D>>,
 }
 
 impl Axis2D {
-    pub fn new(point: impl CartesianPoint, ifc: &mut IFC) -> Self {
+    pub fn new(point: Point2D, ifc: &mut IFC) -> Self {
         let id = ifc.data.insert_new(point);
 
         Self {
-            location: id.id(),
+            location: id,
             local_x: OptionalParameter::omitted(),
         }
     }
@@ -50,21 +56,21 @@ impl AxisPlacement for Axis2D {}
 pub struct Axis3D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.
-    pub location: Id,
+    pub location: TypedId<Point3D>,
     ///	The exact direction of the local Z Axis. If a value is omited that it defaults to [0.0, 0.0, 0.1]
-    pub local_z: OptionalParameter<Id>,
+    pub local_z: OptionalParameter<TypedId<Direction3D>>,
     /// The direction used to determine the direction of the local X Axis. If necessary an
     /// adjustment is made to maintain orthogonality to the Axis direction. If Axis and/or
     /// RefDirection is omitted, these directions are taken from the geometric coordinate system.
-    pub local_x: OptionalParameter<Id>,
+    pub local_x: OptionalParameter<TypedId<Direction3D>>,
 }
 
 impl Axis3D {
-    pub fn new(point: impl CartesianPoint, ifc: &mut IFC) -> Self {
+    pub fn new(point: Point3D, ifc: &mut IFC) -> Self {
         let id = ifc.data.insert_new(point);
 
         Self {
-            location: id.id(),
+            location: id,
             local_z: OptionalParameter::omitted(),
             local_x: OptionalParameter::omitted(),
         }

@@ -61,7 +61,7 @@ impl ProductDefinitionShape {
     ) -> Self {
         self.representations
             .0
-            .push(representation.into().into_id(ifc).id());
+            .push(representation.into().or_insert(ifc).id());
 
         self
     }

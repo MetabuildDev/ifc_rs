@@ -5,6 +5,8 @@ use crate::{
     parser::{IFCParse, IFCParser},
 };
 
+use self::indexed_poly_curve::IndexedPolyCurve;
+
 pub mod arbitrary_closed_profile_def;
 pub mod axis;
 pub mod dimension_count;
@@ -30,7 +32,8 @@ pub struct Geometry;
 impl Geometry {
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
-            arbitrary_closed_profile_def::ArbitraryClosedProfileDef::parse_any(),
+            arbitrary_closed_profile_def::ArbitraryClosedProfileDef::<IndexedPolyCurve>::parse_any(
+            ),
             axis::Axis2D::parse_any(),
             axis::Axis3D::parse_any(),
             direction::Direction2D::parse_any(),

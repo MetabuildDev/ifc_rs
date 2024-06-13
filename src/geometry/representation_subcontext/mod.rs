@@ -105,7 +105,7 @@ impl GeometricRepresentationSubContext {
             world_coord_system: OptionalParameter::inherited(),
             true_north: OptionalParameter::inherited(),
 
-            parent_context: context.into().into_id(ifc).id(),
+            parent_context: context.into().or_insert(ifc).id(),
             target_scale: OptionalParameter::omitted(),
             target_view,
             user_defined_target_view: OptionalParameter::omitted(),

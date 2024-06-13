@@ -24,7 +24,7 @@ pub struct UnitAssigment {
 impl UnitAssigment {
     pub fn new(units: impl IntoIterator<Item = IdOr<SiUnit>>, ifc: &mut IFC) -> Self {
         Self {
-            units: IfcList(units.into_iter().map(|u| u.into_id(ifc).id()).collect()),
+            units: IfcList(units.into_iter().map(|u| u.or_insert(ifc).id()).collect()),
         }
     }
 }

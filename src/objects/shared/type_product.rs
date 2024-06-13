@@ -48,7 +48,7 @@ pub trait TypeProductBuilder: Sized {
 
     // TODO
     // fn representation_maps(mut self, representation_maps: impl Into<IdOr< /* TODO */ >>, ifc: &mut IFC) -> Self {
-    //     self.type_product_mut().representation_maps = representation_maps.into().into_id(ifc).id().into();
+    //     self.type_product_mut().representation_maps = representation_maps.into().or_insert(ifc).id().into();
     //     self
     // }
 

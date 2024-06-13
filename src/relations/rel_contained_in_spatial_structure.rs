@@ -44,7 +44,7 @@ impl RelContainedInSpatialStructure {
         Self {
             root: Root::new(global_id.into()),
             related_elements: IfcList::empty(),
-            relating_structure: relating_structure.into().into_id(ifc).id(),
+            relating_structure: relating_structure.into().or_insert(ifc).id(),
         }
     }
 
@@ -55,7 +55,7 @@ impl RelContainedInSpatialStructure {
     ) -> Self {
         self.related_elements
             .0
-            .push(structure.into().into_id(ifc).id());
+            .push(structure.into().or_insert(ifc).id());
 
         self
     }

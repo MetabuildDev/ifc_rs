@@ -39,12 +39,12 @@ impl RelDefinesByType {
         Self {
             root: Root::new(id.into()),
             related_objects: IfcList::empty(),
-            relating_type: relating_type.into().into_id(ifc).id(),
+            relating_type: relating_type.into().or_insert(ifc).id(),
         }
     }
 
     pub fn relate_obj<OBJ: IfcType>(mut self, object: impl Into<IdOr<OBJ>>, ifc: &mut IFC) -> Self {
-        self.related_objects.0.push(object.into().into_id(ifc).id());
+        self.related_objects.0.push(object.into().or_insert(ifc).id());
         self
     }
 }

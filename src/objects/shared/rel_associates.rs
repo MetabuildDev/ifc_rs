@@ -42,7 +42,7 @@ pub trait RelAssociatesBuilder<T: IfcType>: Sized {
         self.rel_associates_mut()
             .related_objects
             .0
-            .push(object.into().into_id(ifc).id());
+            .push(object.into().or_insert(ifc).id());
         self
     }
 }

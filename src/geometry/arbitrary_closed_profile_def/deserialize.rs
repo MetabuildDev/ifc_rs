@@ -1,11 +1,12 @@
 use crate::geometry::arbitrary_closed_profile_def::ArbitraryClosedProfileDef;
+use crate::geometry::indexed_poly_curve::Curve;
 use crate::geometry::profile_type::ProfileType;
-use crate::id::Id;
+use crate::id::TypedId;
 use crate::parser::comma::Comma;
 use crate::parser::optional::OptionalParameter;
 use crate::parser::*;
 
-impl IFCParse for ArbitraryClosedProfileDef {
+impl<C: Curve> IFCParse for ArbitraryClosedProfileDef<C> {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
@@ -15,7 +16,7 @@ impl IFCParse for ArbitraryClosedProfileDef {
                 _: Comma::parse(),
                 profile_name: OptionalParameter::parse(),
                 _: Comma::parse(),
-                outer_curve: Id::parse(),
+                outer_curve: TypedId::<C>::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

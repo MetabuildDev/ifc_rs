@@ -92,7 +92,7 @@ pub trait ContextBuilder: Sized {
         self.context_mut()
             .representation_context
             .0
-            .push(representation_context.into().into_id(ifc).id());
+            .push(representation_context.into().or_insert(ifc).id());
         self
     }
 
@@ -101,7 +101,7 @@ pub trait ContextBuilder: Sized {
         unit_assignment: impl Into<IdOr<UnitAssigment>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.context_mut().units_in_context = unit_assignment.into().into_id(ifc).id().into();
+        self.context_mut().units_in_context = unit_assignment.into().or_insert(ifc).id().into();
         self
     }
 }

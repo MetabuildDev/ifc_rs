@@ -35,7 +35,7 @@ impl RelDeclares {
     pub fn new(id: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
         Self {
             root: Root::new(id.into()),
-            relating_context: project.into().into_id(ifc).id(),
+            relating_context: project.into().or_insert(ifc).id(),
             related_definitions: IfcList::empty(),
         }
     }
@@ -47,7 +47,7 @@ impl RelDeclares {
     ) -> Self {
         self.related_definitions
             .0
-            .push(defintion.into().into_id(ifc).id());
+            .push(defintion.into().or_insert(ifc).id());
         self
     }
 }

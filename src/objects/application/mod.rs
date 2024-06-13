@@ -33,7 +33,7 @@ impl Application {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            application_developer: application_developer.into().into_id(ifc).id(),
+            application_developer: application_developer.into().or_insert(ifc).id(),
             version: version.into(),
             application_full_name: application_full_name.into(),
             application_identifier: application_identifier.into(),

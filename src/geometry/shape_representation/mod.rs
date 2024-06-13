@@ -62,7 +62,7 @@ pub struct ShapeRepresentation {
 impl ShapeRepresentation {
     pub fn new(context: impl Into<IdOr<GeometricRepresentationSubContext>>, ifc: &mut IFC) -> Self {
         Self {
-            context_of_items: context.into().into_id(ifc).id(),
+            context_of_items: context.into().or_insert(ifc).id(),
             representation_identifier: OptionalParameter::omitted(),
             representation_type: OptionalParameter::omitted(),
             items: IfcList::empty(),

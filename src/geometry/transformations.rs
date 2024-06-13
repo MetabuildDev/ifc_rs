@@ -52,11 +52,11 @@ impl CartesianTransformationOperator3DnonUniform {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            axis_x: axis_x.into().into_id(ifc),
-            axis_y: axis_y.into().into_id(ifc),
-            local_origin: local_origin.into().into_id(ifc),
+            axis_x: axis_x.into().or_insert(ifc).into(),
+            axis_y: axis_y.into().or_insert(ifc).into(),
+            local_origin: local_origin.into().or_insert(ifc).into(),
             scale: IfcFloat(scale),
-            axis_z: axis_z.into().into_id(ifc),
+            axis_z: axis_z.into().or_insert(ifc).into(),
             scale_y: IfcFloat(scale_y),
             scale_z: IfcFloat(scale_z),
         }

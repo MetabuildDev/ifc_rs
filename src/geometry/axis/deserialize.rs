@@ -5,7 +5,7 @@ use winnow::{
 
 use super::{Axis2D, Axis3D};
 use crate::{
-    id::Id,
+    id::TypedId,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
@@ -13,7 +13,7 @@ impl IFCParse for Axis2D {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         delimited(
             "IFCAXIS2PLACEMENT2D(",
-            separated_pair(Id::parse(), Comma::parse(), OptionalParameter::parse()),
+            separated_pair(TypedId::parse(), Comma::parse(), OptionalParameter::parse()),
             ");",
         )
         .map(|(location, local_x)| Self { location, local_x })
@@ -25,7 +25,7 @@ impl IFCParse for Axis3D {
         delimited(
             "IFCAXIS2PLACEMENT3D(",
             (
-                Id::parse(),
+                TypedId::parse(),
                 Comma::parse(),
                 OptionalParameter::parse(),
                 Comma::parse(),

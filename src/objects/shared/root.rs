@@ -56,7 +56,7 @@ pub trait RootBuilder: Sized {
         owner_history: impl Into<IdOr<OwnerHistory>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.root_mut().owner_history = owner_history.into().into_id(ifc).id().into();
+        self.root_mut().owner_history = owner_history.into().or_insert(ifc).id().into();
         self
     }
 

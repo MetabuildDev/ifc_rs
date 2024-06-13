@@ -70,7 +70,9 @@ impl Slab {
         predefined_type: impl Into<IdOr<SlabType>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.predefined_type = predefined_type.into().into_id(ifc).into();
+        let id_or: IdOr<_> = predefined_type.into();
+        let id_or: IdOr<_> = id_or.or_insert(ifc).into();
+        self.predefined_type = id_or.into();
         self
     }
 }

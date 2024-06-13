@@ -52,7 +52,7 @@ impl Organization {
             .custom_mut()
             .unwrap()
             .0
-            .push(role.into().into_id(ifc).id());
+            .push(role.into().or_insert(ifc).id());
 
         self
     }
@@ -66,7 +66,7 @@ impl Organization {
             .custom_mut()
             .unwrap()
             .0
-            .push(address.into().into_id(ifc).id());
+            .push(address.into().or_insert(ifc).id());
 
         self
     }

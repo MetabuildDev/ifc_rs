@@ -47,11 +47,11 @@ impl RelAggregates {
         buildings: impl IntoIterator<Item = IdOr<Building>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.relating_object = project.into().into_id(ifc).id().into();
+        self.relating_object = project.into().or_insert(ifc).id().into();
 
         self.related_objects.0 = buildings
             .into_iter()
-            .map(|id_or| id_or.into_id(ifc).id())
+            .map(|id_or| id_or.or_insert(ifc).id())
             .collect();
 
         self

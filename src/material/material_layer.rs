@@ -81,7 +81,7 @@ impl MaterialLayer {
     }
 
     pub fn material(mut self, material: impl Into<IdOr<Material>>, ifc: &mut IFC) -> Self {
-        self.material = material.into().into_id(ifc).id().into();
+        self.material = material.into().or_insert(ifc).id().into();
         self
     }
 
