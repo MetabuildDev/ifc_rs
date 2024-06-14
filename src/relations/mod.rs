@@ -12,6 +12,7 @@ pub mod rel_associates_material;
 pub mod rel_contained_in_spatial_structure;
 pub mod rel_declares;
 pub mod rel_defines_by_type;
+pub mod rel_voids_element;
 pub mod representation_map;
 
 pub struct Relation;
@@ -24,6 +25,7 @@ impl Relation {
             rel_contained_in_spatial_structure::RelContainedInSpatialStructure::parse_any(),
             rel_declares::RelDeclares::parse_any(),
             rel_defines_by_type::RelDefinesByType::parse_any(),
+            rel_voids_element::RelVoidsElement::parse_any(),
             mapped_item::MappedItem::parse_any(),
             representation_map::RepresentationMap::parse_any(),
         ))

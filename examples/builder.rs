@@ -1,4 +1,5 @@
 use glam::{DVec2, DVec3};
+use ifc4::ifc_builder::openings::VerticalOpeningParameter;
 use ifc4::prelude::*;
 
 fn main() {
@@ -35,7 +36,7 @@ fn main() {
             WallTypeEnum::NotDefined,
         );
 
-        building_builder.vertical_wall(
+        let wall = building_builder.vertical_wall(
             material_layer_set_usage,
             wall_type,
             "ExampleWallDefault",
@@ -46,38 +47,11 @@ fn main() {
             },
         );
 
-        let wall = building_builder.vertical_wall(
-            material_layer_set_usage,
-            wall_type,
-            "ExampleWallRotated",
-            VerticalWallParameter {
-                height: 2.0,
-                length: 4.0,
-                placement: DVec3::new(0.0, 0.0, 0.0),
-            },
-        );
-
-        building_builder.add_transformation(
-            wall,
-            TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
-        );
-
         let slab_type = building_builder.slab_type(
             material_layer_set,
             "ExampleSlabType",
             SlabTypeEnum::NotDefined,
         );
-
-        // building_builder.horizontal_rect_slab(
-        //     material_layer_set_usage,
-        //     slab_type,
-        //     "ExampleSlab",
-        //     HorizontalRectSlabParameter {
-        //         width: 4.0,
-        //         height: 4.0,
-        //         placement: DVec3::new(0.0, 0.0, 0.0),
-        //     },
-        // );
 
         building_builder.horizontal_arbitrary_slab(
             material_layer_set_usage,
@@ -93,6 +67,16 @@ fn main() {
                     DVec2::ZERO,
                 ],
                 placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
+
+        building_builder.vertical_wall_opening(
+            wall,
+            "ExampleOpeningElement",
+            VerticalOpeningParameter {
+                height: 0.5,
+                length: 0.5,
+                placement: DVec3::new(2.0, 0.0, 0.5),
             },
         );
     }

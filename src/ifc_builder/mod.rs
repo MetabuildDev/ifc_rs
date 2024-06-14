@@ -1,4 +1,5 @@
 pub mod materials;
+pub mod openings;
 pub mod slabs;
 pub mod transforms;
 pub mod walls;
@@ -140,14 +141,20 @@ pub struct IfcBuildingBuilder<'a> {
 
     walls: HashSet<TypedId<Wall>>,
     slabs: HashSet<TypedId<Slab>>,
+    opening_elements: HashSet<TypedId<OpeningElement>>,
 
+    // Wall relations
     wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
     material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
     material_to_wall_type: HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
 
+    // Slab relations
     slab_type_to_slab: HashMap<TypedId<SlabType>, HashSet<TypedId<Slab>>>,
     material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Slab>>>,
     material_to_slab_type: HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<SlabType>>>,
+
+    // Opening element relations
+    opening_elements_to_wall: HashMap<TypedId<OpeningElement>, TypedId<Wall>>,
 }
 
 impl<'a> IfcBuildingBuilder<'a> {
@@ -170,6 +177,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
             walls: HashSet::new(),
             slabs: HashSet::new(),
+            opening_elements: HashSet::new(),
 
             wall_type_to_wall: HashMap::new(),
             material_to_wall: HashMap::new(),
@@ -178,6 +186,8 @@ impl<'a> IfcBuildingBuilder<'a> {
             slab_type_to_slab: HashMap::new(),
             material_to_slab: HashMap::new(),
             material_to_slab_type: HashMap::new(),
+
+            opening_elements_to_wall: HashMap::new(),
         }
     }
 }
@@ -295,6 +305,21 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
         }
 
         self.ifc.data.insert_new(spatial_relation);
+
+        // opening elements ----------------------
+
+        // relate opening elements to walls
+        for (index, (opening_element, wall)) in self.opening_elements_to_wall.iter().enumerate() {
+            let opening_element_wall_relation = RelVoidsElement::new(
+                format!("OpeningElementToWall{index}"),
+                *wall,
+                *opening_element,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
+
+            self.ifc.data.insert_new(opening_element_wall_relation);
+        }
     }
 }
 

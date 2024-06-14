@@ -4,6 +4,7 @@ pub use super::address::*;
 pub use super::application::Application;
 pub use super::building::Building;
 pub use super::change_action::ChangeAction;
+pub use super::opening_element::OpeningElement;
 pub use super::organization::Organization;
 pub use super::owner_history::OwnerHistory;
 pub use super::person::Person;

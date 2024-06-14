@@ -53,10 +53,10 @@ impl Default for TransformParameter {
 }
 
 impl<'a> IfcBuildingBuilder<'a> {
-    pub fn add_transformation<T: TransformableType>(
+    pub fn transform<T: TransformableType>(
         &mut self,
         t: TypedId<T>,
-        transform_parameter: TransformParameter,
+        transform_parameter: &TransformParameter,
     ) {
         let transformable = self.ifc.data.get::<T>(t.id());
 
@@ -91,19 +91,17 @@ impl<'a> IfcBuildingBuilder<'a> {
                         *shape_repr,
                         self.ifc,
                     );
-                    ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-                        MappedItem::new(representation_map, transform_id, self.ifc),
-                        self.ifc,
-                    )
+                    let r = ShapeRepresentation::new(self.sub_context, self.ifc)
+                        .repr_type("MappedRepresentation")
+                        .add_item(
+                            MappedItem::new(representation_map, transform_id, self.ifc),
+                            self.ifc,
+                        );
+                    self.ifc.data.insert_new(r).id()
                 })
                 .collect();
 
-            for transform_shape in transforms {
-                product_shape
-                    .representations
-                    .0
-                    .push(self.ifc.data.insert_new(transform_shape).id());
-            }
+            product_shape.representations.0 = transforms;
         }
     }
 }
@@ -149,9 +147,9 @@ mod test {
                 },
             );
 
-            building_builder.add_transformation(
+            building_builder.transform(
                 wall,
-                TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
+                &TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
             );
         }
 

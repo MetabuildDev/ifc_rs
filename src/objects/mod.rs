@@ -11,6 +11,7 @@ pub mod address;
 pub mod application;
 pub mod building;
 pub mod change_action;
+pub mod opening_element;
 pub mod organization;
 pub mod owner_history;
 pub mod person;
@@ -43,6 +44,7 @@ impl Objects {
             slab::Slab::parse_any(),
             slabtype::SlabType::parse_any(),
             building::Building::parse_any(),
+            opening_element::OpeningElement::parse_any(),
             project::Project::parse_any(),
         ))
     }
