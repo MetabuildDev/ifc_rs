@@ -40,8 +40,12 @@ pub struct IFC {
 impl IFC {
     pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
         let contents = fs::read_to_string(path)?;
-        let mut s = contents.as_str();
+        let s = contents.as_str();
 
+        Self::from_str(s)
+    }
+
+    pub fn from_str(mut s: &str) -> Result<Self> {
         let me = seq!(Self {
             header: Header::parse(),
             data: DataMap::parse(),
