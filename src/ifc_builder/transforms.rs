@@ -1,4 +1,4 @@
-use glam::DVec3;
+use glam::{DQuat, DVec3};
 
 use crate::prelude::*;
 
@@ -11,11 +11,19 @@ pub struct TransformParameter {
 }
 
 impl TransformParameter {
+    /// translate/offset by the given vector
     pub fn translation(mut self, translation: DVec3) -> Self {
         self.translation = translation;
         self
     }
 
+    /// rotate from the standard X-Y-Z coordinate system to the one defined by the given rotation
+    pub fn rotation(self, rotation: DQuat) -> Self {
+        let [x, y, z] = [DVec3::X, DVec3::Y, DVec3::Z].map(|v| rotation * v);
+        self.x_rotation(x).y_rotation(y).z_rotation(z)
+    }
+
+    /// set the local x axis direction
     pub fn x_rotation(mut self, x_rotation: DVec3) -> Self {
         if x_rotation != DVec3::ZERO {
             self.x_rotation = x_rotation;
@@ -24,6 +32,7 @@ impl TransformParameter {
         self
     }
 
+    /// set the local y axis direction
     pub fn y_rotation(mut self, y_rotation: DVec3) -> Self {
         if y_rotation != DVec3::ZERO {
             self.y_rotation = y_rotation;
@@ -32,6 +41,7 @@ impl TransformParameter {
         self
     }
 
+    /// set the local z axis direction
     pub fn z_rotation(mut self, z_rotation: DVec3) -> Self {
         if z_rotation != DVec3::ZERO {
             self.z_rotation = z_rotation;
