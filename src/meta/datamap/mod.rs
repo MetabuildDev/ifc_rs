@@ -63,16 +63,6 @@ impl DataMap {
             .unwrap()
     }
 
-    pub unsafe fn get_mut_unchecked<'a, 'b, T: IfcType>(&'a mut self, id: Id) -> &'b mut T {
-        Self::remove_life_time_mut(
-            self.0
-                .get_mut(&id)
-                .map(|any| any.downcast_mut())
-                .flatten()
-                .unwrap(),
-        )
-    }
-
     pub fn contains(&self, id: &Id) -> bool {
         self.0.contains_key(id)
     }
@@ -87,10 +77,6 @@ impl DataMap {
         self.0.iter().filter_map(|(id, ifc_type)| {
             (ifc_type.type_id() == TypeId::of::<T>()).then(|| TypedId::new(*id))
         })
-    }
-
-    unsafe fn remove_life_time_mut<'a, 'b, T>(t: &'a mut T) -> &'b mut T {
-        std::mem::transmute(t as *mut T)
     }
 }
 

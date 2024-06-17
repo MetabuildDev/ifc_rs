@@ -75,20 +75,17 @@ impl<'a> IfcBuildingBuilder<'a> {
 
             // access to shape is still unique since we don't change it anywhere
             // else inside the following loop just afterwards
-            let product_shape = unsafe {
-                self.ifc
-                    .data
-                    .get_mut_unchecked::<ProductDefinitionShape>(shape_id.id())
-            };
+            let product_shape = self.ifc.data.get::<ProductDefinitionShape>(shape_id.id());
 
             let transforms: Vec<_> = product_shape
                 .representations
                 .0
-                .iter()
+                .clone()
+                .into_iter()
                 .map(|shape_repr| {
                     let representation_map = RepresentationMap::new(
                         Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), self.ifc),
-                        *shape_repr,
+                        shape_repr,
                         self.ifc,
                     );
                     let r = ShapeRepresentation::new(self.sub_context, self.ifc)
@@ -101,7 +98,11 @@ impl<'a> IfcBuildingBuilder<'a> {
                 })
                 .collect();
 
-            product_shape.representations.0 = transforms;
+            self.ifc
+                .data
+                .get_mut::<ProductDefinitionShape>(shape_id.id())
+                .representations
+                .0 = transforms;
         }
     }
 }
