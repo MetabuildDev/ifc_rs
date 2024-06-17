@@ -23,6 +23,8 @@ pub mod slab;
 pub mod slabtype;
 pub mod wall;
 pub mod walltype;
+pub mod window;
+pub mod windowtype;
 
 pub trait Structure: IfcType {}
 
@@ -45,6 +47,8 @@ impl Objects {
             slabtype::SlabType::parse_any(),
             building::Building::parse_any(),
             opening_element::OpeningElement::parse_any(),
+            window::Window::parse_any(),
+            windowtype::WindowType::parse_any(),
             project::Project::parse_any(),
         ))
     }

@@ -3,6 +3,7 @@ pub mod openings;
 pub mod slabs;
 pub mod transforms;
 pub mod walls;
+pub mod windows;
 
 use glam::DVec3;
 use std::collections::{HashMap, HashSet};
@@ -142,6 +143,7 @@ pub struct IfcBuildingBuilder<'a> {
     walls: HashSet<TypedId<Wall>>,
     slabs: HashSet<TypedId<Slab>>,
     opening_elements: HashSet<TypedId<OpeningElement>>,
+    windows: HashSet<TypedId<Window>>,
 
     // Wall relations
     wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
@@ -155,6 +157,11 @@ pub struct IfcBuildingBuilder<'a> {
 
     // Opening element relations
     opening_elements_to_wall: HashMap<TypedId<OpeningElement>, TypedId<Wall>>,
+    opening_elements_to_window: HashMap<TypedId<OpeningElement>, TypedId<Window>>,
+
+    // Window relations
+    window_type_to_window: HashMap<TypedId<WindowType>, HashSet<TypedId<Window>>>,
+    material_to_window: HashMap<TypedId<MaterialConstituentSet>, HashSet<TypedId<Window>>>,
 }
 
 impl<'a> IfcBuildingBuilder<'a> {
@@ -178,6 +185,7 @@ impl<'a> IfcBuildingBuilder<'a> {
             walls: HashSet::new(),
             slabs: HashSet::new(),
             opening_elements: HashSet::new(),
+            windows: HashSet::new(),
 
             wall_type_to_wall: HashMap::new(),
             material_to_wall: HashMap::new(),
@@ -188,6 +196,10 @@ impl<'a> IfcBuildingBuilder<'a> {
             material_to_slab_type: HashMap::new(),
 
             opening_elements_to_wall: HashMap::new(),
+            opening_elements_to_window: HashMap::new(),
+
+            window_type_to_window: HashMap::new(),
+            material_to_window: HashMap::new(),
         }
     }
 }
@@ -304,8 +316,6 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             spatial_relation = spatial_relation.relate_structure(*slab, self.ifc);
         }
 
-        self.ifc.data.insert_new(spatial_relation);
-
         // opening elements ----------------------
 
         // relate opening elements to walls
@@ -320,6 +330,57 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
 
             self.ifc.data.insert_new(opening_element_wall_relation);
         }
+
+        // windows ----------------------
+
+        // relate window type to window
+        for (index, (window_type, windows)) in self.window_type_to_window.iter().enumerate() {
+            let mut window_window_type_relation =
+                RelDefinesByType::new(format!("WindowTypeToWindow{index}"), *window_type, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for window in windows {
+                window_window_type_relation =
+                    window_window_type_relation.relate_obj(*window, self.ifc)
+            }
+
+            self.ifc.data.insert_new(window_window_type_relation);
+        }
+
+        // relate material set to window
+        for (index, (material, windows)) in self.material_to_window.iter().enumerate() {
+            let mut material_window_association =
+                RelAssociatesMaterial::new(format!("MaterialToWindow{index}"), *material, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for window in windows {
+                material_window_association =
+                    material_window_association.relate_obj(*window, self.ifc);
+            }
+
+            self.ifc.data.insert_new(material_window_association);
+        }
+
+        // relate opening elements to windows
+        for (index, (opening_element, window)) in self.opening_elements_to_window.iter().enumerate()
+        {
+            let opening_element_window_relation = RelFillsElement::new(
+                format!("OpeningElementToWindow{index}"),
+                *opening_element,
+                *window,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
+
+            self.ifc.data.insert_new(opening_element_window_relation);
+        }
+
+        // relate building to windows
+        for window in self.windows.iter() {
+            spatial_relation = spatial_relation.relate_structure(*window, self.ifc);
+        }
+
+        self.ifc.data.insert_new(spatial_relation);
     }
 }
 

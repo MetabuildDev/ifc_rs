@@ -1,5 +1,5 @@
 use glam::{DVec2, DVec3};
-use ifc4::ifc_builder::openings::VerticalOpeningParameter;
+use ifc4::ifc_builder::windows::WindowParameter;
 use ifc4::prelude::*;
 
 fn main() {
@@ -70,12 +70,24 @@ fn main() {
             },
         );
 
-        building_builder.vertical_wall_opening(
+        let window_type = building_builder.window_type(
+            "ExampleWindowType",
+            WindowTypeEnum::Window,
+            WindowPartitioningTypeEnum::SinglePanel,
+        );
+
+        let material_constituent = building_builder.material_constituent("Wood", "Framing");
+        let material_constituent_set =
+            building_builder.material_constituent_set([material_constituent]);
+
+        building_builder.wall_window_with_opening(
+            material_constituent_set,
+            window_type,
             wall,
-            "ExampleOpeningElement",
-            VerticalOpeningParameter {
+            "ExampleWindow",
+            WindowParameter {
                 height: 0.5,
-                length: 0.5,
+                width: 0.5,
                 placement: DVec3::new(2.0, 0.0, 0.5),
             },
         );

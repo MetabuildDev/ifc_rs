@@ -5,15 +5,13 @@ use crate::prelude::*;
 impl<'a> IfcBuildingBuilder<'a> {
     pub fn material_layer(
         &mut self,
-        name: &str,
+        material_name: &str,
         thickness: f64,
         is_ventilated: bool,
     ) -> TypedId<MaterialLayer> {
-        let material = self.ifc.data.insert_new(Material::new(name));
-
+        let material = self.material(material_name);
         let material_layer =
             MaterialLayer::new(thickness, is_ventilated).material(material, self.ifc);
-
         self.ifc.data.insert_new(material_layer)
     }
 
@@ -70,6 +68,39 @@ impl<'a> IfcBuildingBuilder<'a> {
                 layer.layer_thickness.0
             })
             .sum()
+    }
+
+    pub fn material_constituent(
+        &mut self,
+        material_name: &str,
+        constituent_name: &str,
+    ) -> TypedId<MaterialConstituent> {
+        let material = self.material(material_name);
+        let material_constituent =
+            MaterialConstituent::new(material, self.ifc).name(constituent_name);
+        self.ifc.data.insert_new(material_constituent)
+    }
+
+    pub fn material_constituent_set(
+        &mut self,
+        constituents: impl IntoIterator<Item = TypedId<MaterialConstituent>>,
+    ) -> TypedId<MaterialConstituentSet> {
+        let mut material_constituent_set = MaterialConstituentSet::new();
+
+        for constituent in constituents {
+            material_constituent_set =
+                material_constituent_set.add_constituent(constituent, self.ifc);
+        }
+
+        let id = self.ifc.data.insert_new(material_constituent_set);
+        self.material_to_window.insert(id, HashSet::new());
+
+        id
+    }
+
+    pub fn material(&mut self, name: &str) -> TypedId<Material> {
+        let material = Material::new(name);
+        self.ifc.data.insert_new(material)
     }
 }
 

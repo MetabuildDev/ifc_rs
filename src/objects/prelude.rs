@@ -29,4 +29,9 @@ pub use super::slab::Slab;
 pub use super::slabtype::{type_enum::SlabTypeEnum, SlabType};
 pub use super::wall::Wall;
 pub use super::walltype::{type_enum::WallTypeEnum, WallType};
+pub use super::window::Window;
+pub use super::windowtype::{
+    window_partitioning_type_enum::WindowPartitioningTypeEnum, window_type_enum::WindowTypeEnum,
+    WindowType,
+};
 pub use super::Structure;

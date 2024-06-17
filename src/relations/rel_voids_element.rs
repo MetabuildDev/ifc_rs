@@ -23,7 +23,7 @@ pub struct RelVoidsElement {
     root: Root,
     /// Reference to element in which a void is created by associated feature
     /// subtraction element.
-    relating_building_element: Id,
+    pub relating_building_element: Id,
     /// Reference to the feature subtraction element which defines a void in
     /// the associated element.
     pub related_opening_element: Id,
