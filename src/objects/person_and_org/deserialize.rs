@@ -20,8 +20,8 @@ impl IFCParse for PersonAndOrganization {
             ");",
         )
         .map(|(the_person, _, the_organization, _, roles)| Self {
-            the_person,
-            the_organization,
+            the_person: the_person.into(),
+            the_organization: the_organization.into(),
             roles,
         })
     }

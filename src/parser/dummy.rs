@@ -1,9 +1,15 @@
 use std::fmt::Display;
 
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::{
+    ifc_type::{IfcType, IfcVerify},
+    IFC,
+};
 
 use super::IFCParse;
 
+#[derive(IfcVerify)]
 pub(crate) struct Dummy {
     pub s: String,
 }

@@ -3,9 +3,11 @@ pub mod serialize;
 
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     IFC,
 };
@@ -43,6 +45,7 @@ impl<'a> Display for ShapeItems<'a> {
 /// RepresentationIdentifier.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcshaperepresentation.htm
+#[derive(IfcVerify)]
 pub struct ShapeRepresentation {
     // All fields from IfcRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrepresentation.htm
     //

@@ -1,8 +1,10 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use crate::id::Id;
 use crate::id::IdOr;
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::comma::Comma;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
@@ -22,6 +24,7 @@ use crate::IFC;
 /// of a particular project and might vary within the various regions.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrelcontainedinspatialstructure.htm
+#[derive(IfcVerify)]
 pub struct RelContainedInSpatialStructure {
     root: Root,
 

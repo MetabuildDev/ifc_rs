@@ -1,10 +1,12 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::geometry::indexed_poly_curve::Curve;
 use crate::geometry::rectangle_profile_def::ProfileDef;
 use crate::id::{IdOr, TypedId};
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
 use crate::IFC;
@@ -17,6 +19,7 @@ use super::profile_type::ProfileType;
 /// boundary from which the surface or solid can be constructed.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcarbitraryclosedprofiledef.htm
+#[derive(IfcVerify)]
 pub struct ArbitraryClosedProfileDef<C: Curve> {
     /// Defines the type of geometry into which this profile definition shall be resolved, either a
     /// curve or a surface area. In case of curve the profile should be referenced by a swept

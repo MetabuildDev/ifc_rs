@@ -1,10 +1,13 @@
 mod deserialize;
 mod serialize;
 
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::IFC;
 
 pub trait Address: IfcType {}
 
@@ -12,7 +15,7 @@ pub trait Address: IfcType {}
 ///  telecommunications should be addressed.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifctelecomaddress.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct TelecomAddress {
     // First three attributes from IfcAddress:
     //
@@ -45,7 +48,7 @@ impl Address for TelecomAddress {}
 /// The address for delivery of paper based mail.
 
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifcpostaladdress.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct PostalAddress {
     // First three attributes from IfcAddress:
     //

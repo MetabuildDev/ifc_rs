@@ -3,6 +3,8 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     shared::{
         element::{Element, ElementBuilder},
@@ -15,7 +17,7 @@ use super::{
 };
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
     prelude::{ProductDefinitionShape, TransformableType},
     relations::rel_associates_material::MaterialRelatable,
@@ -28,6 +30,7 @@ use crate::{
 /// A wall is however not required to be load bearing.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwall.htm
+#[derive(IfcVerify)]
 pub struct Wall {
     element: Element,
 

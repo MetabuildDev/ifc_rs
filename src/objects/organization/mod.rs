@@ -1,12 +1,14 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::id::{Id, IdOr, TypedId};
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::prelude::*;
 
 use super::actor_role::ActorRole;
 use super::address::Address;
@@ -14,7 +16,7 @@ use super::address::Address;
 /// A named and structured grouping with a corporate identity.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifcorganization.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct Organization {
     /// Identification of the organization.
     pub id: OptionalParameter<Label>,
@@ -23,8 +25,9 @@ pub struct Organization {
     /// Text that relates the nature of the organization.
     pub description: OptionalParameter<Label>, // TODO: Text
     /// Roles played by the organization.
-    pub roles: OptionalParameter<IfcList<Id>>,
+    pub roles: OptionalParameter<IfcList<TypedId<ActorRole>>>,
     /// Postal and telecommunication addresses of an organization.
+    #[ifc_types(TelecomAddress, PostalAddress)]
     pub addresses: OptionalParameter<IfcList<Id>>,
 }
 
@@ -52,7 +55,7 @@ impl Organization {
             .custom_mut()
             .unwrap()
             .0
-            .push(role.into().or_insert(ifc).id());
+            .push(role.into().or_insert(ifc));
 
         self
     }

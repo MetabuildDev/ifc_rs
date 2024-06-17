@@ -1,17 +1,21 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
         IFCParse, IFCParser,
     },
+    IFC,
 };
 
 /// IfcMaterial is a homogeneous or inhomogeneous substance that can be
 /// used to form elements (physical products or their components).
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcmaterial.htm
+#[derive(IfcVerify)]
 pub struct Material {
     /// Name of the material.
     pub material: OptionalParameter<Label>,

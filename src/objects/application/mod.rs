@@ -1,20 +1,24 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::objects::person_and_org::PersonOrOrg;
 use crate::parser::label::Label;
+use crate::prelude::*;
 use crate::IFC;
 
 ///  IfcApplication holds the information about an IFC compliant application
 ///  developed by an application developer who is a member of buildingSMART.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcutilityresource/lexical/ifcapplication.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct Application {
     /// Name of the application developer, being requested to be member
     /// of buildingSMART. (Person/org id)
+    #[ifc_types(Person, Organization)]
     pub application_developer: Id,
     /// The version number of this software as specified by the developer of the application.
     pub version: Label,

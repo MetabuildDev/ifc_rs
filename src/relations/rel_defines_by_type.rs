@@ -1,8 +1,10 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use crate::id::Id;
 use crate::id::IdOr;
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::comma::Comma;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
@@ -21,6 +23,7 @@ use crate::IFC;
 /// object type.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcreldefinesbytype.htm
+#[derive(IfcVerify)]
 pub struct RelDefinesByType {
     root: Root,
 
@@ -44,7 +47,9 @@ impl RelDefinesByType {
     }
 
     pub fn relate_obj<OBJ: IfcType>(mut self, object: impl Into<IdOr<OBJ>>, ifc: &mut IFC) -> Self {
-        self.related_objects.0.push(object.into().or_insert(ifc).id());
+        self.related_objects
+            .0
+            .push(object.into().or_insert(ifc).id());
         self
     }
 }

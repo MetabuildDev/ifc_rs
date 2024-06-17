@@ -1,8 +1,10 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::id::{IdOr, TypedId};
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::objects::access_state::AccessState;
 use crate::objects::change_action::ChangeAction;
 use crate::parser::optional::OptionalParameter;
@@ -18,19 +20,19 @@ use super::person_and_org::PersonAndOrganization;
 ///  independent objects, relationships and properties.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcutilityresource/lexical/ifcownerhistory.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct OwnerHistory {
     /// Direct reference to the end user who currently "owns" this object.
     /// Note that IFC includes the concept of ownership transfer from one
     /// user to another and therefore distinguishes between the Owning User
     /// and Creating User.
-    pub owning_user: OptionalParameter<Id>,
+    pub owning_user: OptionalParameter<TypedId<PersonAndOrganization>>,
     /// Direct reference to the application which currently "Owns" this object
     /// on behalf of the owning user, who uses this application.
     /// Note that IFC includes the concept of ownership transfer from one
     /// app to another and therefore distinguishes between the Owning
     /// Application and Creating Application.
-    pub owning_application: OptionalParameter<Id>,
+    pub owning_application: OptionalParameter<TypedId<Application>>,
     /// Enumeration that defines the current access state of the object.
     pub state: OptionalParameter<AccessState>,
     /// Enumeration that defines the actions associated with changes made to
@@ -39,9 +41,9 @@ pub struct OwnerHistory {
     /// Date and Time at which the last modification occurred.
     pub last_modified_date: OptionalParameter<IfcTimestamp>,
     /// User who carried out the last modification.
-    pub last_modifying_user: OptionalParameter<Id>,
+    pub last_modifying_user: OptionalParameter<TypedId<Person>>,
     /// Application used to carry out the last modification.
-    pub last_modifying_application: OptionalParameter<Id>,
+    pub last_modifying_application: OptionalParameter<TypedId<Application>>,
     /// Time and date of creation.
     pub creation_date: IfcTimestamp,
 }
@@ -65,7 +67,7 @@ impl OwnerHistory {
         owning_user: impl Into<IdOr<PersonAndOrganization>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_user = owning_user.into().or_insert(ifc).id().into();
+        self.owning_user = owning_user.into().or_insert(ifc).into();
         self
     }
 
@@ -74,7 +76,7 @@ impl OwnerHistory {
         owning_application: impl Into<IdOr<Application>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_application = owning_application.into().or_insert(ifc).id().into();
+        self.owning_application = owning_application.into().or_insert(ifc).into();
         self
     }
 
@@ -93,7 +95,7 @@ impl OwnerHistory {
         last_modifying_user: impl Into<IdOr<Person>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.last_modifying_user = last_modifying_user.into().or_insert(ifc).id().into();
+        self.last_modifying_user = last_modifying_user.into().or_insert(ifc).into();
         self
     }
 
@@ -102,8 +104,7 @@ impl OwnerHistory {
         last_modifying_application: impl Into<IdOr<Application>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.last_modifying_application =
-            last_modifying_application.into().or_insert(ifc).id().into();
+        self.last_modifying_application = last_modifying_application.into().or_insert(ifc).into();
         self
     }
 }

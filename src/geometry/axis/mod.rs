@@ -1,9 +1,11 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::TypedId,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::optional::OptionalParameter,
     prelude::{Direction2D, Direction3D},
     IFC,
@@ -20,7 +22,7 @@ pub trait AxisPlacement: IfcType {}
 /// and P[2] (y-axis) as [0.,1.].
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcaxis2placement2d.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct Axis2D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.
@@ -52,7 +54,7 @@ impl AxisPlacement for Axis2D {}
 /// (x-axis) as [1.,0.,0.], P[2] (y-axis) as [0.,1.,0.] and P[3] (z-axis) as [0.,0.,1.].
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcaxis2placement3d.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct Axis3D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.

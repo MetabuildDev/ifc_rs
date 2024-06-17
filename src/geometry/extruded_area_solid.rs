@@ -1,10 +1,11 @@
 use crate::geometry::rectangle_profile_def::ProfileDef;
 use crate::id::IdOr;
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::prelude::{Axis3D, Direction3D};
 use crate::{id::Id, parser::ifc_float::IfcFloat};
 use crate::{parser::*, IFC};
 use comma::Comma;
+use ifc_type_derive::IfcVerify;
 use optional::OptionalParameter;
 
 use std::fmt::Display;
@@ -19,6 +20,7 @@ use super::shape_representation::ShapeItem;
 /// into holes of the solid.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcextrudedareasolid.htm
+#[derive(IfcVerify)]
 pub struct ExtrudedAreaSolid {
     /// The surface defining the area to be swept. It is given as a
     /// profile definition within the xy plane of the position coordinate system.

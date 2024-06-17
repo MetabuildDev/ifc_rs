@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -24,6 +26,7 @@ use super::{
 /// type of the building element.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcmateriallayersetusage.htm
+#[derive(IfcVerify)]
 pub struct MaterialLayerSetUsage {
     /// The IfcMaterialLayerSet set to which the usage is applied.
     pub spatial_element_structure: Id,

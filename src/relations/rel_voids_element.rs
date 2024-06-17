@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
     prelude::{OpeningElement, Root, RootBuilder, Structure},
     IFC,
@@ -15,6 +17,8 @@ use crate::{
 /// the opening.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcrelvoidselement.htm
+
+#[derive(IfcVerify)]
 pub struct RelVoidsElement {
     root: Root,
     /// Reference to element in which a void is created by associated feature

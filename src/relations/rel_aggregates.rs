@@ -1,8 +1,10 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -17,6 +19,7 @@ use crate::{
 /// all subtypes of IfcObjectDefinition.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrelaggregates.htm
+#[derive(IfcVerify)]
 pub struct RelAggregates {
     root: Root,
 

@@ -1,18 +1,22 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     name::IfcUnitName, optional::OptionalParameter, place_holder::Inherited, prefix::IfcPrefix,
     shared::named_unit::NamedUnit, unit_enum::IfcUnitEnum, IFCParse, IFCParser,
 };
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     units::{comma::Comma, p_space_or_comment_surrounded},
+    IFC,
 };
 
 /// The IfcSIUnit covers both standard base SI units such as meter and second,
 /// and derived SI units such as Pascal, square meter and cubic meter.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiunit.htm
+#[derive(IfcVerify)]
 pub struct SiUnit {
     named_unit: NamedUnit,
 
@@ -39,6 +43,8 @@ impl SiUnit {
         }
     }
 }
+
+impl IfcType for SiUnit {}
 
 impl Deref for SiUnit {
     type Target = NamedUnit;
@@ -75,8 +81,6 @@ impl Display for SiUnit {
         )
     }
 }
-
-impl IfcType for SiUnit {}
 
 #[cfg(test)]
 mod test {

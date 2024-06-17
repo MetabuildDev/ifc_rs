@@ -14,3 +14,4 @@ strum = { version = "0.26", features = ["derive"] }
 winnow = "0.6"
 destructure_traitobject = "0.3.0"
 downcast-rs = "1.2.1"
+ifc_type_derive = { path = "ifc_type_derive" }

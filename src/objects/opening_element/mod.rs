@@ -4,6 +4,8 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     shared::{
         element::{Element, ElementBuilder},
@@ -15,10 +17,11 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     objects::opening_element::opening_element_type_enum::OpeningElementTypeEnum,
     parser::{label::Label, optional::OptionalParameter},
     prelude::{ProductDefinitionShape, TransformableType},
+    IFC,
 };
 
 /// The opening element stands for opening, recess or chase, all reflecting
@@ -38,7 +41,7 @@ use crate::{
 ///
 ///  * the attribute is set to OPENING for an opening or
 ///  * the attribute is set to RECESS for a recess or niche.
-///  
+///
 ///  If the value for PredefinedType is omitted, or the value is set to
 ///  NOTDEFINED, no specific information of whether it is an opening or
 ///  recess shall be assumed.
@@ -57,6 +60,7 @@ use crate::{
 /// addition to the hole in the Body shape representation of the voided element.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcopeningelement.htm
+#[derive(IfcVerify)]
 pub struct OpeningElement {
     element: Element,
 

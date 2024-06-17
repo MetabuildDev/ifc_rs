@@ -1,12 +1,14 @@
 mod deserialize;
 mod serialize;
 
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
 use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
+use crate::IFC;
 use std::str::FromStr;
 
+use ifc_type_derive::IfcVerify;
 use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;
@@ -15,7 +17,7 @@ use winnow::Parser;
 /// a person related to an organization.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifcactorrole.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct ActorRole {
     /// The name of the role played by an actor. If the Role has value USERDEFINED, then
     /// the user defined role shall be provided as a value of the attribute UserDefinedRole.

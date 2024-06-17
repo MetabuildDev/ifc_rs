@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
         optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -17,6 +19,7 @@ use crate::{
 /// IfcMaterialLayerSet along the material layer set base (MlsBase).
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcmateriallayer.htm
+#[derive(IfcVerify)]
 pub struct MaterialLayer {
     /// Optional reference to the material from which the layer is constructed.
     /// Note that if this value is not given, it does not denote a layer

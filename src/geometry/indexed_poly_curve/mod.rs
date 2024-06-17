@@ -1,7 +1,9 @@
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     geometry::point_list::PointList,
     id::Id,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
     IFC,
 };
@@ -15,6 +17,7 @@ mod serialize;
 /// that the list of Segments is not provided, all points in the
 /// IfcCartesianPointList are connected by straight line segments in the
 /// order they appear in the IfcCartesianPointList.
+#[derive(IfcVerify)]
 pub struct IndexedPolyCurve {
     /// A list of points, provided by a point list of either two, or three
     /// dimensions, that is used to define the poly curve. If the attribute

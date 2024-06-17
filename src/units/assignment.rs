@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser},
     IFC,
 };
@@ -16,6 +18,7 @@ use super::si_unit::SiUnit;
 /// within an IfcUnitAssignment.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcunitassignment.htm
+#[derive(IfcVerify)]
 pub struct UnitAssigment {
     /// Units to be included within a unit assignment.
     pub units: IfcList<Id>,

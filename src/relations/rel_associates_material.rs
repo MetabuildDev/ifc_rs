@@ -1,8 +1,10 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
     prelude::{RelAssociates, RelAssociatesBuilder, Root, RootBuilder},
     IFC,
@@ -20,6 +22,7 @@ pub trait MaterialRelatable: IfcType {}
 /// all subtypes of IfcObjectDefinition.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrelassociatesmaterial.htm
+#[derive(IfcVerify)]
 pub struct RelAssociatesMaterial {
     rel_associates: RelAssociates,
 

@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::IdOr,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
     prelude::{Axis3D, ShapeRepresentation},
     IFC,
@@ -31,6 +33,7 @@ use crate::{
 ///   NOTE  Entity adapted from representation_map defined in ISO 10303-43.
 ///
 ///   HISTORY  New entity in IFC2x.
+#[derive(IfcVerify)]
 pub struct RepresentationMap {
     /// An axis2 placement that defines the position about which the mapped representation is mapped.
     pub origin: IdOr<Axis3D>,

@@ -1,8 +1,10 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::id::IdOr;
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::prelude::AxisPlacement;
@@ -16,6 +18,7 @@ use super::profile_type::ProfileType;
 /// within the position coordinate system.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcprofileresource/lexical/ifcrectangleprofiledef.htm
+#[derive(IfcVerify)]
 pub struct RectangleProfileDef {
     /// Defines the type of geometry into which this profile definition shall be resolved, either a
     /// curve or a surface area. In case of curve the profile should be referenced by a swept

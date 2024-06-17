@@ -1,8 +1,10 @@
 mod deserialize;
 mod serialize;
 
-use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::id::{Id, IdOr, TypedId};
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
 use crate::IFC;
@@ -14,12 +16,12 @@ use super::person::Person;
 /// Identification of a person within an organization.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcactorresource/lexical/ifcpersonandorganization.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct PersonAndOrganization {
     /// The person who is related to the organization.
-    pub the_person: Id,
+    pub the_person: TypedId<Person>,
     /// The organization to which the person is related.
-    pub the_organization: Id,
+    pub the_organization: TypedId<Organization>,
     /// Roles played by the person within the context of an organization.
     pub roles: OptionalParameter<IfcList<Id>>,
 }
@@ -31,8 +33,8 @@ impl PersonAndOrganization {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            the_person: the_person.into().or_insert(ifc).id(),
-            the_organization: the_organization.into().or_insert(ifc).id(),
+            the_person: the_person.into().or_insert(ifc),
+            the_organization: the_organization.into().or_insert(ifc),
             roles: OptionalParameter::omitted(),
         }
     }

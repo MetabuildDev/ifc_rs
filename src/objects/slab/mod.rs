@@ -3,6 +3,8 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     shared::{
         element::{Element, ElementBuilder},
@@ -14,7 +16,7 @@ use super::{
 };
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     objects::slabtype::SlabType,
     parser::{label::Label, optional::OptionalParameter},
     prelude::{ProductDefinitionShape, TransformableType},
@@ -45,6 +47,7 @@ use crate::{
 /// given at the attribute ObjectType.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcsharedbldgelements/lexical/ifcslab.htm
+#[derive(IfcVerify)]
 pub struct Slab {
     element: Element,
 

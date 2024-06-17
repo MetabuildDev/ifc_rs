@@ -1,14 +1,17 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         ifc_float::{IfcDVec2, IfcDVec3},
         label::Label,
         list::IfcList,
         optional::OptionalParameter,
     },
+    IFC,
 };
 
 /// The IfcCartesianPointList2D defines an ordered collection of two-dimentional
@@ -21,7 +24,7 @@ use crate::{
 /// x-coordinate, and [2] the y-coordinate of the Cartesian point.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcgeometricmodelresource/lexical/ifccartesianpointlist2d.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct PointList2D {
     pub coord_list: IfcList<IfcDVec2>,
     pub tag_list: OptionalParameter<IfcList<Label>>,
@@ -48,7 +51,7 @@ impl IfcType for PointList2D {}
 /// x-coordinate, [2] is the y-coord, and [3] the z-coordinate of the Cartesian point.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcgeometricmodelresource/lexical/ifccartesianpointlist3d.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct PointList3D {
     pub coord_list: IfcList<IfcDVec3>,
     pub tag_list: OptionalParameter<IfcList<Label>>,

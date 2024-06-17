@@ -3,6 +3,8 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     address::PostalAddress,
     shared::{
@@ -15,8 +17,8 @@ use super::{
     Structure,
 };
 use crate::{
-    id::{Id, IdOr},
-    ifc_type::IfcType,
+    id::{IdOr, TypedId},
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -30,6 +32,7 @@ use crate::{
 /// of a building project (together with site, storey, and space).
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcbuilding.htm
+#[derive(IfcVerify)]
 pub struct Building {
     spatial_element_structure: SpatialStructureElement,
 
@@ -43,7 +46,7 @@ pub struct Building {
     pub elevation_of_terrain: OptionalParameter<IfcFloat>,
 
     /// Address given to the building for postal purposes.
-    pub building_address: OptionalParameter<Id>,
+    pub building_address: OptionalParameter<TypedId<PostalAddress>>,
 }
 
 impl Building {
@@ -73,7 +76,7 @@ impl Building {
         postal_address: impl Into<IdOr<PostalAddress>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.building_address = postal_address.into().or_insert(ifc).id().into();
+        self.building_address = postal_address.into().or_insert(ifc).into();
         self
     }
 }

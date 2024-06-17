@@ -1,9 +1,11 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::geometry::dimension_count::DimensionCount;
 use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
@@ -19,7 +21,7 @@ use super::axis::AxisPlacement;
 /// The TrueNorth attribute can be given, if the y axis of the WorldCoordinateSystem does not point to the global northing.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcrepresentationresource/lexical/ifcgeometricrepresentationcontext.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct GeometricRepresentationContext {
     // NOTE: from IfcRepresentationContext
     //

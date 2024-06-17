@@ -2,7 +2,10 @@ use std::{fmt::Display, marker::PhantomData};
 
 use winnow::Parser;
 
-use crate::{ifc_type::IfcType, parser::IFCParse};
+use crate::{
+    ifc_type::{IfcType, IfcVerify},
+    parser::IFCParse,
+};
 
 use super::{Id, IdOr};
 
@@ -73,6 +76,7 @@ impl<T: IfcType> Display for TypedId<T> {
 }
 
 pub struct FIXMETYPE;
+impl IfcVerify for FIXMETYPE {}
 impl IfcType for FIXMETYPE {}
 impl Display for FIXMETYPE {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

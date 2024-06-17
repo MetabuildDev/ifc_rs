@@ -1,10 +1,12 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
 use winnow::ascii::dec_int;
 
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     units::{comma::Comma, p_space_or_comment_surrounded},
+    IFC,
 };
 
 use super::IFCParse;
@@ -27,6 +29,7 @@ type ExponentType = i32;
 /// # EXAMPLE
 /// A velocity of 2 millimetres per second has a length exponent of 1 and a time exponent of -1.
 /// The remaining exponents are equal to 0.
+#[derive(IfcVerify)]
 pub struct DimensionalExponents {
     /// The power of the length base quantity.
     pub length: ExponentType,

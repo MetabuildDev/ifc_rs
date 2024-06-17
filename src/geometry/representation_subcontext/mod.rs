@@ -1,10 +1,12 @@
 mod deserialize;
 mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
 use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
@@ -31,7 +33,7 @@ use super::representation_context::GeometricRepresentationContext;
 /// showing the geometric shape of the product, depending on the target view and scale.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcrepresentationresource/lexical/ifcgeometricrepresentationsubcontext.htm
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, IfcVerify)]
 pub struct GeometricRepresentationSubContext {
     // first six fields inherited from IfcGeometricRepresentationContext
     //

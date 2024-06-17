@@ -1,9 +1,11 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     geometry::transformations::CartesianTransformationOperator3DnonUniform,
     id::{IdOr, TypedId},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
     prelude::{ProductDefinitionShape, RepresentationMap, ShapeItem},
     IFC,
@@ -38,6 +40,7 @@ pub trait TransformableType: IfcType {
 ///   A mapped item shall not be self-defining by participating in the definition of the
 ///   representation being mapped. The dimensionality of the mapping source and the mapping
 ///   target has to be the same, if the mapping source is a geometric representation item.
+#[derive(IfcVerify)]
 pub struct MappedItem {
     /// A representation map that is the source of the mapped item. It can be seen as a block (or
     /// cell or marco) definition.

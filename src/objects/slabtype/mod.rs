@@ -1,12 +1,14 @@
 use std::ops::Deref;
 
+use ifc_type_derive::IfcVerify;
 use type_enum::SlabTypeEnum;
 
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::label::Label,
     prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
     relations::rel_associates_material::MaterialRelatable,
+    IFC,
 };
 
 use super::shared::{
@@ -41,6 +43,7 @@ pub mod type_enum;
 /// by instances of IfcSlabStandardCase if the IfcSlabType has a single
 /// associated IfcMaterialLayerSet; otherwise they are represented by instances
 /// of IfcSlab, or IfcSlabElementedCase.
+#[derive(IfcVerify)]
 pub struct SlabType {
     element_type: ElementType,
 

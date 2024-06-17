@@ -1,9 +1,11 @@
 pub mod deserialize;
 pub mod serialize;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     IFC,
 };
@@ -21,6 +23,7 @@ use super::shape_representation::ShapeRepresentation;
 /// - or the topological representation items for connectivity systems (vertex, edge, face
 ///   representations) that may include geometric representation items (vertex points, edge curves,
 ///   face surfaces)
+#[derive(IfcVerify)]
 pub struct ProductDefinitionShape {
     // from IfcProductRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcproductrepresentation.htm
     //

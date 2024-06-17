@@ -7,10 +7,12 @@ use std::{
 };
 
 use glam::{DVec2, DVec3};
+use ifc_type_derive::IfcVerify;
 
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::ifc_float::{IfcDVec2, IfcDVec3},
+    IFC,
 };
 
 pub enum PointType<'a> {
@@ -38,7 +40,7 @@ pub trait CartesianPoint: IfcType {}
 /// Coordinates[2] is the Y coordinate.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
 pub struct Point2D(IfcDVec2);
 
 impl Deref for Point2D {
@@ -73,7 +75,7 @@ impl CartesianPoint for Point2D {}
 /// Coordinates[2] is the Y coordinate, and Coordinates[3] is the Z coordinate.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
 pub struct Point3D(IfcDVec3);
 
 impl Deref for Point3D {

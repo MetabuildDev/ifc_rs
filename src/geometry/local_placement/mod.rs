@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
@@ -17,6 +19,7 @@ use super::axis::AxisPlacement;
 /// of a product within the geometric representation context of the project.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifclocalplacement.htm
+#[derive(IfcVerify)]
 pub struct LocalPlacement {
     /// Reference to object placement that provides the relative placement with
     /// its placement in a grid, local coordinate system or linear referenced placement.

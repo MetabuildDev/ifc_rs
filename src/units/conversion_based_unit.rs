@@ -1,13 +1,16 @@
 use std::{fmt::Display, ops::Deref};
 
+use ifc_type_derive::IfcVerify;
+
 use super::{
     ifc_float::IfcFloat, label::Label, shared::named_unit::NamedUnit, IFCParse, IFCParser,
 };
 use crate::{
     id::IdOr,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::optional::OptionalParameter,
     units::{comma::Comma, p_space_or_comment_surrounded},
+    IFC,
 };
 
 /// An IfcConversionBasedUnit is used to define a unit that has a conversion rate to a base unit.
@@ -15,6 +18,7 @@ use crate::{
 /// (case insensitive) for the Name attribute are indicated in Table 697.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcconversionbasedunit.htm
+#[derive(IfcVerify)]
 pub struct ConversionBasedUnit {
     named_unit: NamedUnit,
 

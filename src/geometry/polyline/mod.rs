@@ -1,4 +1,11 @@
-use crate::{id::Id, ifc_type::IfcType, parser::list::IfcList, IFC};
+use ifc_type_derive::IfcVerify;
+
+use crate::{
+    id::Id,
+    ifc_type::{IfcType, IfcVerify},
+    parser::list::IfcList,
+    IFC,
+};
 
 use super::{
     point::{Point2D, Point3D, PointType},
@@ -13,6 +20,7 @@ mod serialize;
 /// is a closed curve, otherwise it is an open curve.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcpolyline.htm
+#[derive(IfcVerify)]
 pub struct PolyLine {
     /// The points defining the polyline.
     pub points: IfcList<Id>,

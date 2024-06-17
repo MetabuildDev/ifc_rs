@@ -1,12 +1,14 @@
 use std::ops::Deref;
 
+use ifc_type_derive::IfcVerify;
 use type_enum::WallTypeEnum;
 
 use crate::{
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::label::Label,
     prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
     relations::rel_associates_material::MaterialRelatable,
+    IFC,
 };
 
 use super::shared::{
@@ -25,6 +27,7 @@ pub mod type_enum;
 ///   * common shape representations
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwalltype.htm
+#[derive(IfcVerify)]
 pub struct WallType {
     element_type: ElementType,
 

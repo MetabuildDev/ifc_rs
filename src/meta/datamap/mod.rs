@@ -11,7 +11,7 @@ use crate::{
 /// CRITICAL: split up the index map into a proper struct with fields which hold Hashmaps mapping
 /// indices to one specific type instead of an enum
 #[derive(Default)]
-pub struct DataMap(BTreeMap<Id, Box<dyn IfcType>>);
+pub struct DataMap(pub(crate) BTreeMap<Id, Box<dyn IfcType>>);
 
 impl DataMap {
     pub fn insert_new<T: IfcType + 'static>(&mut self, value: T) -> TypedId<T> {

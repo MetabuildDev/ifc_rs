@@ -1,14 +1,14 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::ifc_type::IfcType;
+use ifc_type_derive::IfcVerify;
+
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
-use crate::parser::p_space_or_comment_surrounded;
-use crate::parser::IFCParse;
-use crate::parser::IFCParser;
-use crate::prelude::{ContextBuilder, RootBuilder};
+use crate::parser::{p_space_or_comment_surrounded, IFCParse, IFCParser};
+use crate::prelude::*;
 
 use super::shared::context::Context;
 use super::shared::root::Root;
@@ -22,6 +22,7 @@ use super::shared::root::Root;
 /// information items included.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcproject.htm
+#[derive(IfcVerify)]
 pub struct Project {
     context: Context,
 }

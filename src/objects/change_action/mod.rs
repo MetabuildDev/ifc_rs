@@ -1,7 +1,4 @@
-use crate::{
-    ifc_type::IfcType,
-    parser::{p_space_or_comment, IFCParse, IFCParser},
-};
+use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
 
 use std::str::FromStr;
 use winnow::Parser;
@@ -61,5 +58,3 @@ impl IFCParse for ChangeAction {
         )
     }
 }
-
-impl IfcType for ChangeAction {}

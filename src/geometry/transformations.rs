@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::IdOr,
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse},
     prelude::Direction3D,
     IFC,
@@ -20,6 +22,7 @@ use super::point::Point3D;
 /// If the Scale factor (at supertype IfcCartesianTransformationOperator) is omitted, it defaults
 /// to 1.0. If the Scale2 or the Scale3 factor is omitted, it defaults to the value of Scale (the x
 /// axis scale factor).
+#[derive(IfcVerify)]
 pub struct CartesianTransformationOperator3DnonUniform {
     /// The direction used to determine U[1], the derived X axis direction.
     pub axis_x: IdOr<Direction3D>,

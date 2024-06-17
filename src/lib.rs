@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, bail, Result};
 use parser::IFCParse;
 use std::{fmt::Display, fs, path::Path};
 use winnow::{seq, Parser};
@@ -53,6 +53,12 @@ impl IFC {
         })
         .parse_next(&mut s)
         .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
+
+        for ifc_type in me.data.0.values() {
+            if !ifc_type.verify_id_types(&me) {
+                bail!("failed type verification");
+            }
+        }
 
         Ok(me)
     }

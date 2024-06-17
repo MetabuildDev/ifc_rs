@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
+use ifc_type_derive::IfcVerify;
+
 use crate::{
     id::{Id, IdOr},
-    ifc_type::IfcType,
+    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
@@ -17,6 +19,7 @@ use crate::{
 /// relative positioning of individual layers can be expressed.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcmateriallayerset.htm
+#[derive(IfcVerify)]
 pub struct MaterialLayerSet {
     /// Identification of the IfcMaterialLayer’s from which the
     /// IfcMaterialLayerSet is composed.
@@ -49,7 +52,9 @@ impl MaterialLayerSet {
     }
 
     pub fn add_layer(mut self, layer: impl Into<IdOr<MaterialLayer>>, ifc: &mut IFC) -> Self {
-        self.material_layers.0.push(layer.into().or_insert(ifc).id());
+        self.material_layers
+            .0
+            .push(layer.into().or_insert(ifc).id());
         self
     }
 }
