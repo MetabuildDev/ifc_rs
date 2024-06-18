@@ -59,8 +59,8 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         if let Some(&wall_placement_id) = self.ifc.data.get::<Wall>(wall).object_placement.custom()
         {
-            let local_placement = LocalPlacement::new(position, self.ifc)
-                .relative_to::<Axis3D>(wall_placement_id, self.ifc);
+            let local_placement =
+                LocalPlacement::new(position, self.ifc).relative_to(wall_placement_id, self.ifc);
 
             opening_element = opening_element.object_placement(local_placement, self.ifc);
         }

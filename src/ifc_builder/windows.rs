@@ -89,7 +89,7 @@ impl<'a> IfcBuildingBuilder<'a> {
                 self.ifc,
             );
             let local_placement = LocalPlacement::new(position, self.ifc)
-                .relative_to::<Axis3D>(opening_element_placement_id, self.ifc);
+                .relative_to(opening_element_placement_id, self.ifc);
 
             window = window.object_placement(local_placement, self.ifc);
         }

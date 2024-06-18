@@ -27,8 +27,7 @@ pub struct LocalPlacement {
     /// by the origin of horizontal alignment of the referenced IfcAlignment Axis.
     /// In the case of local placement it is established by the geometric representation
     /// context.
-    #[ifc_types(Axis2D, Axis3D)]
-    pub placement_rel_to: OptionalParameter<Id>,
+    pub placement_rel_to: OptionalParameter<TypedId<LocalPlacement>>,
 
     /// Geometric placement that defines the transformation from the related
     /// coordinate system into the relating. The placement can be either 2D or 3D,
@@ -45,12 +44,12 @@ impl LocalPlacement {
         }
     }
 
-    pub fn relative_to<A: AxisPlacement>(
+    pub fn relative_to(
         mut self,
-        placement_rel_to: impl Into<IdOr<A>>,
+        placement_rel_to: impl Into<IdOr<LocalPlacement>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.placement_rel_to = placement_rel_to.into().or_insert(ifc).id().into();
+        self.placement_rel_to = placement_rel_to.into().or_insert(ifc).into();
         self
     }
 }
