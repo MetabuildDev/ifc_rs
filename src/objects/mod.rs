@@ -18,6 +18,8 @@ pub mod person;
 pub mod person_and_org;
 pub mod prelude;
 pub mod project;
+pub mod roof;
+pub mod rooftype;
 pub mod shared;
 pub mod slab;
 pub mod slabtype;
@@ -46,6 +48,8 @@ impl Objects {
             walltype::WallType::parse_any(),
             slab::Slab::parse_any(),
             slabtype::SlabType::parse_any(),
+            roof::Roof::parse_any(),
+            rooftype::RoofType::parse_any(),
             building::Building::parse_any(),
             storey::Storey::parse_any(),
             opening_element::OpeningElement::parse_any(),
