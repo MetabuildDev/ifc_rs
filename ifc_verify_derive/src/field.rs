@@ -65,7 +65,7 @@ impl Field {
 
         let check_error = quote! {
             if !correct_type {
-                anyhow::bail!("variable {} of type {} isn't any of these types: {}", #var_name, #struct_name, #type_names);
+                anyhow::bail!("Variable {} of type {} isn't any of these types: {} instead is: {}", #var_name, #struct_name, #type_names, t.type_name());
             }
         };
 
@@ -82,7 +82,7 @@ impl Field {
 
         quote! {
             if t.type_id() != std::any::TypeId::of::<#typed>() {
-                anyhow::bail!("variable {} of type {} wasn't the expected type: {}", #var_name, #struct_name, #typed_str);
+                anyhow::bail!("Variable {} of type {}: expected type {} but found {}", #var_name, #struct_name, #typed_str, t.type_name());
             }
         }
     }
