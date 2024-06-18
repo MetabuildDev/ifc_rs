@@ -15,7 +15,7 @@ pub struct HorizontalArbitrarySlabParameter {
     pub placement: DVec3,
 }
 
-impl<'a> IfcBuildingBuilder<'a> {
+impl<'a> IfcStoreyBuilder<'a> {
     pub fn horizontal_arbitrary_slab(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
@@ -157,23 +157,24 @@ mod test {
 
         {
             let mut building_builder = builder.new_building("test");
+            let mut storey_builder = building_builder.new_storey("test");
 
-            let material_layer = building_builder.material_layer("ExampleMaterial", 0.02, false);
-            let material_layer_set = building_builder.material_layer_set([material_layer]);
-            let material_layer_set_usage = building_builder.material_layer_set_usage(
+            let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+            let material_layer_set = storey_builder.material_layer_set([material_layer]);
+            let material_layer_set_usage = storey_builder.material_layer_set_usage(
                 material_layer_set,
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,
                 0.0,
             );
 
-            let slab_type = building_builder.slab_type(
+            let slab_type = storey_builder.slab_type(
                 material_layer_set,
                 "ExampleSlabType",
                 SlabTypeEnum::NotDefined,
             );
 
-            building_builder.horizontal_rect_slab(
+            storey_builder.horizontal_rect_slab(
                 material_layer_set_usage,
                 slab_type,
                 "ExampleSlab",

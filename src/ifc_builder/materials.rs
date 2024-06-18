@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::prelude::*;
 
-impl<'a> IfcBuildingBuilder<'a> {
+impl<'a> IfcStoreyBuilder<'a> {
     pub fn material_layer(
         &mut self,
         material_name: &str,
@@ -113,10 +113,11 @@ mod test {
 
         {
             let mut building_builder = builder.new_building("test");
+            let mut storey_builder = building_builder.new_storey("test");
 
-            let material_layer = building_builder.material_layer("ExampleMaterial", 0.02, false);
-            let material_layer_set = building_builder.material_layer_set([material_layer]);
-            building_builder.material_layer_set_usage(
+            let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+            let material_layer_set = storey_builder.material_layer_set([material_layer]);
+            storey_builder.material_layer_set_usage(
                 material_layer_set,
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,

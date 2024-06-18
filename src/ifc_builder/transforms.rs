@@ -62,7 +62,7 @@ impl Default for TransformParameter {
     }
 }
 
-impl<'a> IfcBuildingBuilder<'a> {
+impl<'a> IfcStoreyBuilder<'a> {
     pub fn transform<T: TransformableType>(
         &mut self,
         t: TypedId<T>,
@@ -127,23 +127,24 @@ mod test {
 
         {
             let mut building_builder = builder.new_building("test");
+            let mut storey_builder = building_builder.new_storey("test");
 
-            let material_layer = building_builder.material_layer("ExampleMaterial", 0.02, false);
-            let material_layer_set = building_builder.material_layer_set([material_layer]);
-            let material_layer_set_usage = building_builder.material_layer_set_usage(
+            let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+            let material_layer_set = storey_builder.material_layer_set([material_layer]);
+            let material_layer_set_usage = storey_builder.material_layer_set_usage(
                 material_layer_set,
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,
                 0.0,
             );
 
-            let wall_type = building_builder.wall_type(
+            let wall_type = storey_builder.wall_type(
                 material_layer_set,
                 "ExampleWallType",
                 WallTypeEnum::NotDefined,
             );
 
-            let wall = building_builder.vertical_wall(
+            let wall = storey_builder.vertical_wall(
                 material_layer_set_usage,
                 wall_type,
                 "ExampleWallDefault",
@@ -154,7 +155,7 @@ mod test {
                 },
             );
 
-            building_builder.transform(
+            storey_builder.transform(
                 wall,
                 &TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
             );

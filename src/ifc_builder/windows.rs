@@ -11,7 +11,7 @@ pub struct WindowParameter {
     pub placement: DVec3,
 }
 
-impl<'a> IfcBuildingBuilder<'a> {
+impl<'a> IfcStoreyBuilder<'a> {
     pub fn window_type(
         &mut self,
         name: &str,
@@ -160,23 +160,24 @@ mod test {
 
         {
             let mut building_builder = builder.new_building("test");
+            let mut storey_builder = building_builder.new_storey("test");
 
-            let material_layer = building_builder.material_layer("ExampleMaterial", 0.02, false);
-            let material_layer_set = building_builder.material_layer_set([material_layer]);
-            let material_layer_set_usage = building_builder.material_layer_set_usage(
+            let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+            let material_layer_set = storey_builder.material_layer_set([material_layer]);
+            let material_layer_set_usage = storey_builder.material_layer_set_usage(
                 material_layer_set,
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,
                 0.0,
             );
 
-            let wall_type = building_builder.wall_type(
+            let wall_type = storey_builder.wall_type(
                 material_layer_set,
                 "ExampleWallType",
                 WallTypeEnum::NotDefined,
             );
 
-            let wall = building_builder.vertical_wall(
+            let wall = storey_builder.vertical_wall(
                 material_layer_set_usage,
                 wall_type,
                 "ExampleWallDefault",
@@ -187,7 +188,7 @@ mod test {
                 },
             );
 
-            let opening_element = building_builder.vertical_wall_opening(
+            let opening_element = storey_builder.vertical_wall_opening(
                 wall,
                 "ExampleOpeningElement",
                 VerticalOpeningParameter {
@@ -197,17 +198,17 @@ mod test {
                 },
             );
 
-            let window_type = building_builder.window_type(
+            let window_type = storey_builder.window_type(
                 "ExampleWindowType",
                 WindowTypeEnum::Window,
                 WindowPartitioningTypeEnum::SinglePanel,
             );
 
-            let material_constituent = building_builder.material_constituent("Wood", "Framing");
+            let material_constituent = storey_builder.material_constituent("Wood", "Framing");
             let material_constituent_set =
-                building_builder.material_constituent_set([material_constituent]);
+                storey_builder.material_constituent_set([material_constituent]);
 
-            building_builder.wall_window(
+            storey_builder.wall_window(
                 material_constituent_set,
                 window_type,
                 opening_element,
@@ -218,6 +219,7 @@ mod test {
                     placement: DVec3::new(0.0, 0.0, 0.0),
                 },
             );
+            drop(storey_builder);
         }
 
         let s = builder.build();
