@@ -28,6 +28,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         let id = self.ifc.data.insert_new(material_layer_set);
         self.material_to_wall_type.insert(id, HashSet::new());
         self.material_to_slab_type.insert(id, HashSet::new());
+        self.material_to_roof_type.insert(id, HashSet::new());
 
         id
     }
@@ -45,6 +46,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         let id = self.ifc.data.insert_new(material_layer_set_usage);
         self.material_to_wall.insert(id, HashSet::new());
         self.material_to_slab.insert(id, HashSet::new());
+        self.material_to_roof.insert(id, HashSet::new());
 
         id
     }

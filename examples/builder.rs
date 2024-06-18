@@ -92,6 +92,29 @@ fn main() {
                 placement: DVec3::new(2.0, 0.0, 0.5),
             },
         );
+
+        let roof_type = storey_builder.roof_type(
+            material_layer_set,
+            "ExampleRoofType",
+            RoofTypeEnum::FlatRoof,
+        );
+
+        storey_builder.horizontal_arbitrary_roof(
+            material_layer_set_usage,
+            roof_type,
+            "ExampleRoof",
+            HorizontalArbitraryRoofParameter {
+                coords: vec![
+                    DVec2::ZERO,
+                    DVec2::new(0.0, 4.0),
+                    DVec2::new(2.0, 6.0),
+                    DVec2::new(4.0, 4.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::ZERO,
+                ],
+                placement: DVec3::new(0.0, 0.0, 2.0),
+            },
+        );
     }
 
     std::fs::write("examples/builder_example.ifc", builder.build()).unwrap();

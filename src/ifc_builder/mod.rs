@@ -3,6 +3,7 @@ pub mod materials;
 pub mod openings;
 pub mod prelude;
 pub mod primary;
+pub mod roofs;
 pub mod slabs;
 pub mod storey;
 pub mod transforms;

@@ -23,13 +23,13 @@ pub struct RelContainedInSpatialStructure {
 
     /// Set of products, which are contained within this level of the
     /// spatial structure hierarchy.
-    #[ifc_types(Building, Storey, OpeningElement, Slab, Wall, Window)]
+    #[ifc_types(Building, Storey, OpeningElement, Slab, Roof, Wall, Window)]
     pub related_elements: IfcList<Id>,
 
     /// Spatial structure element, within which the element is
     /// contained. Any element can only be contained within one
     /// element of the project spatial structure.
-    #[ifc_types(Building, Storey, OpeningElement, Slab, Wall, Window)]
+    #[ifc_types(Building, Storey, OpeningElement, Slab, Roof, Wall, Window)]
     pub relating_structure: Id,
 }
 

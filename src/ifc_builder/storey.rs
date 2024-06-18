@@ -12,20 +12,30 @@ pub struct IfcStoreyBuilder<'a> {
 
     pub(crate) walls: HashSet<TypedId<Wall>>,
     pub(crate) slabs: HashSet<TypedId<Slab>>,
+    pub(crate) roofs: HashSet<TypedId<Roof>>,
     pub(crate) opening_elements: HashSet<TypedId<OpeningElement>>,
     pub(crate) windows: HashSet<TypedId<Window>>,
 
     // Wall relations
     pub(crate) wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
     pub(crate) material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
+    // TODO: Required??
     pub(crate) material_to_wall_type:
         HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
 
     // Slab relations
     pub(crate) slab_type_to_slab: HashMap<TypedId<SlabType>, HashSet<TypedId<Slab>>>,
     pub(crate) material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Slab>>>,
+    // TODO: Required??
     pub(crate) material_to_slab_type:
         HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<SlabType>>>,
+
+    // Roof relations
+    pub(crate) roof_type_to_roof: HashMap<TypedId<RoofType>, HashSet<TypedId<Roof>>>,
+    pub(crate) material_to_roof: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Roof>>>,
+    // TODO: Required??
+    pub(crate) material_to_roof_type:
+        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<RoofType>>>,
 
     // Opening element relations
     pub(crate) opening_elements_to_wall: HashMap<TypedId<OpeningElement>, TypedId<Wall>>,
@@ -57,6 +67,7 @@ impl<'a> IfcStoreyBuilder<'a> {
 
             walls: HashSet::new(),
             slabs: HashSet::new(),
+            roofs: HashSet::new(),
             opening_elements: HashSet::new(),
             windows: HashSet::new(),
 
@@ -67,6 +78,10 @@ impl<'a> IfcStoreyBuilder<'a> {
             slab_type_to_slab: HashMap::new(),
             material_to_slab: HashMap::new(),
             material_to_slab_type: HashMap::new(),
+
+            roof_type_to_roof: HashMap::new(),
+            material_to_roof: HashMap::new(),
+            material_to_roof_type: HashMap::new(),
 
             opening_elements_to_wall: HashMap::new(),
             opening_elements_to_window: HashMap::new(),
@@ -183,6 +198,56 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
         // relate storey to slabs
         for slab in self.slabs.iter() {
             spatial_relation = spatial_relation.relate_structure(*slab, self.ifc);
+        }
+
+        // roofs ----------------------
+
+        // relate roof type to roof
+        for (index, (roof_type, roofs)) in self.roof_type_to_roof.iter().enumerate() {
+            let mut roof_roof_type_relation =
+                RelDefinesByType::new(format!("RoofTypeToRoof{index}"), *roof_type, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for roof in roofs {
+                roof_roof_type_relation = roof_roof_type_relation.relate_obj(*roof, self.ifc)
+            }
+
+            self.ifc.data.insert_new(roof_roof_type_relation);
+        }
+
+        // relate material set usage to roof
+        for (index, (material, roofs)) in self.material_to_roof.iter().enumerate() {
+            let mut material_roof_association =
+                RelAssociatesMaterial::new(format!("MaterialToRoof{index}"), *material, self.ifc)
+                    .owner_history(self.owner_history, self.ifc);
+
+            for roof in roofs {
+                material_roof_association = material_roof_association.relate_obj(*roof, self.ifc);
+            }
+
+            self.ifc.data.insert_new(material_roof_association);
+        }
+
+        // relate material set to roof type
+        for (index, (material, roof_types)) in self.material_to_roof_type.iter().enumerate() {
+            let mut roof_type_material_association = RelAssociatesMaterial::new(
+                format!("MaterialToRoofType{index}"),
+                *material,
+                self.ifc,
+            )
+            .owner_history(self.owner_history, self.ifc);
+
+            for roof_type in roof_types {
+                roof_type_material_association =
+                    roof_type_material_association.relate_obj(*roof_type, self.ifc);
+            }
+
+            self.ifc.data.insert_new(roof_type_material_association);
+        }
+
+        // relate storey to roofs
+        for roof in self.roofs.iter() {
+            spatial_relation = spatial_relation.relate_structure(*roof, self.ifc);
         }
 
         // opening elements ----------------------
