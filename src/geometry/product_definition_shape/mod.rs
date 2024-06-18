@@ -1,10 +1,10 @@
 pub mod deserialize;
 pub mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     IFC,
@@ -35,7 +35,7 @@ pub struct ProductDefinitionShape {
     pub description: OptionalParameter<Label>,
     /// Contained list of representations (including shape representations). Each member defines a
     /// valid representation of a particular type within a particular representation context.
-    pub representations: IfcList<Id>,
+    pub representations: IfcList<TypedId<ShapeRepresentation>>,
 }
 
 impl ProductDefinitionShape {
@@ -64,7 +64,7 @@ impl ProductDefinitionShape {
     ) -> Self {
         self.representations
             .0
-            .push(representation.into().or_insert(ifc).id());
+            .push(representation.into().or_insert(ifc));
 
         self
     }
@@ -101,12 +101,12 @@ pub mod test {
             GeometricRepresentationSubContext::derive(context, GeometricProjection::ModelView, ifc);
 
         let shape = ShapeRepresentation::new(sub_context, ifc).add_item(
-            PolyLine::from_3d(
+            PolyLine::from(
                 [
-                    DVec3::new(0.0, 0.0, 0.0).into(),
-                    DVec3::new(1.0, 0.0, 0.0).into(),
-                    DVec3::new(1.0, 1.0, 0.0).into(),
-                    DVec3::new(0.0, 1.0, 0.0).into(),
+                    Point3D::from(DVec3::new(0.0, 0.0, 0.0)),
+                    Point3D::from(DVec3::new(1.0, 0.0, 0.0)),
+                    Point3D::from(DVec3::new(1.0, 1.0, 0.0)),
+                    Point3D::from(DVec3::new(0.0, 1.0, 0.0)),
                 ]
                 .into_iter(),
                 ifc,

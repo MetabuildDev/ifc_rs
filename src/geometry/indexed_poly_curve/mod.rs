@@ -1,11 +1,10 @@
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    geometry::point_list::PointList,
     id::Id,
     ifc_type::{IfcType, IfcVerify},
     parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
-    IFC,
+    prelude::*,
 };
 
 mod deserialize;
@@ -26,6 +25,7 @@ pub struct IndexedPolyCurve {
     /// list. If the attribute Segments is provided, the segments determine,
     /// how the points are to be used to create straigth and circular
     /// arc segments.
+    #[ifc_types(PointList2D, PointList3D)]
     pub points: Id,
     /// List of straight line and circular arc segments, each providing a
     /// list of indices into the Cartesian point list. Indices should

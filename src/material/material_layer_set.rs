@@ -1,17 +1,17 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
     prelude::MaterialLayer,
+    prelude::*,
     relations::rel_associates_material::RelatableMaterial,
-    IFC,
 };
 
 /// The IfcMaterialLayerSet is a designation by which materials of an element
@@ -23,7 +23,7 @@ use crate::{
 pub struct MaterialLayerSet {
     /// Identification of the IfcMaterialLayer’s from which the
     /// IfcMaterialLayerSet is composed.
-    pub material_layers: IfcList<Id>,
+    pub material_layers: IfcList<TypedId<MaterialLayer>>,
 
     /// The name by which the IfcMaterialLayerSet is known.
     pub layer_set_name: OptionalParameter<Label>,
@@ -52,9 +52,7 @@ impl MaterialLayerSet {
     }
 
     pub fn add_layer(mut self, layer: impl Into<IdOr<MaterialLayer>>, ifc: &mut IFC) -> Self {
-        self.material_layers
-            .0
-            .push(layer.into().or_insert(ifc).id());
+        self.material_layers.0.push(layer.into().or_insert(ifc));
         self
     }
 }

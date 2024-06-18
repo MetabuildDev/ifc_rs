@@ -3,14 +3,17 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use ifc_verify_derive::IfcVerify;
+
 use crate::{
     geometry::{
         local_placement::LocalPlacement, point::Point3D,
         product_definition_shape::ProductDefinitionShape,
     },
-    id::{Id, IdOr},
+    id::{Id, IdOr, TypedId},
+    ifc_type::IfcVerify,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
-    IFC,
+    prelude::*,
 };
 
 use super::object::Object;
@@ -27,6 +30,7 @@ use super::object::Object;
 /// (with or without underlying geometry of the topological items).
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcproduct.htm
+#[derive(IfcVerify)]
 pub struct Product {
     object: Object,
 
@@ -37,7 +41,8 @@ pub struct Product {
     /// the various subtypes of IfcObjectPlacement, which includes the
     /// axis placement information to determine the transformation for
     /// the object coordinate system.
-    pub object_placement: OptionalParameter<IdOr<Point3D>>,
+    #[ifc_types(Axis3D, Point3D, LocalPlacement)]
+    pub object_placement: OptionalParameter<Id>,
 
     /// Reference to the representations of the product, being either a
     /// representation (IfcProductRepresentation) or as a special case
@@ -45,7 +50,7 @@ pub struct Product {
     /// definition shape provides for multiple geometric representations
     /// of the shape property of the object within the same object
     /// coordinate system, defined by the object placement.
-    pub representation: OptionalParameter<Id>,
+    pub representation: OptionalParameter<TypedId<ProductDefinitionShape>>,
 }
 
 impl Product {
@@ -66,8 +71,7 @@ pub trait ProductBuilder: Sized {
         object_placement: impl Into<IdOr<LocalPlacement>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.product_mut().object_placement =
-            IdOr::Id(object_placement.into().or_insert(ifc).id()).into();
+        self.product_mut().object_placement = object_placement.into().or_insert(ifc).id().into();
         self
     }
 
@@ -76,7 +80,7 @@ pub trait ProductBuilder: Sized {
         representation: impl Into<IdOr<ProductDefinitionShape>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.product_mut().representation = representation.into().or_insert(ifc).id().into();
+        self.product_mut().representation = representation.into().or_insert(ifc).into();
         self
     }
 }

@@ -1,14 +1,13 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::id::IdOr;
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
-use crate::prelude::AxisPlacement;
-use crate::IFC;
+use crate::prelude::*;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
 use super::profile_type::ProfileType;
@@ -30,6 +29,7 @@ pub struct RectangleProfileDef {
     profile_name: OptionalParameter<Label>,
     /// Position coordinate system of the parameterized profile definition. If unspecified, no
     /// translation and no rotation is applied.
+    #[ifc_types(Axis2D, Axis3D)]
     position: OptionalParameter<Id>,
     /// The extent of the rectangle in the direction of the x-axis.
     x_dim: IfcFloat,

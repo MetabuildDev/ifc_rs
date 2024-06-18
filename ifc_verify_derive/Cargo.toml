@@ -1,5 +1,5 @@
 [package]
-name = "ifc_type_derive"
+name = "ifc_verify_derive"
 version = "0.1.0"
 edition = "2021"
 

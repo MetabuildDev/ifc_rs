@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr},
@@ -9,7 +9,7 @@ use crate::{
         comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
     },
-    IFC,
+    prelude::*,
 };
 
 use super::axis::AxisPlacement;
@@ -27,11 +27,13 @@ pub struct LocalPlacement {
     /// by the origin of horizontal alignment of the referenced IfcAlignment Axis.
     /// In the case of local placement it is established by the geometric representation
     /// context.
+    #[ifc_types(Axis2D, Axis3D)]
     pub placement_rel_to: OptionalParameter<Id>,
 
     /// Geometric placement that defines the transformation from the related
     /// coordinate system into the relating. The placement can be either 2D or 3D,
     /// depending on the dimension count of the coordinate system.
+    #[ifc_types(Axis2D, Axis3D)]
     pub relative_placement: Id,
 }
 

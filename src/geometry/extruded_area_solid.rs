@@ -1,11 +1,12 @@
 use crate::geometry::rectangle_profile_def::ProfileDef;
-use crate::id::IdOr;
+use crate::id::{IdOr, TypedId};
 use crate::ifc_type::{IfcType, IfcVerify};
+use crate::prelude::*;
 use crate::prelude::{Axis3D, Direction3D};
-use crate::{id::Id, parser::ifc_float::IfcFloat};
-use crate::{parser::*, IFC};
+use crate::{id::Id, parser::*};
 use comma::Comma;
-use ifc_type_derive::IfcVerify;
+use ifc_float::IfcFloat;
+use ifc_verify_derive::IfcVerify;
 use optional::OptionalParameter;
 
 use std::fmt::Display;
@@ -24,6 +25,7 @@ use super::shape_representation::ShapeItem;
 pub struct ExtrudedAreaSolid {
     /// The surface defining the area to be swept. It is given as a
     /// profile definition within the xy plane of the position coordinate system.
+    #[ifc_types(RectangleProfileDef)]
     pub swept_area: Id,
 
     /// Position coordinate system for the resulting swept solid of the sweeping
@@ -31,10 +33,10 @@ pub struct ExtrudedAreaSolid {
     /// the swept solid. If not provided, the swept solid remains within the
     /// position as determined by the cross section or by the directrix used
     /// for the sweeping operation.
-    pub position: OptionalParameter<Id>,
+    pub position: OptionalParameter<TypedId<Axis3D>>,
 
     /// The direction in which the surface, provided by SweptArea is to be swept.
-    pub extruded_direction: Id,
+    pub extruded_direction: TypedId<Direction3D>,
 
     /// The distance the surface is to be swept along the ExtrudedDirection.
     pub depth: IfcFloat,
@@ -50,13 +52,13 @@ impl ExtrudedAreaSolid {
         Self {
             swept_area: swept_area.into().or_insert(ifc).id(),
             position: OptionalParameter::omitted(),
-            extruded_direction: extruded_direction.into().or_insert(ifc).id(),
+            extruded_direction: extruded_direction.into().or_insert(ifc),
             depth: depth.into(),
         }
     }
 
     pub fn position(mut self, position: impl Into<IdOr<Axis3D>>, ifc: &mut IFC) -> Self {
-        self.position = position.into().or_insert(ifc).id().into();
+        self.position = position.into().or_insert(ifc).into();
         self
     }
 }
@@ -71,7 +73,7 @@ impl IFCParse for ExtrudedAreaSolid {
                 _: Comma::parse(),
                 position: OptionalParameter::parse(),
                 _: Comma::parse(),
-                extruded_direction: Id::parse(),
+                extruded_direction: Id::parse().map(|id| TypedId::new(id)),
                 _: Comma::parse(),
                 depth: IfcFloat::parse(),
 

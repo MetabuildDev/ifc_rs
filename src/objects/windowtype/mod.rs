@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 use window_partitioning_type_enum::WindowPartitioningTypeEnum;
 use window_type_enum::WindowTypeEnum;
 

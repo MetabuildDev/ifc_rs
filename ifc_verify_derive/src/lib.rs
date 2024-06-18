@@ -1,8 +1,6 @@
 mod data_type;
 mod field;
 
-use std::ops::Not;
-
 use data_type::DataType;
 use field::{Field, IfcTypesTokenType};
 use proc_macro::TokenStream;
@@ -42,15 +40,23 @@ pub fn ifc_type_builder(item: TokenStream) -> TokenStream {
                             .collect(),
                     };
 
-                    collected.types.is_empty().not().then(|| Field {
-                        variable_name: field
-                            .ident
-                            .as_ref()
-                            .expect("named field should have a name")
-                            .clone(),
-                        data_type: DataType::new(&field.ty),
-                        ifc_types: collected,
-                    })
+                    DataType::new(&field.ty)
+                        .map(|data_type| {
+                            if data_type.needs_arguments() && collected.types.is_empty() {
+                                None
+                            } else {
+                                Some(Field {
+                                    variable_name: field
+                                        .ident
+                                        .as_ref()
+                                        .expect("named field should have a name")
+                                        .clone(),
+                                    data_type,
+                                    ifc_types: collected,
+                                })
+                            }
+                        })
+                        .flatten()
                 })
                 .collect(),
             Fields::Unnamed(_) => Vec::new(),

@@ -78,24 +78,22 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
 
-        let opening_element_placement_id = self
-            .ifc
-            .data
-            .get::<OpeningElement>(opening_element)
-            .object_placement
-            .id();
-
-        let position = Axis3D::new(
-            Point3D::from(window_parameter.placement + DVec3::new(0., window_thickness, 0.)),
-            self.ifc,
-        );
-        let local_placement = LocalPlacement::new(position, self.ifc)
-            .relative_to::<Axis3D>(opening_element_placement_id, self.ifc);
-
-        let window = Window::new(name)
+        let mut window = Window::new(name)
             .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
             .representation(product_shape, self.ifc);
+
+        if let Some(&opening_element_placement_id) =
+            self.ifc.data.get(opening_element).object_placement.custom()
+        {
+            let position = Axis3D::new(
+                Point3D::from(window_parameter.placement + DVec3::new(0., window_thickness, 0.)),
+                self.ifc,
+            );
+            let local_placement = LocalPlacement::new(position, self.ifc)
+                .relative_to::<Axis3D>(opening_element_placement_id, self.ifc);
+
+            window = window.object_placement(local_placement, self.ifc);
+        }
 
         let window_id = self.ifc.data.insert_new(window);
 

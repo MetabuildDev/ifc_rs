@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 use type_enum::WallTypeEnum;
 
 use crate::{

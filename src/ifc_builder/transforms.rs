@@ -68,7 +68,7 @@ impl<'a> IfcBuildingBuilder<'a> {
         t: TypedId<T>,
         transform_parameter: &TransformParameter,
     ) {
-        let transformable = self.ifc.data.get::<T>(t.id());
+        let transformable = self.ifc.data.get(t);
 
         if let Some(shape_id) = transformable.shape() {
             let transform = CartesianTransformationOperator3DnonUniform::new(
@@ -85,7 +85,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
             // access to shape is still unique since we don't change it anywhere
             // else inside the following loop just afterwards
-            let product_shape = self.ifc.data.get::<ProductDefinitionShape>(shape_id.id());
+            let product_shape = self.ifc.data.get(shape_id);
 
             let transforms: Vec<_> = product_shape
                 .representations
@@ -104,15 +104,11 @@ impl<'a> IfcBuildingBuilder<'a> {
                             MappedItem::new(representation_map, transform_id, self.ifc),
                             self.ifc,
                         );
-                    self.ifc.data.insert_new(r).id()
+                    self.ifc.data.insert_new(r)
                 })
                 .collect();
 
-            self.ifc
-                .data
-                .get_mut::<ProductDefinitionShape>(shape_id.id())
-                .representations
-                .0 = transforms;
+            self.ifc.data.get_mut(shape_id).representations.0 = transforms;
         }
     }
 }

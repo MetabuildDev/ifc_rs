@@ -1,9 +1,10 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::id::Id;
 use crate::id::IdOr;
+use crate::id::TypedId;
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::comma::Comma;
 use crate::parser::label::Label;
@@ -27,7 +28,7 @@ pub struct RelDeclares {
     root: Root,
 
     /// Reference to the IfcProject to which additional information is assigned.
-    pub relating_context: Id,
+    pub relating_context: TypedId<Project>,
 
     /// Set of object or property definitions that are assigned to a context and
     /// to which the unit and representation context definitions of that context apply.
@@ -38,7 +39,7 @@ impl RelDeclares {
     pub fn new(id: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
         Self {
             root: Root::new(id.into()),
-            relating_context: project.into().or_insert(ifc).id(),
+            relating_context: project.into().or_insert(ifc),
             related_definitions: IfcList::empty(),
         }
     }
@@ -77,7 +78,7 @@ impl IFCParse for RelDeclares {
 
                 root: Root::parse(),
                 _ :Comma::parse(),
-                relating_context: Id::parse(),
+                relating_context: Id::parse().map(|id| TypedId::new(id)),
                 _ : Comma::parse(),
                 related_definitions: IfcList::parse(),
 

@@ -3,18 +3,13 @@ pub mod serialize;
 
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{Id, IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
-    IFC,
-};
-
-use super::{
-    extruded_area_solid::ExtrudedAreaSolid, point::PointType, polyline::PolyLine,
-    representation_subcontext::GeometricRepresentationSubContext,
+    prelude::*,
 };
 
 pub trait ShapeItem: IfcType {}
@@ -50,7 +45,7 @@ pub struct ShapeRepresentation {
     // All fields from IfcRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrepresentation.htm
     //
     /// Definition of the representation context for which the different subtypes of representation are valid.
-    pub context_of_items: Id,
+    pub context_of_items: TypedId<GeometricRepresentationSubContext>,
     /// The optional identifier of the representation as used within a project.
     pub representation_identifier: OptionalParameter<Label>,
     /// The description of the type of a representation context. The representation type defines
@@ -59,13 +54,14 @@ pub struct ShapeRepresentation {
     /// The supported values for context type are to be specified by implementers agreements.
     pub representation_type: OptionalParameter<Label>,
     /// Set of geometric representation items that are defined for this representation.
+    #[ifc_types(ExtrudedAreaSolid, PolyLine, MappedItem)]
     pub items: IfcList<Id>,
 }
 
 impl ShapeRepresentation {
     pub fn new(context: impl Into<IdOr<GeometricRepresentationSubContext>>, ifc: &mut IFC) -> Self {
         Self {
-            context_of_items: context.into().or_insert(ifc).id(),
+            context_of_items: context.into().or_insert(ifc),
             representation_identifier: OptionalParameter::omitted(),
             representation_type: OptionalParameter::omitted(),
             items: IfcList::empty(),

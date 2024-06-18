@@ -1,16 +1,16 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
-use crate::id::{Id, IdOr};
+use crate::id::{Id, IdOr, TypedId};
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::prelude::*;
 
 use super::representation_context::GeometricRepresentationContext;
 
@@ -63,6 +63,7 @@ pub struct GeometricRepresentationSubContext {
     /// IfcMapConversion offset relates. In preferred practise both points (also called "project
     /// base point" and "survey point") should be coincidental. However it is possible to offset
     /// the geographic reference point from the local zero point.
+    #[ifc_types(Axis2D, Axis3D)]
     pub world_coord_system: OptionalParameter<Id>,
     ///	Direction of the true north, or geographic northing direction, relative to the underlying
     ///	project coordinate system. It is given by a 2 dimensional direction within the xy-plane of
@@ -70,11 +71,12 @@ pub struct GeometricRepresentationSubContext {
     ///	positive Y axis of the project coordinate system equals the geographic northing direction.
     ///
     /// NOTE  If a geographic placement is provided using IfcMapConversion then the true north is for information only. In case of inconsistency, the value provided with IfcMapConversion shall take precedence.
+    #[ifc_types(Axis2D, Axis3D)]
     pub true_north: OptionalParameter<Id>,
 
     /// Parent context from which the sub context derives its world coordinate
     /// system, precision, space coordinate dimension and true north.
-    pub parent_context: Id,
+    pub parent_context: TypedId<GeometricRepresentationContext>,
     /// The target plot scale of the representation to which this representation context applies.
     ///
     /// Scale indicates the target plot scale for the representation sub context,
@@ -107,7 +109,7 @@ impl GeometricRepresentationSubContext {
             world_coord_system: OptionalParameter::inherited(),
             true_north: OptionalParameter::inherited(),
 
-            parent_context: context.into().or_insert(ifc).id(),
+            parent_context: context.into().or_insert(ifc),
             target_scale: OptionalParameter::omitted(),
             target_view,
             user_defined_target_view: OptionalParameter::omitted(),

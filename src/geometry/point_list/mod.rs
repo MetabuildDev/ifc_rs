@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
     ifc_type::{IfcType, IfcVerify},

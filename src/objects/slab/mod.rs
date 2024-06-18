@@ -3,7 +3,7 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use super::{
     shared::{
@@ -124,7 +124,7 @@ impl MaterialRelatable for Slab {}
 
 impl TransformableType for Slab {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>> {
-        self.representation.custom().map(|id| TypedId::new(*id))
+        self.representation.custom().cloned()
     }
 }
 
@@ -134,9 +134,6 @@ pub mod test {
 
     use crate::geometry::axis::Axis3D;
     use crate::geometry::product_definition_shape::ProductDefinitionShape;
-    use crate::geometry::representation_context::GeometricRepresentationContext;
-    use crate::geometry::representation_subcontext::GeometricRepresentationSubContext;
-    use crate::geometry::shape_representation::ShapeRepresentation;
     use crate::id::IdOr;
     use crate::objects::slab::Slab;
     use crate::parser::IFCParse;
@@ -158,19 +155,12 @@ pub mod test {
         for slab in ifc.data.find_all_of_type::<Slab>() {
             println!("slab: {slab}");
 
-            if let Some(owner_history) = slab
-                .owner_history
-                .custom()
-                .map(|&id| ifc.data.get_untyped(id))
-            {
+            if let Some(owner_history) = slab.owner_history.custom().map(|&id| ifc.data.get(id)) {
                 println!("\towner_history: {owner_history}");
             }
 
-            if let Some(id_or) = slab.object_placement.custom() {
-                match id_or {
-                    IdOr::Id(id) => println!("\tpoint3d: {}", ifc.data.get_untyped(*id)),
-                    IdOr::Custom(point) => println!("\tpoint3d: {point}"),
-                }
+            if let Some(id) = slab.object_placement.custom() {
+                println!("\tpoint3d: {}", ifc.data.get_untyped(*id));
             }
 
             if let Some(representation) = slab
@@ -186,18 +176,14 @@ pub mod test {
                     .representations
                     .iter()
                 {
-                    let shape = ifc.data.get::<ShapeRepresentation>(*repr);
+                    let shape = ifc.data.get(*repr);
                     println!("\t\tshape_representation: {shape}");
 
-                    let sub_context = ifc
-                        .data
-                        .get::<GeometricRepresentationSubContext>(shape.context_of_items);
+                    let sub_context = ifc.data.get(shape.context_of_items);
 
                     println!("\t\t\tsub context: {sub_context}");
 
-                    let parent_context = ifc
-                        .data
-                        .get::<GeometricRepresentationContext>(sub_context.parent_context);
+                    let parent_context = ifc.data.get(sub_context.parent_context);
 
                     println!("\t\t\t\tcontext: {parent_context}");
                     println!(
@@ -205,8 +191,9 @@ pub mod test {
                         parent_context.coord_space_dimension
                     );
 
-                    let world_coord_system =
-                        ifc.data.get::<Axis3D>(parent_context.world_coord_system);
+                    let world_coord_system = ifc
+                        .data
+                        .get::<Axis3D>(parent_context.world_coord_system.into());
 
                     println!("\t\t\t\t\tworld_coord_system: {world_coord_system}");
                     println!(

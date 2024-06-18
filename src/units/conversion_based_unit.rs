@@ -1,6 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use super::{
     ifc_float::IfcFloat, label::Label, shared::named_unit::NamedUnit, IFCParse, IFCParser,

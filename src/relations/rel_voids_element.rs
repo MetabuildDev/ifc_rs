@@ -1,13 +1,13 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{Id, IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    prelude::*,
     prelude::{OpeningElement, Root, RootBuilder, Structure},
-    IFC,
 };
 
 /// IfcRelVoidsElement is an objectified relationship between a building
@@ -23,10 +23,11 @@ pub struct RelVoidsElement {
     root: Root,
     /// Reference to element in which a void is created by associated feature
     /// subtraction element.
+    #[ifc_types(Building, OpeningElement, Slab, Wall, Window)]
     pub relating_building_element: Id,
     /// Reference to the feature subtraction element which defines a void in
     /// the associated element.
-    pub related_opening_element: Id,
+    pub related_opening_element: TypedId<OpeningElement>,
 }
 
 impl RelVoidsElement {
@@ -39,7 +40,7 @@ impl RelVoidsElement {
         Self {
             root: Root::new(id.into()),
             relating_building_element: relating_building_element.into().or_insert(ifc).id(),
-            related_opening_element: relating_opening_element.into().or_insert(ifc).id(),
+            related_opening_element: relating_opening_element.into().or_insert(ifc),
         }
     }
 }
@@ -60,7 +61,7 @@ impl IFCParse for RelVoidsElement {
                 _ :Comma::parse(),
                 relating_building_element: Id::parse(),
                 _: Comma::parse(),
-                related_opening_element: Id::parse(),
+                related_opening_element: Id::parse().map(|id| TypedId::new(id)),
 
                 _: p_space_or_comment_surrounded(");"),
             }

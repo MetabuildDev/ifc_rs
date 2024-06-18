@@ -1,6 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::id::Id;
 use crate::id::IdOr;

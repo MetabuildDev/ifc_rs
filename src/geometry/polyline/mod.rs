@@ -1,4 +1,4 @@
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
     id::Id,
@@ -8,7 +8,7 @@ use crate::{
 };
 
 use super::{
-    point::{Point2D, Point3D, PointType},
+    point::{CartesianPoint, Point2D, Point3D, PointType},
     shape_representation::ShapeItem,
 };
 
@@ -23,21 +23,12 @@ mod serialize;
 #[derive(IfcVerify)]
 pub struct PolyLine {
     /// The points defining the polyline.
+    #[ifc_types(Point2D, Point3D)]
     pub points: IfcList<Id>,
 }
 
 impl PolyLine {
-    pub fn from_2d<'a>(points: impl Iterator<Item = Point2D>, ifc: &mut IFC) -> Self {
-        Self {
-            points: IfcList(
-                points
-                    .map(|point| ifc.data.insert_new(point).id())
-                    .collect(),
-            ),
-        }
-    }
-
-    pub fn from_3d<'a>(points: impl Iterator<Item = Point3D>, ifc: &mut IFC) -> Self {
+    pub fn from<'a, C: CartesianPoint>(points: impl Iterator<Item = C>, ifc: &mut IFC) -> Self {
         Self {
             points: IfcList(
                 points
@@ -99,7 +90,7 @@ mod test {
             DVec2::new(0.0, 4.0).into(),
         ];
 
-        let poly_line = PolyLine::from_2d(points.into_iter(), &mut ifc);
+        let poly_line = PolyLine::from(points.into_iter(), &mut ifc);
         let _poly_line_id = ifc.data.insert_new(poly_line);
 
         println!("{}", ifc.data);

@@ -60,7 +60,7 @@ impl ToTokens for Field {
         let ifc_types = &self.ifc_types;
 
         let check = match &self.data_type {
-            DataType::Type(id_or_list) => match id_or_list {
+            DataType::Id(id_or_list) => match id_or_list {
                 IdOrList::Id => quote! {
 
                     let t = ifc.data.get_untyped(self.#var_name);
@@ -72,6 +72,34 @@ impl ToTokens for Field {
                     self.#var_name.0.iter().all(|id| {
                         let t = ifc.data.get_untyped(*id);
                         #ifc_types
+                    })
+
+                },
+                IdOrList::TypedId(typed) => quote! {
+
+                    let t = ifc.data.get_untyped(self.#var_name.id());
+                    t.type_id() == std::any::TypeId::of::<#typed>()
+
+                },
+                IdOrList::TypedIdList(typed) => quote! {
+
+                    self.#var_name.0.iter().all(|typed_id| {
+                        let t = ifc.data.get_untyped(typed_id.id());
+                        t.type_id() == std::any::TypeId::of::<#typed>()
+                    })
+
+                },
+                IdOrList::IdOr(typed) => quote! {
+
+                    let t = ifc.data.get_untyped(self.#var_name.id().id());
+                    t.type_id() == std::any::TypeId::of::<#typed>()
+
+                },
+                IdOrList::IdOrList(typed) => quote! {
+
+                    self.#var_name.0.iter().all(|id_or| {
+                        let t = ifc.data.get_untyped(id_or.id().id());
+                        t.type_id() == std::any::TypeId::of::<#typed>()
                     })
 
                 },
@@ -96,6 +124,54 @@ impl ToTokens for Field {
                             #var_name.0.iter().all(|id| {
                                 let t = ifc.data.get_untyped(*id);
                                 #ifc_types
+                            })
+                        }
+                        None => true,
+                    }
+
+                },
+                IdOrList::TypedId(typed) => quote! {
+
+                    match self.#var_name.custom() {
+                        Some(typed_id) => {
+                            let t = ifc.data.get_untyped(typed_id.id());
+                            t.type_id() == std::any::TypeId::of::<#typed>()
+                        }
+                        None => true,
+                    }
+
+                },
+                IdOrList::TypedIdList(typed) => quote! {
+
+                    match self.#var_name.custom() {
+                        Some(#var_name) => {
+                            #var_name.0.iter().all(|typed_id| {
+                                let t = ifc.data.get_untyped(typed_id.id());
+                                t.type_id() == std::any::TypeId::of::<#typed>()
+                            })
+                        }
+                        None => true,
+                    }
+
+                },
+                IdOrList::IdOr(typed) => quote! {
+
+                    match self.#var_name.custom() {
+                        Some(id_or) => {
+                            let t = ifc.data.get_untyped(id_or.id().id());
+                            t.type_id() == std::any::TypeId::of::<#typed>()
+                        }
+                        None => true,
+                    }
+
+                },
+                IdOrList::IdOrList(typed) => quote! {
+
+                    match self.#var_name.custom() {
+                        Some(#var_name) => {
+                            #var_name.0.iter().all(|id_or| {
+                                let t = ifc.data.get_untyped(id_or.id().id());
+                                t.type_id() == std::any::TypeId::of::<#typed>()
                             })
                         }
                         None => true,

@@ -47,17 +47,17 @@ impl DataMap {
         self.0.remove(&id.into())
     }
 
-    pub fn get<T: IfcType>(&self, id: impl Into<Id>) -> &T {
-        self.get_untyped(id).downcast_ref().unwrap()
+    pub fn get<T: IfcType>(&self, typed_id: TypedId<T>) -> &T {
+        self.get_untyped(typed_id.id()).downcast_ref().unwrap()
     }
 
     pub fn get_untyped(&self, id: impl Into<Id>) -> &Box<dyn IfcType> {
         self.0.get(&id.into()).unwrap()
     }
 
-    pub fn get_mut<T: IfcType>(&mut self, id: Id) -> &mut T {
+    pub fn get_mut<T: IfcType>(&mut self, typed_id: TypedId<T>) -> &mut T {
         self.0
-            .get_mut(&id)
+            .get_mut(&typed_id.id())
             .map(|any| any.downcast_mut())
             .flatten()
             .unwrap()

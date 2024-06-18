@@ -1,12 +1,10 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
-use crate::parser::list::IfcList;
-use crate::parser::optional::OptionalParameter;
 use crate::parser::{p_space_or_comment_surrounded, IFCParse, IFCParser};
 use crate::prelude::*;
 
@@ -30,14 +28,7 @@ pub struct Project {
 impl Project {
     pub fn new<'a>(global_id: impl Into<Label>) -> Self {
         Self {
-            context: Context::new(
-                Root::new(global_id.into()),
-                OptionalParameter::omitted(),
-                OptionalParameter::omitted(),
-                OptionalParameter::omitted(),
-                IfcList(Vec::new()),
-                OptionalParameter::omitted(),
-            ),
+            context: Context::new(Root::new(global_id.into())),
         }
     }
 }

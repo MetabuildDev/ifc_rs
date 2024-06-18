@@ -53,18 +53,15 @@ impl<'a> IfcBuildingBuilder<'a> {
         &self,
         material: TypedId<MaterialLayerSetUsage>,
     ) -> f64 {
-        let layer_set_usage = self.ifc.data.get::<MaterialLayerSetUsage>(material.id());
-        let layer_set = self
-            .ifc
-            .data
-            .get::<MaterialLayerSet>(layer_set_usage.spatial_element_structure);
+        let layer_set_usage = self.ifc.data.get(material);
+        let layer_set = self.ifc.data.get(layer_set_usage.spatial_element_structure);
 
         layer_set
             .material_layers
             .0
             .iter()
             .map(|layer_id| {
-                let layer = self.ifc.data.get::<MaterialLayer>(*layer_id);
+                let layer = self.ifc.data.get(*layer_id);
                 layer.layer_thickness.0
             })
             .sum()

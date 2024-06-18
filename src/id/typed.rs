@@ -50,7 +50,7 @@ impl<T: IfcType> TypedId<T> {
     }
 
     pub fn id_or(&self) -> IdOr<T> {
-        IdOr::Id(self.id)
+        IdOr::Id(*self)
     }
 }
 

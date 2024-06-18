@@ -1,13 +1,13 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{Id, IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    prelude::*,
     prelude::{OpeningElement, Root, RootBuilder, Structure},
-    IFC,
 };
 
 /// IfcRelFillsElement is an objectified relationship between an opening
@@ -19,9 +19,10 @@ use crate::{
 pub struct RelFillsElement {
     root: Root,
     /// Opening Element being filled by virtue of this relationship.
-    relating_opening_element: Id,
+    relating_opening_element: TypedId<OpeningElement>,
     /// Reference to building element that occupies fully or partially the
     /// associated opening.
+    #[ifc_types(Building, OpeningElement, Slab, Wall, Window)]
     pub related_building_element: Id,
 }
 
@@ -34,7 +35,7 @@ impl RelFillsElement {
     ) -> Self {
         Self {
             root: Root::new(id.into()),
-            relating_opening_element: relating_opening_element.into().or_insert(ifc).id(),
+            relating_opening_element: relating_opening_element.into().or_insert(ifc),
             related_building_element: relating_building_element.into().or_insert(ifc).id(),
         }
     }
@@ -54,7 +55,7 @@ impl IFCParse for RelFillsElement {
 
                 root: Root::parse(),
                 _ :Comma::parse(),
-                relating_opening_element: Id::parse(),
+                relating_opening_element: Id::parse().map(|id| TypedId::new(id)),
                 _: Comma::parse(),
                 related_building_element: Id::parse(),
 

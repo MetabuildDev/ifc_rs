@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{
         bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
@@ -25,7 +25,7 @@ pub struct MaterialLayer {
     /// Note that if this value is not given, it does not denote a layer
     /// with no material (an air gap), it only means that the material
     /// is not specified at that point.
-    pub material: OptionalParameter<Id>,
+    pub material: OptionalParameter<TypedId<Material>>,
 
     /// The thickness of the material layer. The meaning of "thickness"
     /// depends on its usage. In case of building elements elements
@@ -84,7 +84,7 @@ impl MaterialLayer {
     }
 
     pub fn material(mut self, material: impl Into<IdOr<Material>>, ifc: &mut IFC) -> Self {
-        self.material = material.into().or_insert(ifc).id().into();
+        self.material = material.into().or_insert(ifc).into();
         self
     }
 

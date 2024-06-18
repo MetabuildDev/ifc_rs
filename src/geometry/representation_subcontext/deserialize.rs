@@ -5,7 +5,7 @@ use crate::{
         geometric_projection::GeometricProjection,
         representation_subcontext::GeometricRepresentationSubContext,
     },
-    id::Id,
+    id::{Id, TypedId},
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
 };
 
@@ -64,7 +64,7 @@ impl IFCParse for GeometricRepresentationSubContext {
                 precision,
                 world_coord_system,
                 true_north,
-                parent_context,
+                parent_context: TypedId::new(parent_context),
                 target_scale,
                 target_view,
                 user_defined_target_view,

@@ -1,9 +1,9 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
-use crate::id::{Id, IdOr, TypedId};
+use crate::id::{IdOr, TypedId};
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
@@ -23,7 +23,7 @@ pub struct PersonAndOrganization {
     /// The organization to which the person is related.
     pub the_organization: TypedId<Organization>,
     /// Roles played by the person within the context of an organization.
-    pub roles: OptionalParameter<IfcList<Id>>,
+    pub roles: OptionalParameter<IfcList<TypedId<ActorRole>>>,
 }
 
 impl PersonAndOrganization {
@@ -48,7 +48,7 @@ impl PersonAndOrganization {
             .custom_mut()
             .unwrap()
             .0
-            .push(role.into().or_insert(ifc).id());
+            .push(role.into().or_insert(ifc));
 
         self
     }

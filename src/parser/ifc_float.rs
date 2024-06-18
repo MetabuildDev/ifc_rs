@@ -5,6 +5,7 @@ use glam::{DVec2, DVec3};
 use winnow::ascii::float;
 use winnow::Parser;
 
+use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::geometry::{p_vec2, p_vec3};
 use crate::parser::{IFCParse, IFCParser};
 
@@ -19,6 +20,9 @@ impl IFCParse for IfcFloat {
         float.map(Self)
     }
 }
+
+impl IfcVerify for IfcFloat {}
+impl IfcType for IfcFloat {}
 
 impl From<f64> for IfcFloat {
     fn from(value: f64) -> Self {

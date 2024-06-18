@@ -8,7 +8,7 @@ use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
 use crate::IFC;
 use std::str::FromStr;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 use strum::{Display, EnumString, VariantNames};
 use winnow::combinator::{alt, delimited};
 use winnow::Parser;

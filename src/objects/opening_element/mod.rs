@@ -4,7 +4,7 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use super::{
     shared::{
@@ -127,6 +127,6 @@ impl Structure for OpeningElement {}
 
 impl TransformableType for OpeningElement {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>> {
-        self.representation.custom().map(|id| TypedId::new(*id))
+        self.representation.custom().cloned()
     }
 }

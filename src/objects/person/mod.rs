@@ -1,14 +1,14 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
-use crate::id::{Id, IdOr};
+use crate::id::{Id, IdOr, TypedId};
 use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::prelude::*;
 
 use super::actor_role::ActorRole;
 use super::address::Address;
@@ -35,8 +35,9 @@ pub struct Person {
     /// and/or professional standing and appear after his/her names.
     pub suffix_titles: OptionalParameter<IfcList<Label>>,
     /// Roles played by the person.
-    pub roles: OptionalParameter<IfcList<Id>>,
+    pub roles: OptionalParameter<IfcList<TypedId<ActorRole>>>,
     /// Postal and telecommunication addresses of a person.
+    #[ifc_types(TelecomAddress, PostalAddress)]
     pub addresses: OptionalParameter<IfcList<Id>>,
 }
 
@@ -120,7 +121,7 @@ impl Person {
             .custom_mut()
             .unwrap()
             .0
-            .push(role.into().or_insert(ifc).id());
+            .push(role.into().or_insert(ifc));
 
         self
     }

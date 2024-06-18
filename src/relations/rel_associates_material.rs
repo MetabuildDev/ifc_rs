@@ -1,13 +1,12 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr},
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
-    prelude::{RelAssociates, RelAssociatesBuilder, Root, RootBuilder},
-    IFC,
+    prelude::*,
 };
 
 /// Material set usages & material sets which can be related to.
@@ -27,6 +26,7 @@ pub struct RelAssociatesMaterial {
     rel_associates: RelAssociates,
 
     /// Material definition assigned to the elements or element types.
+    #[ifc_types(MaterialConstituentSet, MaterialLayerSetUsage, MaterialLayerSet)]
     pub relating_material: Id,
 }
 

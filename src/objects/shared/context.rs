@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
 use crate::geometry::representation_context::GeometricRepresentationContext;
-use crate::id::{Id, IdOr};
+use crate::id::{IdOr, TypedId};
 use crate::parser::comma::Comma;
 use crate::parser::list::IfcList;
 use crate::parser::IFCParse;
@@ -40,28 +40,21 @@ pub struct Context {
     /// components, one or several geometric representation contexts need
     /// to be included that define e.g. the world coordinate system, the
     /// coordinate space dimensions, and/or the precision factor.
-    pub representation_context: IfcList<Id>,
+    pub representation_context: IfcList<TypedId<GeometricRepresentationContext>>,
 
     /// Units globally assigned to measure types used within the context.
-    pub units_in_context: OptionalParameter<Id>,
+    pub units_in_context: OptionalParameter<TypedId<UnitAssigment>>,
 }
 
 impl Context {
-    pub fn new(
-        root: Root,
-        object_type: OptionalParameter<Label>,
-        long_name: OptionalParameter<Label>,
-        phase: OptionalParameter<Label>,
-        representation_context: IfcList<Id>,
-        units_in_context: OptionalParameter<Id>,
-    ) -> Self {
+    pub fn new(root: Root) -> Self {
         Self {
             root,
-            object_type,
-            long_name,
-            phase,
-            representation_context,
-            units_in_context,
+            object_type: OptionalParameter::omitted(),
+            long_name: OptionalParameter::omitted(),
+            phase: OptionalParameter::omitted(),
+            representation_context: IfcList::empty(),
+            units_in_context: OptionalParameter::omitted(),
         }
     }
 }
@@ -92,7 +85,7 @@ pub trait ContextBuilder: Sized {
         self.context_mut()
             .representation_context
             .0
-            .push(representation_context.into().or_insert(ifc).id());
+            .push(representation_context.into().or_insert(ifc));
         self
     }
 
@@ -101,7 +94,7 @@ pub trait ContextBuilder: Sized {
         unit_assignment: impl Into<IdOr<UnitAssigment>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.context_mut().units_in_context = unit_assignment.into().or_insert(ifc).id().into();
+        self.context_mut().units_in_context = unit_assignment.into().or_insert(ifc).into();
         self
     }
 }

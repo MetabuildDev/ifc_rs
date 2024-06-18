@@ -3,7 +3,7 @@ mod serialize;
 
 use std::ops::{Deref, DerefMut};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use super::{
     shared::{
@@ -104,7 +104,7 @@ impl MaterialRelatable for Wall {}
 
 impl TransformableType for Wall {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>> {
-        self.representation.custom().map(|id| TypedId::new(*id))
+        self.representation.custom().cloned()
     }
 }
 
@@ -158,11 +158,8 @@ pub mod test {
                 println!("\towner_history: {owner_history}");
             }
 
-            if let Some(id_or) = wall.object_placement.custom() {
-                match id_or {
-                    IdOr::Id(id) => println!("\tpoint3d: {}", ifc.data.get_untyped(*id)),
-                    IdOr::Custom(point) => println!("\tpoint3d: {point}"),
-                }
+            if let Some(id) = wall.object_placement.custom() {
+                println!("\tpoint3d: {}", ifc.data.get_untyped(*id));
             }
 
             if let Some(representation) = wall
@@ -197,8 +194,9 @@ pub mod test {
                         parent_context.coord_space_dimension
                     );
 
-                    let world_coord_system =
-                        ifc.data.get::<Axis3D>(parent_context.world_coord_system);
+                    let world_coord_system = ifc
+                        .data
+                        .get::<Axis3D>(parent_context.world_coord_system.into());
 
                     println!("\t\t\t\t\tworld_coord_system: {world_coord_system}");
                     println!(

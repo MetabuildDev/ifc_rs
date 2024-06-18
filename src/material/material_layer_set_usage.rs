@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{Id, IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
@@ -29,7 +29,7 @@ use super::{
 #[derive(IfcVerify)]
 pub struct MaterialLayerSetUsage {
     /// The IfcMaterialLayerSet set to which the usage is applied.
-    pub spatial_element_structure: Id,
+    pub spatial_element_structure: TypedId<MaterialLayerSet>,
 
     /// Orientation of the material layer set relative to element reference
     /// geometry. The meaning of the value of this attribute shall be
@@ -78,7 +78,7 @@ impl MaterialLayerSetUsage {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            spatial_element_structure: spatial_element_structure.into().or_insert(ifc).id(),
+            spatial_element_structure: spatial_element_structure.into().or_insert(ifc),
             layer_set_direction,
             direction_sense,
             offset_from_reference_line: offset_from_reference_line.into(),
@@ -98,7 +98,7 @@ impl IFCParse for MaterialLayerSetUsage {
             Self {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYERSETUSAGE("),
 
-                spatial_element_structure: Id::parse(),
+                spatial_element_structure: Id::parse().map(|id| TypedId::new(id)),
                 _: Comma::parse(),
                 layer_set_direction: LayerSetDirectionEnum::parse(),
                 _: Comma::parse(),

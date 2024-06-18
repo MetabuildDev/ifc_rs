@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::id::{Id, IdOr};
@@ -9,7 +9,7 @@ use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::prelude::*;
 
 use super::axis::AxisPlacement;
 
@@ -39,12 +39,14 @@ pub struct GeometricRepresentationContext {
     pub precision: OptionalParameter<IfcFloat>,
     /// Establishment of the engineering coordinate system (often referred to as the world coordinate
     /// system in CAD) for all representation contexts used by the project.
+    #[ifc_types(Axis2D, Axis3D)]
     pub world_coord_system: Id,
 
     /// Direction of the true north, or geographic northing direction, relative to the underlying project coordinate system.
     /// It is given by a 2 dimensional direction within the xy-plane of the project coordinate system.
     /// If not present, it defaults to 0. 1., meaning that the positive Y axis of the project coordinate system equals the
     /// geographic northing direction.
+    #[ifc_types(Axis2D, Axis3D)]
     pub true_north: OptionalParameter<Id>,
 }
 

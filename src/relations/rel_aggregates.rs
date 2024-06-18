@@ -1,9 +1,9 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
@@ -26,13 +26,13 @@ pub struct RelAggregates {
     /// The object definition, either an object type or an object
     /// occurrence, that represents the aggregation. It is the whole
     /// within the whole/part relationship.
-    pub relating_object: OptionalParameter<Id>,
+    pub relating_object: OptionalParameter<TypedId<Project>>,
 
     /// The object definitions, either object occurrences or object
     /// types, that are being aggregated. They are defined as the
     /// parts in the whole/part relationship. No order is implied
     /// between the parts.
-    pub related_objects: IfcList<Id>,
+    pub related_objects: IfcList<TypedId<Building>>,
 }
 
 impl RelAggregates {
@@ -50,11 +50,11 @@ impl RelAggregates {
         buildings: impl IntoIterator<Item = IdOr<Building>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.relating_object = project.into().or_insert(ifc).id().into();
+        self.relating_object = project.into().or_insert(ifc).into();
 
         self.related_objects.0 = buildings
             .into_iter()
-            .map(|id_or| id_or.or_insert(ifc).id())
+            .map(|id_or| id_or.or_insert(ifc))
             .collect();
 
         self

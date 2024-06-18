@@ -1,20 +1,13 @@
 use std::{fmt::Display, ops::Deref};
 
-use ifc_type_derive::IfcVerify;
+use ifc_verify_derive::IfcVerify;
 
-use crate::id::Id;
-use crate::id::IdOr;
+use crate::id::{Id, IdOr};
 use crate::ifc_type::{IfcType, IfcVerify};
-use crate::parser::comma::Comma;
-use crate::parser::label::Label;
-use crate::parser::list::IfcList;
-use crate::parser::p_space_or_comment_surrounded;
-use crate::parser::IFCParse;
-use crate::parser::IFCParser;
-use crate::prelude::Root;
-use crate::prelude::RootBuilder;
-use crate::prelude::Structure;
-use crate::IFC;
+use crate::parser::{
+    comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser,
+};
+use crate::prelude::*;
 
 /// This objectified relationship, IfcRelContainedInSpatialStructure,
 /// is used to assign elements to a certain level of the spatial project
@@ -30,11 +23,13 @@ pub struct RelContainedInSpatialStructure {
 
     /// Set of products, which are contained within this level of the
     /// spatial structure hierarchy.
+    #[ifc_types(Building, OpeningElement, Slab, Wall, Window)]
     pub related_elements: IfcList<Id>,
 
     /// Spatial structure element, within which the element is
     /// contained. Any element can only be contained within one
     /// element of the project spatial structure.
+    #[ifc_types(Building, OpeningElement, Slab, Wall, Window)]
     pub relating_structure: Id,
 }
 

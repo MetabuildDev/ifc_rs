@@ -5,7 +5,7 @@ use label::Label;
 use optional::OptionalParameter;
 
 use crate::{
-    id::{Id, IdOr},
+    id::{IdOr, TypedId},
     objects::owner_history::OwnerHistory,
     parser::*,
     IFC,
@@ -26,7 +26,7 @@ pub struct Root {
     /// Assignment of the information about the current ownership of that object,
     /// including owning actor, application, local identification and information
     /// captured about the recent changes of the object.
-    pub owner_history: OptionalParameter<Id>,
+    pub owner_history: OptionalParameter<TypedId<OwnerHistory>>,
 
     /// Optional name for use by the participating software systems or users.
     /// For some subtypes of IfcRoot the insertion of the Name attribute may
@@ -56,7 +56,7 @@ pub trait RootBuilder: Sized {
         owner_history: impl Into<IdOr<OwnerHistory>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.root_mut().owner_history = owner_history.into().or_insert(ifc).id().into();
+        self.root_mut().owner_history = owner_history.into().or_insert(ifc).into();
         self
     }
 

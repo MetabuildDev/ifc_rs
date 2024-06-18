@@ -7,7 +7,7 @@ pub use super::geometric_projection::GeometricProjection;
 pub use super::indexed_poly_curve::IndexedPolyCurve;
 pub use super::local_placement::LocalPlacement;
 pub use super::point::{CartesianPoint, Point2D, Point3D, PointType};
-pub use super::point_list::{PointList2D, PointList3D};
+pub use super::point_list::{PointList, PointList2D, PointList3D};
 pub use super::polyline::PolyLine;
 pub use super::product_definition_shape::ProductDefinitionShape;
 pub use super::profile_type::ProfileType;
