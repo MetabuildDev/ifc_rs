@@ -21,6 +21,7 @@ pub mod project;
 pub mod shared;
 pub mod slab;
 pub mod slabtype;
+pub mod storey;
 pub mod wall;
 pub mod walltype;
 pub mod window;
@@ -46,6 +47,7 @@ impl Objects {
             slab::Slab::parse_any(),
             slabtype::SlabType::parse_any(),
             building::Building::parse_any(),
+            storey::Storey::parse_any(),
             opening_element::OpeningElement::parse_any(),
             window::Window::parse_any(),
             windowtype::WindowType::parse_any(),
