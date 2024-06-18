@@ -1,3 +1,4 @@
+use proc_macro2::TokenStream;
 use quote::{format_ident, quote, ToTokens};
 use syn::{
     parse::{Parse, ParseStream, Result},
@@ -24,25 +25,8 @@ impl Parse for IfcTypesTokenType {
     }
 }
 
-impl ToTokens for IfcTypesTokenType {
-    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
-        let f = &self.types[0];
-
-        let mut first = quote! {
-            t.type_id() == std::any::TypeId::of::<#f>()
-        };
-
-        first.extend(self.types.iter().skip(1).map(|type_check| {
-            quote! {
-                || t.type_id() == std::any::TypeId::of::<#type_check>()
-            }
-        }));
-
-        first.to_tokens(tokens);
-    }
-}
-
 pub struct Field {
+    pub struct_name: Ident,
     pub variable_name: Ident,
     pub ifc_types: IfcTypesTokenType,
     pub data_type: DataType,
@@ -52,140 +36,232 @@ impl Field {
     pub fn check_function(&self) -> Ident {
         format_ident!("check_{}", self.variable_name)
     }
+
+    fn loop_check(&self) -> TokenStream {
+        let struct_name = self.struct_name.to_string();
+        let var_name = self.variable_name.to_string();
+
+        let mut def = quote! {
+            let mut correct_type = false;
+        };
+
+        let checks = self.ifc_types.types.iter().map(|type_check| {
+            quote! {
+
+                if t.type_id() == std::any::TypeId::of::<#type_check>() {
+                    correct_type = true;
+                }
+
+            }
+        });
+
+        let type_names = self
+            .ifc_types
+            .types
+            .iter()
+            .map(|type_check| type_check.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+
+        let check_error = quote! {
+            if !correct_type {
+                anyhow::bail!("variable {} of type {} isn't any of these types: {}", #var_name, #struct_name, #type_names);
+            }
+        };
+
+        def.extend(checks);
+        def.extend(check_error);
+
+        def
+    }
+
+    fn single_check(&self, typed: &TokenStream) -> TokenStream {
+        let struct_name = self.struct_name.to_string();
+        let var_name = self.variable_name.to_string();
+        let typed_str = typed.to_string();
+
+        quote! {
+            if t.type_id() != std::any::TypeId::of::<#typed>() {
+                anyhow::bail!("variable {} of type {} wasn't the expected type: {}", #var_name, #struct_name, #typed_str);
+            }
+        }
+    }
 }
 
 impl ToTokens for Field {
-    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
         let var_name = &self.variable_name;
-        let ifc_types = &self.ifc_types;
 
         let check = match &self.data_type {
             DataType::Id(id_or_list) => match id_or_list {
-                IdOrList::Id => quote! {
+                IdOrList::Id => {
+                    let multiple = self.loop_check();
 
-                    let t = ifc.data.get_untyped(self.#var_name);
-                    #ifc_types
+                    quote! {
 
-                },
-                IdOrList::List => quote! {
+                        let t = ifc.data.get_untyped(self.#var_name);
+                        #multiple
 
-                    self.#var_name.0.iter().all(|id| {
-                        let t = ifc.data.get_untyped(*id);
-                        #ifc_types
-                    })
+                    }
+                }
+                IdOrList::List => {
+                    let multiple = self.loop_check();
 
-                },
-                IdOrList::TypedId(typed) => quote! {
+                    quote! {
 
-                    let t = ifc.data.get_untyped(self.#var_name.id());
-                    t.type_id() == std::any::TypeId::of::<#typed>()
+                        self.#var_name.0.iter().try_for_each(|id| {
+                            let t = ifc.data.get_untyped(*id);
+                            #multiple
 
-                },
-                IdOrList::TypedIdList(typed) => quote! {
+                            Ok(())
+                        })?;
 
-                    self.#var_name.0.iter().all(|typed_id| {
-                        let t = ifc.data.get_untyped(typed_id.id());
-                        t.type_id() == std::any::TypeId::of::<#typed>()
-                    })
+                    }
+                }
+                IdOrList::TypedId(typed) => {
+                    let single = self.single_check(typed);
 
-                },
-                IdOrList::IdOr(typed) => quote! {
+                    quote! {
 
-                    let t = ifc.data.get_untyped(self.#var_name.id().id());
-                    t.type_id() == std::any::TypeId::of::<#typed>()
+                        let t = ifc.data.get_untyped(self.#var_name.id());
+                        #single
 
-                },
-                IdOrList::IdOrList(typed) => quote! {
+                    }
+                }
+                IdOrList::TypedIdList(typed) => {
+                    let single = self.single_check(typed);
 
-                    self.#var_name.0.iter().all(|id_or| {
-                        let t = ifc.data.get_untyped(id_or.id().id());
-                        t.type_id() == std::any::TypeId::of::<#typed>()
-                    })
+                    quote! {
 
-                },
+                        self.#var_name.0.iter().try_for_each(|typed_id| {
+                            let t = ifc.data.get_untyped(typed_id.id());
+                            #single
+
+                            Ok(())
+                        })?;
+
+                    }
+                }
+                IdOrList::IdOr(typed) => {
+                    let single = self.single_check(typed);
+
+                    quote! {
+
+                        let t = ifc.data.get_untyped(self.#var_name.id().id());
+                        #single
+
+                    }
+                }
+                IdOrList::IdOrList(typed) => {
+                    let single = self.single_check(typed);
+
+                    quote! {
+
+                        self.#var_name.0.iter().try_for_each(|id_or| {
+                            let t = ifc.data.get_untyped(id_or.id().id());
+                            #single
+
+                            Ok(())
+                        })?;
+
+                    }
+                }
             },
             DataType::OptionalParameter(optional) => match optional {
-                IdOrList::Id => quote! {
+                IdOrList::Id => {
+                    let multiple = self.loop_check();
 
-                    match self.#var_name.custom() {
-                        Some(id) => {
+                    quote! {
+
+                        if let Some(id) = self.#var_name.custom() {
                             let t = ifc.data.get_untyped(*id);
-                            #ifc_types
-
+                            #multiple
                         }
-                        None => true,
+
                     }
+                }
+                IdOrList::List => {
+                    let multiple = self.loop_check();
 
-                },
-                IdOrList::List => quote! {
+                    quote! {
 
-                    match self.#var_name.custom() {
-                        Some(#var_name) => {
-                            #var_name.0.iter().all(|id| {
+                        if let Some(#var_name) = self.#var_name.custom() {
+                            #var_name.0.iter().try_for_each(|id| {
                                 let t = ifc.data.get_untyped(*id);
-                                #ifc_types
-                            })
+                                #multiple
+
+                                Ok(())
+                            })?;
                         }
-                        None => true,
+
                     }
+                }
+                IdOrList::TypedId(typed) => {
+                    let single = self.single_check(typed);
 
-                },
-                IdOrList::TypedId(typed) => quote! {
+                    quote! {
 
-                    match self.#var_name.custom() {
-                        Some(typed_id) => {
+                        if let Some(typed_id) = self.#var_name.custom() {
                             let t = ifc.data.get_untyped(typed_id.id());
-                            t.type_id() == std::any::TypeId::of::<#typed>()
+                            #single
                         }
-                        None => true,
+
                     }
+                }
+                IdOrList::TypedIdList(typed) => {
+                    let single = self.single_check(typed);
 
-                },
-                IdOrList::TypedIdList(typed) => quote! {
+                    quote! {
 
-                    match self.#var_name.custom() {
-                        Some(#var_name) => {
-                            #var_name.0.iter().all(|typed_id| {
+                        if let Some(#var_name) = self.#var_name.custom() {
+                            #var_name.0.iter().try_for_each(|typed_id| {
                                 let t = ifc.data.get_untyped(typed_id.id());
-                                t.type_id() == std::any::TypeId::of::<#typed>()
-                            })
+                                #single
+
+                                Ok(())
+                            })?;
                         }
-                        None => true,
+
                     }
+                }
+                IdOrList::IdOr(typed) => {
+                    let single = self.single_check(typed);
 
-                },
-                IdOrList::IdOr(typed) => quote! {
+                    quote! {
 
-                    match self.#var_name.custom() {
-                        Some(id_or) => {
+                        if let Some(id_or) = self.#var_name.custom() {
                             let t = ifc.data.get_untyped(id_or.id().id());
-                            t.type_id() == std::any::TypeId::of::<#typed>()
+                            #single
                         }
-                        None => true,
+
                     }
+                }
+                IdOrList::IdOrList(typed) => {
+                    let single = self.single_check(typed);
 
-                },
-                IdOrList::IdOrList(typed) => quote! {
+                    quote! {
 
-                    match self.#var_name.custom() {
-                        Some(#var_name) => {
-                            #var_name.0.iter().all(|id_or| {
+                        if let Some(#var_name) = self.#var_name.custom() {
+                            #var_name.0.iter().try_for_each(|id_or| {
                                 let t = ifc.data.get_untyped(id_or.id().id());
-                                t.type_id() == std::any::TypeId::of::<#typed>()
-                            })
-                        }
-                        None => true,
-                    }
+                                #single
 
-                },
+                                Ok(())
+                            })?;
+                        }
+
+                    }
+                }
             },
         };
 
         let check_function = self.check_function();
 
         quote! {
-            fn #check_function(&self, ifc: &IFC) -> bool {
+            fn #check_function(&self, ifc: &IFC) -> anyhow::Result<()> {
                 #check
+
+                Ok(())
             }
         }
         .to_tokens(tokens);

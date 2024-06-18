@@ -46,6 +46,7 @@ pub fn ifc_type_builder(item: TokenStream) -> TokenStream {
                                 None
                             } else {
                                 Some(Field {
+                                    struct_name: struct_name.clone(),
                                     variable_name: field
                                         .ident
                                         .as_ref()
@@ -87,12 +88,12 @@ pub fn ifc_type_builder(item: TokenStream) -> TokenStream {
         }
 
         impl #impls IfcVerify for #struct_name #types #where_clause {
-            fn verify_id_types(&self, ifc: &IFC) -> bool {
+            fn verify_id_types(&self, ifc: &IFC) -> anyhow::Result<()> {
                 #(
-                    self.#check_var_functions(ifc) &&
+                    self.#check_var_functions(ifc)?;
                 )*
 
-                true
+                Ok(())
             }
         }
     })
