@@ -2,7 +2,6 @@ use std::collections::HashSet;
 
 use glam::{DVec2, DVec3};
 
-use crate::prelude::openings::VerticalOpeningParameter;
 use crate::prelude::*;
 
 pub struct WindowParameter {
@@ -151,8 +150,6 @@ impl<'a> IfcBuildingBuilder<'a> {
 mod test {
     use glam::DVec3;
 
-    use crate::prelude::openings::VerticalOpeningParameter;
-    use crate::prelude::windows::WindowParameter;
     use crate::prelude::*;
 
     use super::super::test::create_builder;

@@ -79,7 +79,6 @@ impl<'a> IfcBuildingBuilder<'a> {
 mod test {
     use glam::DVec3;
 
-    use crate::prelude::openings::VerticalOpeningParameter;
     use crate::prelude::*;
 
     use super::super::test::create_builder;
