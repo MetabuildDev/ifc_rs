@@ -1,4 +1,4 @@
-use std::{fmt::Display, ops::Deref};
+use std::fmt::Display;
 
 use winnow::{combinator::alt, Parser};
 
@@ -70,17 +70,6 @@ impl<T: IFCParse> From<Option<T>> for OptionalParameter<T> {
 impl<T: IFCParse> From<T> for OptionalParameter<T> {
     fn from(value: T) -> Self {
         Self::Custom(value)
-    }
-}
-
-impl<T: IFCParse> Deref for OptionalParameter<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        match self {
-            Self::Custom(t) => t,
-            _ => panic!("OptionalParameter: called deref on non-custom variant"),
-        }
     }
 }
 
