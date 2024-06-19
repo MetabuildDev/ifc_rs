@@ -32,13 +32,13 @@ pub struct RelVoidsElement {
 
 impl RelVoidsElement {
     pub fn new<S: Structure>(
-        id: impl Into<Label>,
+        name: impl Into<Label>,
         relating_building_element: impl Into<IdOr<S>>,
         relating_opening_element: impl Into<IdOr<OpeningElement>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            root: Root::new(id.into()),
+            root: Root::new(name.into()),
             relating_building_element: relating_building_element.into().or_insert(ifc).id(),
             related_opening_element: relating_opening_element.into().or_insert(ifc),
         }

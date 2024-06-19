@@ -32,12 +32,12 @@ pub struct RelAssociatesMaterial {
 
 impl RelAssociatesMaterial {
     pub fn new<R: RelatableMaterial>(
-        id: impl Into<Label>,
+        name: impl Into<Label>,
         material_layer_set: impl Into<IdOr<R>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            rel_associates: RelAssociates::new(Root::new(id.into())),
+            rel_associates: RelAssociates::new(Root::new(name.into())),
             relating_material: material_layer_set.into().or_insert(ifc).id(),
         }
     }

@@ -26,9 +26,9 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+    pub fn new<'a>(name: impl Into<Label>) -> Self {
         Self {
-            context: Context::new(Root::new(global_id.into())),
+            context: Context::new(Root::new(name.into())),
         }
     }
 }

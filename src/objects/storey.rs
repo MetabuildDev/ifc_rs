@@ -63,10 +63,10 @@ pub struct Storey {
 }
 
 impl Storey {
-    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+    pub fn new<'a>(name: impl Into<Label>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
-                Product::new(Object::new(Root::new(global_id.into()))),
+                Product::new(Object::new(Root::new(name.into()))),
             )),
             elevation: OptionalParameter::omitted(),
         }

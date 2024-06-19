@@ -33,9 +33,11 @@ pub struct RoofType {
 }
 
 impl RoofType {
-    pub fn new(id: impl Into<Label>, predefined_type: RoofTypeEnum) -> Self {
+    pub fn new(name: impl Into<Label>, predefined_type: RoofTypeEnum) -> Self {
         Self {
-            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(id.into())))),
+            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
+                name.into(),
+            )))),
             predefined_type,
         }
     }

@@ -70,6 +70,7 @@ impl IfcBuilder {
         );
 
         let project = Project::new(project_name)
+            .name(project_name)
             .owner_history(owner_history_id, &mut ifc)
             .unit_assignment(unit_assignment, &mut ifc)
             .add_context(context_id, &mut ifc);

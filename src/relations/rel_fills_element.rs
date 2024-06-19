@@ -28,13 +28,13 @@ pub struct RelFillsElement {
 
 impl RelFillsElement {
     pub fn new<S: Structure>(
-        id: impl Into<Label>,
+        name: impl Into<Label>,
         relating_opening_element: impl Into<IdOr<OpeningElement>>,
         relating_building_element: impl Into<IdOr<S>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            root: Root::new(id.into()),
+            root: Root::new(name.into()),
             relating_opening_element: relating_opening_element.into().or_insert(ifc),
             related_building_element: relating_building_element.into().or_insert(ifc).id(),
         }

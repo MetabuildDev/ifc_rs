@@ -108,9 +108,9 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+    pub fn new<'a>(name: impl Into<Label>) -> Self {
         Self {
-            element: Element::new(Product::new(Object::new(Root::new(global_id.into())))),
+            element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             overall_height: OptionalParameter::omitted(),
             overall_width: OptionalParameter::omitted(),
             predefined_type: OptionalParameter::omitted(),

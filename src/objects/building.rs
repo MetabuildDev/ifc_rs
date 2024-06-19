@@ -50,10 +50,10 @@ pub struct Building {
 }
 
 impl Building {
-    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+    pub fn new<'a>(name: impl Into<Label>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
-                Product::new(Object::new(Root::new(global_id.into()))),
+                Product::new(Object::new(Root::new(name.into()))),
             )),
             elevation_of_ref_height: OptionalParameter::omitted(),
             elevation_of_terrain: OptionalParameter::omitted(),

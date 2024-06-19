@@ -3,6 +3,7 @@ use std::fmt::Display;
 use comma::Comma;
 use label::Label;
 use optional::OptionalParameter;
+use uuid::Uuid;
 
 use crate::{
     id::{IdOr, TypedId},
@@ -38,11 +39,11 @@ pub struct Root {
 }
 
 impl Root {
-    pub fn new(global_id: Label) -> Self {
+    pub fn new(name: Label) -> Self {
         Self {
-            global_id,
+            global_id: Uuid::new_v4().to_string().into(),
             owner_history: OptionalParameter::omitted(),
-            name: OptionalParameter::omitted(),
+            name: name.into(),
             description: OptionalParameter::omitted(),
         }
     }

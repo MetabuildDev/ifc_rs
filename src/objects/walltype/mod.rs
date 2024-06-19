@@ -37,9 +37,11 @@ pub struct WallType {
 }
 
 impl WallType {
-    pub fn new(id: impl Into<Label>, predefined_type: WallTypeEnum) -> Self {
+    pub fn new(name: impl Into<Label>, predefined_type: WallTypeEnum) -> Self {
         Self {
-            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(id.into())))),
+            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
+                name.into(),
+            )))),
             predefined_type,
         }
     }

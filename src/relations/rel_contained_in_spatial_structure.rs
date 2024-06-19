@@ -35,12 +35,12 @@ pub struct RelContainedInSpatialStructure {
 
 impl RelContainedInSpatialStructure {
     pub fn new<S: Structure>(
-        global_id: impl Into<Label>,
+        name: impl Into<Label>,
         relating_structure: impl Into<IdOr<S>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            root: Root::new(global_id.into()),
+            root: Root::new(name.into()),
             related_elements: IfcList::empty(),
             relating_structure: relating_structure.into().or_insert(ifc).id(),
         }

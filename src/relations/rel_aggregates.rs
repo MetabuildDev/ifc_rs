@@ -38,13 +38,9 @@ pub struct RelAggregates {
 }
 
 impl RelAggregates {
-    pub fn new(
-        global_id: impl Into<Label>,
-        parent: Id,
-        children: impl IntoIterator<Item = Id>,
-    ) -> Self {
+    pub fn new(name: impl Into<Label>, parent: Id, children: impl IntoIterator<Item = Id>) -> Self {
         Self {
-            root: Root::new(global_id.into()),
+            root: Root::new(name.into()),
             relating_object: parent,
             related_objects: IfcList(children.into_iter().collect()),
         }

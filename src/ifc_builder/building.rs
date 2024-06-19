@@ -42,7 +42,7 @@ impl<'a> IfcBuildingBuilder<'a> {
             .get(self.building)
             .object_placement
             .custom()
-            .expect("Site Placement Exists")
+            .expect("Building Placement Exists")
             .clone();
         let position = Axis3D::new(Point3D::from(DVec3::Z * elevation), &mut self.ifc);
         let local_placement = LocalPlacement::new(position, &mut self.ifc)

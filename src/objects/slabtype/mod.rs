@@ -53,9 +53,11 @@ pub struct SlabType {
 }
 
 impl SlabType {
-    pub fn new(id: impl Into<Label>, predefined_type: SlabTypeEnum) -> Self {
+    pub fn new(name: impl Into<Label>, predefined_type: SlabTypeEnum) -> Self {
         Self {
-            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(id.into())))),
+            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
+                name.into(),
+            )))),
             predefined_type,
         }
     }

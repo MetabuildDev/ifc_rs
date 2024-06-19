@@ -69,12 +69,14 @@ pub struct WindowType {
 
 impl WindowType {
     pub fn new(
-        id: impl Into<Label>,
+        name: impl Into<Label>,
         predefined_type: WindowTypeEnum,
         partitioning_type: WindowPartitioningTypeEnum,
     ) -> Self {
         Self {
-            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(id.into())))),
+            element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
+                name.into(),
+            )))),
             predefined_type,
             partitioning_type,
             parameter_takes_precedence: OptionalParameter::omitted(),

@@ -35,12 +35,12 @@ pub struct RelDefinesByType {
 
 impl RelDefinesByType {
     pub fn new<OBJ: IfcType>(
-        id: impl Into<Label>,
+        name: impl Into<Label>,
         relating_type: impl Into<IdOr<OBJ>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            root: Root::new(id.into()),
+            root: Root::new(name.into()),
             related_objects: IfcList::empty(),
             relating_type: relating_type.into().or_insert(ifc).id(),
         }

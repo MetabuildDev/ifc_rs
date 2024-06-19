@@ -36,9 +36,9 @@ pub struct RelDeclares {
 }
 
 impl RelDeclares {
-    pub fn new(id: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
+    pub fn new(name: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
         Self {
-            root: Root::new(id.into()),
+            root: Root::new(name.into()),
             relating_context: project.into().or_insert(ifc),
             related_definitions: IfcList::empty(),
         }

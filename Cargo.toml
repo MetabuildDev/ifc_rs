@@ -15,3 +15,4 @@ winnow = "0.6"
 destructure_traitobject = "0.3.0"
 downcast-rs = "1.2.1"
 ifc_verify_derive = { path = "ifc_verify_derive" }
+uuid = { version = "1.8", features = ["v4"] }
