@@ -3,13 +3,13 @@ use std::{fmt::Display, ops::Deref};
 use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{IdOr, TypedId},
+    id::Id,
     ifc_type::{IfcType, IfcVerify},
     parser::{
-        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
+        IFCParser,
     },
-    prelude::{Building, Project, Root, RootBuilder},
+    prelude::{Building, Project, Root, RootBuilder, Site, Storey},
     IFC,
 };
 
@@ -26,38 +26,28 @@ pub struct RelAggregates {
     /// The object definition, either an object type or an object
     /// occurrence, that represents the aggregation. It is the whole
     /// within the whole/part relationship.
-    pub relating_object: OptionalParameter<TypedId<Project>>,
+    #[ifc_types(Project, Site, Building)]
+    pub relating_object: Id,
 
     /// The object definitions, either object occurrences or object
     /// types, that are being aggregated. They are defined as the
     /// parts in the whole/part relationship. No order is implied
     /// between the parts.
-    pub related_objects: IfcList<TypedId<Building>>,
+    #[ifc_types(Site, Building, Storey)]
+    pub related_objects: IfcList<Id>,
 }
 
 impl RelAggregates {
-    pub fn new<'a>(global_id: impl Into<Label>) -> Self {
+    pub fn new(
+        global_id: impl Into<Label>,
+        parent: Id,
+        children: impl IntoIterator<Item = Id>,
+    ) -> Self {
         Self {
             root: Root::new(global_id.into()),
-            relating_object: OptionalParameter::omitted(),
-            related_objects: IfcList::empty(),
+            relating_object: parent,
+            related_objects: IfcList(children.into_iter().collect()),
         }
-    }
-
-    pub fn relate_project_with_buildings(
-        mut self,
-        project: impl Into<IdOr<Project>>,
-        buildings: impl IntoIterator<Item = IdOr<Building>>,
-        ifc: &mut IFC,
-    ) -> Self {
-        self.relating_object = project.into().or_insert(ifc).into();
-
-        self.related_objects.0 = buildings
-            .into_iter()
-            .map(|id_or| id_or.or_insert(ifc))
-            .collect();
-
-        self
     }
 }
 
@@ -83,7 +73,7 @@ impl IFCParse for RelAggregates {
 
                 root: Root::parse(),
                 _: Comma::parse(),
-                relating_object: OptionalParameter::parse(),
+                relating_object: Id::parse(),
                 _: Comma::parse(),
                 related_objects: IfcList::parse(),
 

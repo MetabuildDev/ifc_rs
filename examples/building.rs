@@ -49,8 +49,11 @@ fn main() {
     let building_id = ifc.data.insert_new(building);
 
     // create relation between project and building
-    let project_building_relation = RelAggregates::new("ProjectBuildingLink")
-        .relate_project_with_buildings(project_id.id(), [building_id.id().into()], &mut ifc);
+    let project_building_relation = RelAggregates::new(
+        "ProjectBuildingLink",
+        project_id.id(),
+        [building_id.id().into()],
+    );
     ifc.data.insert_new(project_building_relation);
 
     // create subcontext for our model (wall)

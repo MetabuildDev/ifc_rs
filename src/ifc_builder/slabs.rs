@@ -156,8 +156,9 @@ mod test {
         let mut builder = create_builder();
 
         {
-            let mut building_builder = builder.new_building("test");
-            let mut storey_builder = building_builder.new_storey("test");
+            let mut site_builder = builder.new_site("test", DVec3::ZERO);
+            let mut building_builder = site_builder.new_building("test", DVec3::ZERO);
+            let mut storey_builder = building_builder.new_storey("test", 0.0);
 
             let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
             let material_layer_set = storey_builder.material_layer_set([material_layer]);
