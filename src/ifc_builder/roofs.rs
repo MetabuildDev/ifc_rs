@@ -4,12 +4,6 @@ use glam::{DVec2, DVec3};
 
 use crate::prelude::*;
 
-pub struct HorizontalRectRoofParameter {
-    pub width: f64,
-    pub height: f64,
-    pub placement: DVec3,
-}
-
 pub struct HorizontalArbitraryRoofParameter {
     pub coords: Vec<DVec2>,
     pub placement: DVec3,
@@ -44,55 +38,18 @@ impl<'a> IfcStoreyBuilder<'a> {
             self.ifc,
         );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new(position, self.ifc);
-
-        let roof = Roof::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
-
-        self.roof(material, roof_type, roof);
-    }
-
-    pub fn horizontal_rect_roof(
-        &mut self,
-        material: TypedId<MaterialLayerSetUsage>,
-        roof_type: TypedId<RoofType>,
-        name: &str,
-        roof_information: HorizontalRectRoofParameter,
-    ) {
-        let position = Axis3D::new(Point3D::from(roof_information.placement), self.ifc);
-        let roof_thickness = self.calculate_material_layer_set_thickness(material);
-
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    roof_information.width,
-                    roof_information.height,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            roof_information.width * 0.5,
-                            roof_information.height * 0.5,
-                        )),
-                        self.ifc,
-                    ),
-                    self.ifc,
-                ),
-                // horizontal roof (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                roof_thickness,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+        let relative_placement_id = self
+            .ifc
+            .data
+            .get(self.storey)
+            .object_placement
+            .custom()
+            .expect("Storey Placement Exists")
+            .clone();
 
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new(position, self.ifc);
+        let local_placement = LocalPlacement::new(position, self.ifc)
+            .relative_to(relative_placement_id, &mut self.ifc);
 
         let roof = Roof::new(name)
             .owner_history(self.owner_history, self.ifc)
@@ -145,9 +102,8 @@ impl<'a> IfcStoreyBuilder<'a> {
 
 #[cfg(test)]
 mod test {
-    use glam::DVec3;
+    use glam::{DVec2, DVec3};
 
-    use crate::ifc_builder::roofs::HorizontalRectRoofParameter;
     use crate::prelude::*;
 
     use super::super::test::create_builder;
@@ -176,13 +132,17 @@ mod test {
                 RoofTypeEnum::FlatRoof,
             );
 
-            storey_builder.horizontal_rect_roof(
+            storey_builder.horizontal_arbitrary_roof(
                 material_layer_set_usage,
                 roof_type,
                 "ExampleRoof",
-                HorizontalRectRoofParameter {
-                    width: 4.0,
-                    height: 4.0,
+                HorizontalArbitraryRoofParameter {
+                    coords: vec![
+                        DVec2::new(0.0, 0.0),
+                        DVec2::new(0.0, 1.0),
+                        DVec2::new(1.0, 1.0),
+                        DVec2::new(1.0, 0.0),
+                    ],
                     placement: DVec3::new(0.0, 0.0, 0.0),
                 },
             );

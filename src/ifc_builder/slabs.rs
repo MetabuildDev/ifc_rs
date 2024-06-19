@@ -4,12 +4,6 @@ use glam::{DVec2, DVec3};
 
 use crate::prelude::*;
 
-pub struct HorizontalRectSlabParameter {
-    pub width: f64,
-    pub height: f64,
-    pub placement: DVec3,
-}
-
 pub struct HorizontalArbitrarySlabParameter {
     pub coords: Vec<DVec2>,
     pub placement: DVec3,
@@ -44,55 +38,18 @@ impl<'a> IfcStoreyBuilder<'a> {
             self.ifc,
         );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new(position, self.ifc);
-
-        let slab = Slab::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
-
-        self.slab(material, slab_type, slab);
-    }
-
-    pub fn horizontal_rect_slab(
-        &mut self,
-        material: TypedId<MaterialLayerSetUsage>,
-        slab_type: TypedId<SlabType>,
-        name: &str,
-        slab_information: HorizontalRectSlabParameter,
-    ) {
-        let position = Axis3D::new(Point3D::from(slab_information.placement), self.ifc);
-        let slab_thickness = self.calculate_material_layer_set_thickness(material);
-
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    slab_information.width,
-                    slab_information.height,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            slab_information.width * 0.5,
-                            slab_information.height * 0.5,
-                        )),
-                        self.ifc,
-                    ),
-                    self.ifc,
-                ),
-                // horizontal slab (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                slab_thickness,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+        let relative_placement_id = self
+            .ifc
+            .data
+            .get(self.storey)
+            .object_placement
+            .custom()
+            .expect("Storey Placement Exists")
+            .clone();
 
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new(position, self.ifc);
+        let local_placement = LocalPlacement::new(position, self.ifc)
+            .relative_to(relative_placement_id, &mut self.ifc);
 
         let slab = Slab::new(name)
             .owner_history(self.owner_history, self.ifc)
@@ -145,7 +102,7 @@ impl<'a> IfcStoreyBuilder<'a> {
 
 #[cfg(test)]
 mod test {
-    use glam::DVec3;
+    use glam::{DVec2, DVec3};
 
     use crate::prelude::*;
 
@@ -175,13 +132,17 @@ mod test {
                 SlabTypeEnum::NotDefined,
             );
 
-            storey_builder.horizontal_rect_slab(
+            storey_builder.horizontal_arbitrary_slab(
                 material_layer_set_usage,
                 slab_type,
                 "ExampleSlab",
-                HorizontalRectSlabParameter {
-                    width: 4.0,
-                    height: 4.0,
+                HorizontalArbitrarySlabParameter {
+                    coords: vec![
+                        DVec2::new(0.0, 0.0),
+                        DVec2::new(0.0, 1.0),
+                        DVec2::new(1.0, 1.0),
+                        DVec2::new(1.0, 0.0),
+                    ],
                     placement: DVec3::new(0.0, 0.0, 0.0),
                 },
             );

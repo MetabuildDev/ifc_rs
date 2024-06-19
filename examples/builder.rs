@@ -120,7 +120,7 @@ fn main() {
         };
 
         mk_storey(0.0);
-        mk_storey(4.0);
+        mk_storey(2.0);
     }
 
     std::fs::write("examples/builder_example.ifc", builder.build()).unwrap();
