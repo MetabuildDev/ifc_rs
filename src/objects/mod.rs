@@ -21,6 +21,7 @@ pub mod project;
 pub mod roof;
 pub mod rooftype;
 pub mod shared;
+pub mod site;
 pub mod slab;
 pub mod slabtype;
 pub mod storey;
@@ -52,6 +53,7 @@ impl Objects {
             rooftype::RoofType::parse_any(),
             building::Building::parse_any(),
             storey::Storey::parse_any(),
+            site::Site::parse_any(),
             opening_element::OpeningElement::parse_any(),
             window::Window::parse_any(),
             windowtype::WindowType::parse_any(),

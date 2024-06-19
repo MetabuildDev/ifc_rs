@@ -10,6 +10,7 @@ pub use super::owner_history::OwnerHistory;
 pub use super::person::Person;
 pub use super::person_and_org::PersonAndOrganization;
 pub use super::project::Project;
+pub use super::site::Site;
 pub use super::storey::Storey;
 
 pub use super::roof::Roof;
