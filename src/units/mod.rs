@@ -1,6 +1,12 @@
 pub mod assignment;
 pub mod conversion_based_unit;
+pub mod derived_unit;
+pub mod derived_unit_element;
+pub mod derived_unit_enum;
 pub mod dimensional_exponents;
+pub mod measure;
+pub mod measure_with_unit;
+pub mod monetary_unit;
 pub mod name;
 pub mod prefix;
 pub mod prelude;
@@ -26,6 +32,11 @@ impl Units {
             conversion_based_unit::ConversionBasedUnit::parse_any(),
             si_unit::SiUnit::parse_any(),
             dimensional_exponents::DimensionalExponents::parse_any(),
+            measure_with_unit::MeasureWithUnit::parse_any(),
+            measure::Measures::parse(),
+            derived_unit::DerivedUnit::parse_any(),
+            derived_unit_element::DerivedUnitElement::parse_any(),
+            monetary_unit::MonetaryUnit::parse_any(),
         ))
     }
 }

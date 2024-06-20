@@ -46,7 +46,7 @@ pub struct GeometricRepresentationContext {
     /// It is given by a 2 dimensional direction within the xy-plane of the project coordinate system.
     /// If not present, it defaults to 0. 1., meaning that the positive Y axis of the project coordinate system equals the
     /// geographic northing direction.
-    #[ifc_types(Axis2D, Axis3D)]
+    #[ifc_types(Direction2D, Direction3D)]
     pub true_north: OptionalParameter<Id>,
 }
 

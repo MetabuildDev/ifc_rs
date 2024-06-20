@@ -1,6 +1,12 @@
 pub use super::assignment::UnitAssigment;
 pub use super::conversion_based_unit::ConversionBasedUnit;
+pub use super::derived_unit::DerivedUnit;
+pub use super::derived_unit_element::DerivedUnitElement;
+pub use super::derived_unit_enum::DerivedUnitEnum;
 pub use super::dimensional_exponents::DimensionalExponents;
+pub use super::measure::*;
+pub use super::measure_with_unit::MeasureWithUnit;
+pub use super::monetary_unit::MonetaryUnit;
 pub use super::name::IfcUnitName;
 pub use super::prefix::IfcPrefix;
 pub use super::si_unit::SiUnit;

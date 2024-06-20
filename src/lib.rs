@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, Context, Result};
 use parser::IFCParse;
 use std::{fmt::Display, fs, path::Path};
 use winnow::{seq, Parser};
@@ -54,8 +54,8 @@ impl IFC {
         .parse_next(&mut s)
         .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
 
-        for ifc_type in me.data.0.values() {
-            ifc_type.verify_id_types(&me)?;
+        for (id, ifc_type) in me.data.0.iter() {
+            ifc_type.verify_id_types(&me).context(format!("ID: {id}"))?;
         }
 
         Ok(me)
@@ -96,8 +96,17 @@ mod test {
     use anyhow::Result;
 
     #[test]
-    fn load_file() -> Result<()> {
+    fn load_wall_example_file() -> Result<()> {
         let ifc = IFC::from_file("resources/wall-standard-case.ifc")?;
+
+        print_wall_hierarchy(&ifc);
+
+        Ok(())
+    }
+
+    #[test]
+    fn load_archicad_file() -> Result<()> {
+        let ifc = IFC::from_file("resources/AC20-FZK-Haus.ifc")?;
 
         print_wall_hierarchy(&ifc);
 

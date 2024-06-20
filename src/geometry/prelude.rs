@@ -1,8 +1,10 @@
 pub use super::arbitrary_closed_profile_def::ArbitraryClosedProfileDef;
 pub use super::axis::{Axis2D, Axis3D, AxisPlacement};
+pub use super::bounding_box::BoundingBox;
 pub use super::dimension_count::DimensionCount;
 pub use super::direction::{Direction2D, Direction3D};
 pub use super::extruded_area_solid::ExtrudedAreaSolid;
+pub use super::faceted_brep::FacetedBrep;
 pub use super::geometric_projection::GeometricProjection;
 pub use super::indexed_poly_curve::IndexedPolyCurve;
 pub use super::local_placement::LocalPlacement;

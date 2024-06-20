@@ -3,13 +3,11 @@ use std::fmt::Display;
 use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{IdOr, TypedId},
+    id::IdOr,
     ifc_type::{IfcType, IfcVerify},
     parser::{list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser},
-    IFC,
+    prelude::*,
 };
-
-use super::si_unit::SiUnit;
 
 /// IfcUnitAssignment indicates a set of units which may be assigned. Within an
 /// IfcUnitAssigment each unit definition shall be unique; that is, there shall
@@ -21,13 +19,14 @@ use super::si_unit::SiUnit;
 #[derive(IfcVerify)]
 pub struct UnitAssigment {
     /// Units to be included within a unit assignment.
-    pub units: IfcList<TypedId<SiUnit>>,
+    #[ifc_types(SiUnit, ConversionBasedUnit, DerivedUnit, MonetaryUnit)]
+    pub units: IfcList<Id>,
 }
 
 impl UnitAssigment {
     pub fn new(units: impl IntoIterator<Item = IdOr<SiUnit>>, ifc: &mut IFC) -> Self {
         Self {
-            units: IfcList(units.into_iter().map(|u| u.or_insert(ifc)).collect()),
+            units: IfcList(units.into_iter().map(|u| u.or_insert(ifc).id()).collect()),
         }
     }
 }

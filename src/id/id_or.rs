@@ -18,10 +18,17 @@ pub enum IdOr<T: IfcType> {
 }
 
 impl<T: IfcType> IdOr<T> {
-    pub fn id(&self) -> TypedId<T> {
+    pub fn id(&self) -> Option<TypedId<T>> {
         match self {
-            Self::Id(id) => *id,
-            Self::Custom(_) => panic!("IdOr: called Id on Custom"),
+            Self::Id(id) => Some(*id),
+            Self::Custom(_) => None,
+        }
+    }
+
+    pub fn custom(&self) -> Option<&T> {
+        match self {
+            Self::Id(_) => None,
+            Self::Custom(t) => Some(t),
         }
     }
 

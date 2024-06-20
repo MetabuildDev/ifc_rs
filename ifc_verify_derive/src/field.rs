@@ -65,7 +65,7 @@ impl Field {
 
         let check_error = quote! {
             if !correct_type {
-                anyhow::bail!("Variable {} of type {} isn't any of these types: {} instead is: {}", #var_name, #struct_name, #type_names, t.type_name());
+                anyhow::bail!("Variable {} of type {} isn't any of these types: {} instead is: {} ({})", #var_name, #struct_name, #type_names, t.type_name(), id);
             }
         };
 
@@ -82,7 +82,7 @@ impl Field {
 
         quote! {
             if t.type_id() != std::any::TypeId::of::<#typed>() {
-                anyhow::bail!("Variable {} of type {}: expected type {} but found {}", #var_name, #struct_name, #typed_str, t.type_name());
+                anyhow::bail!("Variable {} of type {}: expected type {} but found {} ({})", #var_name, #struct_name, #typed_str, t.type_name(), id);
             }
         }
     }
@@ -99,7 +99,8 @@ impl ToTokens for Field {
 
                     quote! {
 
-                        let t = ifc.data.get_untyped(self.#var_name);
+                        let id = self.#var_name;
+                        let t = ifc.data.get_untyped(id);
                         #multiple
 
                     }
@@ -123,7 +124,8 @@ impl ToTokens for Field {
 
                     quote! {
 
-                        let t = ifc.data.get_untyped(self.#var_name.id());
+                        let id = self.#var_name.id();
+                        let t = ifc.data.get_untyped(id);
                         #single
 
                     }
@@ -134,7 +136,8 @@ impl ToTokens for Field {
                     quote! {
 
                         self.#var_name.0.iter().try_for_each(|typed_id| {
-                            let t = ifc.data.get_untyped(typed_id.id());
+                            let id = typed_id.id();
+                            let t = ifc.data.get_untyped(id);
                             #single
 
                             Ok(())
@@ -147,8 +150,11 @@ impl ToTokens for Field {
 
                     quote! {
 
-                        let t = ifc.data.get_untyped(self.#var_name.id().id());
-                        #single
+                        if let Some(typed_id) = self.#var_name.id() {
+                            let id = typed_id.id();
+                            let t = ifc.data.get_untyped(id);
+                            #single
+                        }
 
                     }
                 }
@@ -158,8 +164,11 @@ impl ToTokens for Field {
                     quote! {
 
                         self.#var_name.0.iter().try_for_each(|id_or| {
-                            let t = ifc.data.get_untyped(id_or.id().id());
-                            #single
+                            if let Some(typed_id) = id_or.id() {
+                                let id = typed_id.id();
+                                let t = ifc.data.get_untyped(id);
+                                #single
+                            }
 
                             Ok(())
                         })?;
@@ -202,7 +211,8 @@ impl ToTokens for Field {
                     quote! {
 
                         if let Some(typed_id) = self.#var_name.custom() {
-                            let t = ifc.data.get_untyped(typed_id.id());
+                            let id = typed_id.id();
+                            let t = ifc.data.get_untyped(id);
                             #single
                         }
 
@@ -215,7 +225,8 @@ impl ToTokens for Field {
 
                         if let Some(#var_name) = self.#var_name.custom() {
                             #var_name.0.iter().try_for_each(|typed_id| {
-                                let t = ifc.data.get_untyped(typed_id.id());
+                                let id = typed_id.id();
+                                let t = ifc.data.get_untyped(id);
                                 #single
 
                                 Ok(())
@@ -230,8 +241,11 @@ impl ToTokens for Field {
                     quote! {
 
                         if let Some(id_or) = self.#var_name.custom() {
-                            let t = ifc.data.get_untyped(id_or.id().id());
-                            #single
+                            if let Some(typed_id) = id_or.id() {
+                                let id = typed_id.id();
+                                let t = ifc.data.get_untyped(id);
+                                #single
+                            }
                         }
 
                     }
@@ -243,8 +257,11 @@ impl ToTokens for Field {
 
                         if let Some(#var_name) = self.#var_name.custom() {
                             #var_name.0.iter().try_for_each(|id_or| {
-                                let t = ifc.data.get_untyped(id_or.id().id());
-                                #single
+                                if let Some(typed_id) = id_or.id() {
+                                    let id = typed_id.id();
+                                    let t = ifc.data.get_untyped(id);
+                                    #single
+                                }
 
                                 Ok(())
                             })?;

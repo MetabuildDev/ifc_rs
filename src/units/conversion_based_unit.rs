@@ -2,15 +2,13 @@ use std::{fmt::Display, ops::Deref};
 
 use ifc_verify_derive::IfcVerify;
 
-use super::{
-    ifc_float::IfcFloat, label::Label, shared::named_unit::NamedUnit, IFCParse, IFCParser,
-};
+use super::{label::Label, shared::named_unit::NamedUnit, IFCParse, IFCParser};
 use crate::{
     id::IdOr,
     ifc_type::{IfcType, IfcVerify},
     parser::optional::OptionalParameter,
+    prelude::*,
     units::{comma::Comma, p_space_or_comment_surrounded},
-    IFC,
 };
 
 /// An IfcConversionBasedUnit is used to define a unit that has a conversion rate to a base unit.
@@ -26,7 +24,7 @@ pub struct ConversionBasedUnit {
     pub name: OptionalParameter<Label>,
 
     /// The physical quantity from which the converted unit is derived.
-    pub conversion_factor: OptionalParameter<IdOr<IfcFloat>>,
+    pub conversion_factor: OptionalParameter<IdOr<MeasureWithUnit>>,
 }
 
 impl Deref for ConversionBasedUnit {

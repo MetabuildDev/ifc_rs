@@ -96,5 +96,6 @@ pub mod schema {
         IFC2X3,
         // oof, fix issue where case sensivity matters
         IFC4x2,
+        IFC4,
     }
 }

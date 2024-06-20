@@ -2,8 +2,9 @@ use std::str::FromStr;
 
 use chrono::{DateTime, Utc};
 use strum::VariantNames;
-use winnow::combinator::{alt, delimited, separated};
+use winnow::combinator::{alt, delimited, repeat, separated};
 use winnow::prelude::*;
+use winnow::token::none_of;
 
 use super::description::{FileDescription, ImplementationLevel, ViewDefinition};
 use super::details::{
@@ -54,7 +55,7 @@ impl Header {
                 _: p_space_or_comment_surrounded(("FILE_DESCRIPTION", p_space_or_comment(), "(")),
                 descriptions: Self::p_desc_desc(),
                 _: Comma::parse(),
-                implementation_level: delimited("'", Self::p_desc_level(), "'"),
+                implementation_level: Self::p_desc_level(),
                 _: p_space_or_comment_surrounded((")", p_space_or_comment(), ";"))
             }
         }
@@ -69,17 +70,29 @@ impl Header {
     }
 
     fn p_view_definition<'a>() -> impl IFCParser<'a, ViewDefinition> {
-        let mut p_items = delimited(
-            '[',
-            separated(.., p_space_or_comment_surrounded(p_ident()), ','),
-            ']',
-        );
+        // view definition value can be anything, examples:
+        //
+        // "Drawing Scale: 100.000000"
+        // "Global Unique Identifiers (GUID): Keep existing"
+        //
+        // so spaces, braces and anything is allowed, we just take anything and clean it up a bit
+        // via trim
+        let p_item = repeat(.., none_of([',', ']'])).map(|s: String| s.trim().to_owned());
+        let p_items = delimited('[', separated(.., p_item, ','), ']');
+        // apparently, some applications like archicad support lists with leading comma which
+        // result in empty items. Since this doesn't provide any value, we filter it out
+        let mut p_nonempty_items = p_items.map(|items: Vec<String>| {
+            items
+                .into_iter()
+                .filter(|s| !s.is_empty())
+                .collect::<Vec<_>>()
+        });
         winnow::seq! {
             ViewDefinition {
                 _: p_space_or_comment(),
                 name: p_ident(),
                 _: p_space_or_comment(),
-                items: p_items,
+                items: p_nonempty_items,
                 _: p_space_or_comment(),
             }
         }
@@ -90,9 +103,13 @@ impl Header {
             .try_into()
             .expect("statically known");
 
-        p_space_or_comment_surrounded(alt(variants
-            .map(|v| (v, ImplementationLevel::from_str(v).expect("valid version")))
-            .map(|(k, v)| k.map(move |_| v))))
+        delimited(
+            "'",
+            p_space_or_comment_surrounded(alt(variants
+                .map(|v| (v, ImplementationLevel::from_str(v).expect("valid version")))
+                .map(|(k, v)| k.map(move |_| v)))),
+            "'",
+        )
     }
 
     fn p_name<'a>() -> impl IFCParser<'a, FileDetails> {
@@ -230,6 +247,17 @@ fn parse_header_from_example_file() {
     FILE_DESCRIPTION((''),'2;1');
     FILE_NAME('','2019-03-24T14:01:39',(''),(''),'BuildingSmart IfcKit by Constructivity','IfcDoc 12.0.0.0','');
     FILE_SCHEMA(('IFC4x2'));
+    ENDSEC;"#;
+
+    Header::parse().parse(data).unwrap();
+}
+
+#[test]
+fn archicad_header() {
+    let data = r#"ISO-10303-21;
+    HEADER;FILE_DESCRIPTION(('ViewDefinition [, QuantityTakeOffAddOnView, SpaceBoundary2ndLevelAddOnView]','Option [Drawing Scale: 100.000000]','Option [Global Unique Identifiers (GUID): Keep existing]','Option [Elements to export: Entire project]','Option [Partial Structure Display: Entire Model]','Option [IFC Domain: All]','Option [Structural Function: All Elements]','Option [Convert Grid elements: On]','Option [Convert IFC Annotations and ARCHICAD 2D elements: On]','Option [Convert 2D symbols of Doors and Windows: Off]','Option [Explode Composite and Complex Profile elements into parts: Off]','Option [Export geometries that Participates in Collision Detection only: On]','Option [Multi-skin complex geometries: Building element parts]','Option [Elements in Solid Element Operations: Extruded/revolved]','Option [Elements with junctions: Extruded/revolved without junctions]','Option [Slabs with slanted edge(s): Extruded]','Option [Use legacy geometric methods as in Coordination View 1.0: Off]','Option [IFC Site Geometry: As boundary representation (BRep)]','Option [IFC Site Location: At Project Origin]','Option [Properties To Export: All properties]','Option [Space containment: Off]','Option [Bounding Box: On]','Option [Geometry to type objects: On]','Option [Element Properties: On]','Option [Properties To Export: All]','Option [IFC Base Quantities: On]','Option [Window Door Lining and Panel Parameters: On]','Option [IFC Space boundaries: On]','Option [ARCHICAD Zone Categories as IFC Space classification data: On]'),'2;1');
+    FILE_NAME('S:\\[IFC]\\[COMPLETE-BUILDINGS]\\FZK-MODELS\\FZK-Haus\\ArchiCAD-20\\AC20-FZK-Haus.ifc','2016-12-21T17:54:06',('Architect'),('Building Designer Office'),'The EXPRESS Data Manager Version 5.02.0100.09 : 26 Sep 2013','IFC file generated by GRAPHISOFT ARCHICAD-64 20.0.0 GER FULL Windows version (IFC2x3 add-on version: 4009 GER FULL).','The authorising person');
+    FILE_SCHEMA(('IFC4'));
     ENDSEC;"#;
 
     Header::parse().parse(data).unwrap();

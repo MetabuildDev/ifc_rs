@@ -9,9 +9,11 @@ use self::indexed_poly_curve::IndexedPolyCurve;
 
 pub mod arbitrary_closed_profile_def;
 pub mod axis;
+pub mod bounding_box;
 pub mod dimension_count;
 pub mod direction;
 pub mod extruded_area_solid;
+pub mod faceted_brep;
 pub mod geometric_projection;
 pub mod indexed_poly_curve;
 pub mod local_placement;
@@ -52,6 +54,8 @@ impl Geometry {
             shape_representation::ShapeRepresentation::parse_any(),
             local_placement::LocalPlacement::parse_any(),
             transformations::CartesianTransformationOperator3DnonUniform::parse_any(),
+            bounding_box::BoundingBox::parse_any(),
+            faceted_brep::FacetedBrep::parse_any(),
         ))
     }
 }
