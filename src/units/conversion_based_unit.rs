@@ -18,6 +18,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcconversionbasedunit.htm
 #[derive(IfcVerify)]
 pub struct ConversionBasedUnit {
+    #[inherited]
     named_unit: NamedUnit,
 
     /// The word, or group of words, by which the conversion based unit is referred to.

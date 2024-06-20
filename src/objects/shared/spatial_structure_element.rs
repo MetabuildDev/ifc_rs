@@ -3,7 +3,13 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use crate::parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser};
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    ifc_type::IfcVerify,
+    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::{composition_type_enum::CompositionTypeEnum, spatial_element::SpatialElement};
 
@@ -11,7 +17,9 @@ use super::{composition_type_enum::CompositionTypeEnum, spatial_element::Spatial
 /// might be used to define a spatial structure or to define spatial zones.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcspatialelement.htm
+#[derive(IfcVerify)]
 pub struct SpatialStructureElement {
+    #[inherited]
     spatial_element: SpatialElement,
 
     /// Denotes, whether the predefined spatial structure element

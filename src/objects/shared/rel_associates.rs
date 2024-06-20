@@ -1,13 +1,14 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::id::{Id, IdOr};
-use crate::ifc_type::IfcType;
-use crate::parser::comma::Comma;
-use crate::parser::list::IfcList;
-use crate::parser::IFCParse;
-use crate::parser::IFCParser;
-use crate::IFC;
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    id::{Id, IdOr},
+    ifc_type::{IfcType, IfcVerify},
+    parser::{comma::Comma, list::IfcList, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::root::Root;
 
@@ -17,7 +18,9 @@ use super::root::Root;
 /// There is no dependency implied by the association.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrelassociates.htm
+#[derive(IfcVerify)]
 pub struct RelAssociates {
+    #[inherited]
     root: Root,
 
     /// Set of object or property definitions to which the external references or

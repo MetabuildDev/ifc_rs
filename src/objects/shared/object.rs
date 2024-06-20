@@ -1,9 +1,13 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::parser::comma::Comma;
-use crate::parser::IFCParse;
-use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    ifc_type::IfcVerify,
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::root::Root;
 
@@ -11,7 +15,9 @@ use super::root::Root;
 /// thing or process. Objects are things as they appear - i.e. occurrences.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcobject.htm
+#[derive(IfcVerify)]
 pub struct Object {
+    #[inherited]
     root: Root,
 
     /// The type denotes a particular type that indicates the object further.

@@ -25,6 +25,7 @@ pub mod type_enum;
 /// https://standards.buildingsmart.org/MVD/RELEASE/IFC4/ADD2_TC1/RV1_2/HTML/schema/ifcsharedbldgelements/lexical/ifcrooftype.htm
 #[derive(IfcVerify)]
 pub struct RoofType {
+    #[inherited]
     element_type: ElementType,
 
     /// Identifies the predefined types of a roof element from which the type

@@ -3,14 +3,22 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use crate::parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser};
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    ifc_type::IfcVerify,
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::product::Product;
 
 /// An element is a generalization of all components that make up an AEC product.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcelement.htm
+#[derive(IfcVerify)]
 pub struct Element {
+    #[inherited]
     product: Product,
 
     /// The tag (or label) identifier at the particular instance of a product,

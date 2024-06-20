@@ -3,7 +3,13 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use crate::parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser};
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    ifc_type::IfcVerify,
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::product::Product;
 
@@ -11,7 +17,9 @@ use super::product::Product;
 /// might be used to define a spatial structure or to define spatial zones.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcspatialelement.htm
+#[derive(IfcVerify)]
 pub struct SpatialElement {
+    #[inherited]
     product: Product,
 
     /// Long name for a spatial structure element, used for informal purposes.

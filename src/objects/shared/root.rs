@@ -1,15 +1,17 @@
 use std::fmt::Display;
 
 use comma::Comma;
+use ifc_verify_derive::IfcVerify;
 use label::Label;
 use optional::OptionalParameter;
 use uuid::Uuid;
 
 use crate::{
     id::{IdOr, TypedId},
+    ifc_type::IfcVerify,
     objects::owner_history::OwnerHistory,
     parser::*,
-    IFC,
+    prelude::*,
 };
 
 /// IfcRoot is the most abstract and root class for all entity definitions
@@ -20,6 +22,7 @@ use crate::{
 /// that are not subtypes of IfcRoot, are not supposed to be independent entities.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcroot.htm
+#[derive(IfcVerify)]
 pub struct Root {
     /// Assignment of a globally unique identifier within the entire software world.
     pub global_id: Label,

@@ -79,6 +79,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcsharedbldgelements/lexical/ifcwindow.htm
 #[derive(IfcVerify)]
 pub struct Window {
+    #[inherited]
     element: Element,
 
     /// Overall measure of the height, it reflects the Z Dimension of a bounding

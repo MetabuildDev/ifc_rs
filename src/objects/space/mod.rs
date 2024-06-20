@@ -46,6 +46,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcspace.htm
 #[derive(IfcVerify)]
 pub struct Space {
+    #[inherited]
     spatial_element_structure: SpatialStructureElement,
 
     /// Predefined generic types for a space that are specified in an

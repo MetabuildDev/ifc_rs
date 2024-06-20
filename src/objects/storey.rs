@@ -54,6 +54,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcbuildingstorey.htm
 #[derive(IfcVerify)]
 pub struct Storey {
+    #[inherited]
     spatial_element_structure: SpatialStructureElement,
 
     /// Elevation of the base of this storey, relative to the 0,00 internal reference height of the

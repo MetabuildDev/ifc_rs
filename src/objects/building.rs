@@ -23,6 +23,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcbuilding.htm
 #[derive(IfcVerify)]
 pub struct Building {
+    #[inherited]
     spatial_element_structure: SpatialStructureElement,
 
     /// Elevation above sea level of the reference height used for all storey

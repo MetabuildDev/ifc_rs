@@ -21,6 +21,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwall.htm
 #[derive(IfcVerify)]
 pub struct Wall {
+    #[inherited]
     element: Element,
 
     /// Predefined generic type for a wall that is specified in an

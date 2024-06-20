@@ -3,12 +3,15 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use ifc_verify_derive::IfcVerify;
+
 use crate::{
     id::TypedId,
+    ifc_type::IfcVerify,
     parser::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser,
     },
-    relations::prelude::RepresentationMap,
+    prelude::*,
 };
 
 use super::type_object::TypeObject;
@@ -21,7 +24,9 @@ use super::type_object::TypeObject;
 /// of that product type.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifctypeproduct.htm
+#[derive(IfcVerify)]
 pub struct TypeProduct {
+    #[inherited]
     type_object: TypeObject,
 
     /// List of unique representation maps. Each representation map

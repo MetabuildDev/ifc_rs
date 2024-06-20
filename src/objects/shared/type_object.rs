@@ -3,9 +3,13 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use ifc_verify_derive::IfcVerify;
+
 use crate::{
     id::Id,
+    ifc_type::IfcVerify,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
 };
 
 use super::root::Root;
@@ -17,7 +21,9 @@ use super::root::Root;
 /// object instances (the occurrences) via the IfcRelDefinesByType relationship.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifctypeobject.htm
+#[derive(IfcVerify)]
 pub struct TypeObject {
+    #[inherited]
     root: Root,
 
     /// The attribute optionally defines the data type of the occurrence

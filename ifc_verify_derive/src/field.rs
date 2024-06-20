@@ -7,8 +7,54 @@ use syn::{
 
 use crate::data_type::{DataType, IdOrList};
 
-pub struct IfcTypesTokenType {
-    pub types: Vec<Ident>,
+#[derive(Clone)]
+pub enum IfcTypesTokenType {
+    Types(Vec<Ident>),
+    Inherited,
+}
+
+impl IfcTypesTokenType {
+    fn is_inherited(&self) -> bool {
+        match self {
+            IfcTypesTokenType::Types(_) => false,
+            IfcTypesTokenType::Inherited => true,
+        }
+    }
+
+    fn types(&self) -> &Vec<Ident> {
+        match self {
+            IfcTypesTokenType::Types(types) => types,
+            IfcTypesTokenType::Inherited => unreachable!(),
+        }
+    }
+
+    pub fn merge(tt: Vec<Self>) -> Self {
+        if !tt.iter().all(|t| !t.is_inherited()) && !tt.iter().all(|t| t.is_inherited()) {
+            panic!("Mixing `inherited` with `ifc_types` is not supported!");
+        }
+
+        if tt.is_empty() {
+            return Self::Types(Vec::new());
+        }
+
+        if tt[0].is_inherited() {
+            Self::Inherited
+        } else {
+            Self::Types(
+                tt.into_iter()
+                    .map(|t| {
+                        let types = match t {
+                            IfcTypesTokenType::Types(types) => types,
+                            IfcTypesTokenType::Inherited => unreachable!(),
+                        };
+
+                        types
+                    })
+                    .flatten()
+                    .collect(),
+            )
+        }
+    }
 }
 
 impl Parse for IfcTypesTokenType {
@@ -21,7 +67,7 @@ impl Parse for IfcTypesTokenType {
             .map(|ident| ident)
             .collect();
 
-        Ok(Self { types })
+        Ok(Self::Types(types))
     }
 }
 
@@ -45,7 +91,7 @@ impl Field {
             let mut correct_type = false;
         };
 
-        let checks = self.ifc_types.types.iter().map(|type_check| {
+        let checks = self.ifc_types.types().iter().map(|type_check| {
             quote! {
 
                 if t.type_id() == std::any::TypeId::of::<#type_check>() {
@@ -65,7 +111,7 @@ impl Field {
 
         let type_names = self
             .ifc_types
-            .types
+            .types()
             .iter()
             .map(|type_check| type_check.to_string())
             .collect::<Vec<_>>()

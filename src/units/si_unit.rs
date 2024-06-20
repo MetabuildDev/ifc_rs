@@ -18,6 +18,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcsiunit.htm
 #[derive(IfcVerify)]
 pub struct SiUnit {
+    #[inherited]
     named_unit: NamedUnit,
 
     /// The SI Prefix for defining decimal multiples and submultiples of the unit.

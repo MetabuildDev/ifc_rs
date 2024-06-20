@@ -32,6 +32,7 @@ use super::object::Object;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcproduct.htm
 #[derive(IfcVerify)]
 pub struct Product {
+    #[inherited]
     object: Object,
 
     /// Placement of the product in space, the placement can either be

@@ -62,6 +62,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcopeningelement.htm
 #[derive(IfcVerify)]
 pub struct OpeningElement {
+    #[inherited]
     element: Element,
 
     /// Predefined generic type for an opening that is specified in an

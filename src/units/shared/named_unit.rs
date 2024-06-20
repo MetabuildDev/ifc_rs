@@ -1,11 +1,13 @@
 use std::fmt::Display;
 
 use comma::Comma;
+use ifc_verify_derive::IfcVerify;
 use optional::OptionalParameter;
 
-use crate::{id::Id, parser::*, units::unit_enum::IfcUnitEnum};
+use crate::{id::Id, ifc_type::IfcVerify, parser::*, prelude::*, units::unit_enum::IfcUnitEnum};
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcnamedunit.htm
+#[derive(IfcVerify)]
 pub struct NamedUnit {
     /// The dimensional exponents of the SI base units by which the named unit is defined.
     pub dimensions: OptionalParameter<Id>,

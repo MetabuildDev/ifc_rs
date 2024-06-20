@@ -29,6 +29,7 @@ pub mod type_enum;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwalltype.htm
 #[derive(IfcVerify)]
 pub struct WallType {
+    #[inherited]
     element_type: ElementType,
 
     /// Identifies the predefined types of a wall element from which

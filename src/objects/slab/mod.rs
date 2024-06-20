@@ -39,6 +39,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcsharedbldgelements/lexical/ifcslab.htm
 #[derive(IfcVerify)]
 pub struct Slab {
+    #[inherited]
     element: Element,
 
     /// Predefined generic types for a slab that are specified in an

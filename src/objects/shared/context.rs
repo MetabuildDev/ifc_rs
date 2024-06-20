@@ -1,14 +1,16 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::geometry::representation_context::GeometricRepresentationContext;
-use crate::id::{IdOr, TypedId};
-use crate::parser::comma::Comma;
-use crate::parser::list::IfcList;
-use crate::parser::IFCParse;
-use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
-use crate::units::assignment::UnitAssigment;
-use crate::IFC;
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    id::{IdOr, TypedId},
+    ifc_type::IfcVerify,
+    parser::{
+        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser,
+    },
+    prelude::*,
+};
 
 use super::root::Root;
 
@@ -21,7 +23,9 @@ use super::root::Root;
 /// IfcProjectLibrary as the context of that library.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccontext.htm
+#[derive(IfcVerify)]
 pub struct Context {
+    #[inherited]
     root: Root,
 
     /// The type denotes a particular type that indicates the object further.

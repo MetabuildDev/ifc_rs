@@ -22,6 +22,7 @@ use super::shared::root::Root;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcproject.htm
 #[derive(IfcVerify)]
 pub struct Project {
+    #[inherited]
     context: Context,
 }
 

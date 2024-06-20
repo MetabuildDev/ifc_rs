@@ -53,6 +53,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcsite.htm
 #[derive(IfcVerify)]
 pub struct Site {
+    #[inherited]
     spatial_element_structure: SpatialStructureElement,
 
     /// World Latitude at reference point (most likely defined in legal

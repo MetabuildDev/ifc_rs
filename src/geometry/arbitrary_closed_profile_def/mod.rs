@@ -23,13 +23,13 @@ pub struct ArbitraryClosedProfileDef<C: Curve> {
     /// Defines the type of geometry into which this profile definition shall be resolved, either a
     /// curve or a surface area. In case of curve the profile should be referenced by a swept
     /// surface, in case of area the profile should be referenced by a swept area solid.
-    profile_type: ProfileType,
+    pub profile_type: ProfileType,
     /// Human-readable name of the profile, for example according to a standard profile table. As
     /// noted above, machine-readable standardized profile designations should be provided in
     /// IfcExternalReference.ItemReference.
-    profile_name: OptionalParameter<Label>,
+    pub profile_name: OptionalParameter<Label>,
     /// `IfcCurve` Bounded curve, defining the outer boundaries of the arbitrary profile.
-    outer_curve: TypedId<C>,
+    pub outer_curve: TypedId<C>,
 }
 
 impl<C: Curve> ArbitraryClosedProfileDef<C> {

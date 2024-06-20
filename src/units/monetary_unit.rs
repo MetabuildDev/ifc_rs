@@ -16,7 +16,7 @@ use crate::{
 pub struct MonetaryUnit {
     /// Code or name of the currency. Permissible values are the three-letter
     /// alphabetic currency codes as per ISO 4217, for example CNY, EUR, GBP, JPY, USD.
-    currency: Label,
+    pub currency: Label,
 }
 
 impl IfcType for MonetaryUnit {}

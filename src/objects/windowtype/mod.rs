@@ -45,6 +45,7 @@ pub mod window_type_enum;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcsharedbldgelements/lexical/ifcwindowtype.htm
 #[derive(IfcVerify)]
 pub struct WindowType {
+    #[inherited]
     element_type: ElementType,
 
     /// Identifies the predefined types of a window element from which the

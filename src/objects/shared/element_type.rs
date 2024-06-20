@@ -1,9 +1,13 @@
 use std::ops::DerefMut;
 use std::{fmt::Display, ops::Deref};
 
-use crate::parser::comma::Comma;
-use crate::parser::IFCParse;
-use crate::parser::{label::Label, optional::OptionalParameter, IFCParser};
+use ifc_verify_derive::IfcVerify;
+
+use crate::{
+    ifc_type::IfcVerify,
+    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    prelude::*,
+};
 
 use super::type_product::TypeProduct;
 
@@ -14,7 +18,9 @@ use super::type_product::TypeProduct;
 /// all occurrences of that product type).
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcelementtype.htm
+#[derive(IfcVerify)]
 pub struct ElementType {
+    #[inherited]
     type_product: TypeProduct,
 
     /// The type denotes a particular type that indicates the

@@ -42,6 +42,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcroof.htm
 #[derive(IfcVerify)]
 pub struct Roof {
+    #[inherited]
     element: Element,
 
     ///	Predefined generic types for a roof that are specified in an enumeration.

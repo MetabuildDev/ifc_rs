@@ -42,6 +42,7 @@ pub mod type_enum;
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcspacetype.htm
 #[derive(IfcVerify)]
 pub struct SpaceType {
+    #[inherited]
     element_type: ElementType,
 
     /// Predefined types to define the particular type of space. There may be

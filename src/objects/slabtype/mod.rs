@@ -45,6 +45,7 @@ pub mod type_enum;
 /// of IfcSlab, or IfcSlabElementedCase.
 #[derive(IfcVerify)]
 pub struct SlabType {
+    #[inherited]
     element_type: ElementType,
 
     /// Identifies the predefined types of a slab element from which the type
