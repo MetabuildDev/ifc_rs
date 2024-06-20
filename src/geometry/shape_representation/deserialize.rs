@@ -4,6 +4,7 @@ use crate::{
         comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
         IFCParse,
     },
+    prelude::*,
 };
 
 use super::ShapeRepresentation;

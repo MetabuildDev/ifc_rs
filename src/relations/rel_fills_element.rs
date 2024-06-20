@@ -7,7 +7,6 @@ use crate::{
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
     prelude::*,
-    prelude::{OpeningElement, Root, RootBuilder, Structure},
 };
 
 /// IfcRelFillsElement is an objectified relationship between an opening
