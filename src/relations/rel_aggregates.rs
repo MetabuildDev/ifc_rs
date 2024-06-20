@@ -9,8 +9,7 @@ use crate::{
         comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
         IFCParser,
     },
-    prelude::{Building, Project, Root, RootBuilder, Site, Storey},
-    IFC,
+    prelude::*,
 };
 
 /// The aggregation relationship IfcRelAggregates is a special type of

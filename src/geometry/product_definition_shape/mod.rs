@@ -7,10 +7,8 @@ use crate::{
     id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
-    IFC,
+    prelude::*,
 };
-
-use super::shape_representation::ShapeRepresentation;
 
 /// The IfcProductDefinitionShape defines all shape relevant information about an IfcProduct. It
 /// allows for multiple geometric shape representations of the same product. The shape relevant

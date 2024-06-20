@@ -5,23 +5,13 @@ use std::ops::{Deref, DerefMut};
 
 use ifc_verify_derive::IfcVerify;
 
-use super::{
-    shared::{
-        element::{Element, ElementBuilder},
-        object::{Object, ObjectBuilder},
-        product::{Product, ProductBuilder},
-        root::{Root, RootBuilder},
-    },
-    Structure,
-};
 use crate::{
     id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     objects::slabtype::SlabType,
     parser::{label::Label, optional::OptionalParameter},
-    prelude::{ProductDefinitionShape, TransformableType},
+    prelude::*,
     relations::rel_associates_material::MaterialRelatable,
-    IFC,
 };
 
 /// A slab is a component of the construction that normally encloses a space

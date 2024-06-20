@@ -2,20 +2,15 @@ use std::{fmt::Display, ops::Deref};
 
 use ifc_verify_derive::IfcVerify;
 
-use crate::id::Id;
-use crate::id::IdOr;
-use crate::id::TypedId;
-use crate::ifc_type::{IfcType, IfcVerify};
-use crate::parser::comma::Comma;
-use crate::parser::label::Label;
-use crate::parser::list::IfcList;
-use crate::parser::p_space_or_comment_surrounded;
-use crate::parser::IFCParse;
-use crate::parser::IFCParser;
-use crate::prelude::Project;
-use crate::prelude::Root;
-use crate::prelude::RootBuilder;
-use crate::IFC;
+use crate::{
+    id::{Id, IdOr, TypedId},
+    ifc_type::{IfcType, IfcVerify},
+    parser::{
+        comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
+        IFCParser,
+    },
+    prelude::*,
+};
 
 /// The objectified relationship IfcRelDeclares handles the declaration of
 /// objects (subtypes of IfcObject) or properties (subtypes of

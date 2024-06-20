@@ -9,8 +9,7 @@ use crate::{
         bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
         optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    prelude::Material,
-    IFC,
+    prelude::*,
 };
 
 /// IfcMaterialLayer is a single and identifiable part of an element which is

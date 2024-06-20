@@ -7,11 +7,8 @@ use crate::{
     id::TypedId,
     ifc_type::{IfcType, IfcVerify},
     parser::optional::OptionalParameter,
-    prelude::{Direction2D, Direction3D},
-    IFC,
+    prelude::*,
 };
-
-use super::point::{Point2D, Point3D};
 
 pub trait AxisPlacement: IfcType {}
 

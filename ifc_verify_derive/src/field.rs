@@ -55,6 +55,14 @@ impl Field {
             }
         });
 
+        let allow_dummy_check = quote! {
+
+            if t.type_id() == std::any::TypeId::of::<Dummy>() {
+                correct_type = true;
+            }
+
+        };
+
         let type_names = self
             .ifc_types
             .types
@@ -70,6 +78,7 @@ impl Field {
         };
 
         def.extend(checks);
+        def.extend(allow_dummy_check);
         def.extend(check_error);
 
         def
@@ -81,7 +90,7 @@ impl Field {
         let typed_str = typed.to_string();
 
         quote! {
-            if t.type_id() != std::any::TypeId::of::<#typed>() {
+            if t.type_id() != std::any::TypeId::of::<#typed>() && t.type_id() != std::any::TypeId::of::<Dummy>() {
                 anyhow::bail!("Variable {} of type {}: expected type {} but found {} ({})", #var_name, #struct_name, #typed_str, t.type_name(), id);
             }
         }

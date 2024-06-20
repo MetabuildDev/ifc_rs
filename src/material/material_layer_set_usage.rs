@@ -9,13 +9,8 @@ use crate::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    prelude::MaterialLayerSet,
+    prelude::*,
     relations::rel_associates_material::RelatableMaterial,
-    IFC,
-};
-
-use super::{
-    direction_sense_enum::DirectionSenseEnum, layer_set_direction_enum::LayerSetDirectionEnum,
 };
 
 /// The IfcMaterialLayerSetUsage determines the usage of IfcMaterialLayerSet

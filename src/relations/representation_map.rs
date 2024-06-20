@@ -6,8 +6,7 @@ use crate::{
     id::IdOr,
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
-    prelude::{Axis3D, ShapeRepresentation},
-    IFC,
+    prelude::*,
 };
 
 /// An IfcRepresentationMap defines the base definition (also referred to as block, cell or macro)

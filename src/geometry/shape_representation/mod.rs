@@ -54,7 +54,7 @@ pub struct ShapeRepresentation {
     /// The supported values for context type are to be specified by implementers agreements.
     pub representation_type: OptionalParameter<Label>,
     /// Set of geometric representation items that are defined for this representation.
-    #[ifc_types(ExtrudedAreaSolid, PolyLine, MappedItem, FacetedBrep, BoundingBox)]
+    #[ifc_types(ExtrudedAreaSolid, PolyLine, MappedItem)]
     pub items: IfcList<Id>,
 }
 

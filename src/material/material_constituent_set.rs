@@ -9,9 +9,8 @@ use crate::{
         comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    prelude::MaterialConstituent,
+    prelude::*,
     relations::rel_associates_material::RelatableMaterial,
-    IFC,
 };
 
 /// IfcMaterialConstituentSet is a collection of individual material

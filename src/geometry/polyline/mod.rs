@@ -4,12 +4,7 @@ use crate::{
     id::Id,
     ifc_type::{IfcType, IfcVerify},
     parser::list::IfcList,
-    IFC,
-};
-
-use super::{
-    point::{CartesianPoint, Point2D, Point3D, PointType},
-    shape_representation::ShapeItem,
+    prelude::*,
 };
 
 mod deserialize;

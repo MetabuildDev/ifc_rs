@@ -5,17 +5,6 @@ use std::{
 
 use ifc_verify_derive::IfcVerify;
 
-use super::{
-    address::PostalAddress,
-    shared::{
-        object::{Object, ObjectBuilder},
-        product::{Product, ProductBuilder},
-        root::{Root, RootBuilder},
-        spatial_element::{SpatialElement, SpatialElementBuilder},
-        spatial_structure_element::{SpatialStructureElement, SpatialStructureElementBuilder},
-    },
-    Structure,
-};
 use crate::{
     id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
@@ -23,7 +12,7 @@ use crate::{
         comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    IFC,
+    prelude::*,
 };
 
 /// A building represents a structure that provides shelter for its occupants

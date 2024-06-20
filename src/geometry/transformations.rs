@@ -6,11 +6,8 @@ use crate::{
     id::IdOr,
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse},
-    prelude::Direction3D,
-    IFC,
+    prelude::*,
 };
-
-use super::point::Point3D;
 
 /// A Cartesian transformation operator 3d non uniform defines a geometric transformation in
 /// three-dimensional space composed of translation, rotation, mirroring and non uniform scaling.

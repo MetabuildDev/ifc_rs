@@ -3,15 +3,14 @@ mod serialize;
 
 use ifc_verify_derive::IfcVerify;
 
-use crate::geometry::indexed_poly_curve::Curve;
-use crate::geometry::rectangle_profile_def::ProfileDef;
-use crate::id::{IdOr, TypedId};
-use crate::ifc_type::{IfcType, IfcVerify};
-use crate::parser::label::Label;
-use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::{
+    id::{IdOr, TypedId},
+    ifc_type::{IfcType, IfcVerify},
+    parser::{label::Label, optional::OptionalParameter},
+    prelude::*,
+};
 
-use super::profile_type::ProfileType;
+use super::{indexed_poly_curve::Curve, rectangle_profile_def::ProfileDef};
 
 /// The closed profile IfcArbitraryClosedProfileDef defines an arbitrary
 /// two-dimensional profile for the use within the swept surface geometry,

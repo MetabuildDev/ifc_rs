@@ -10,4 +10,4 @@ pub use super::{
     IFC,
 };
 
-pub use super::parser::timestamp::IfcTimestamp;
+pub use super::parser::{dummy::Dummy, timestamp::IfcTimestamp};

@@ -3,12 +3,11 @@ use std::fmt::Display;
 use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    geometry::transformations::CartesianTransformationOperator3DnonUniform,
     id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
+    prelude::*,
     prelude::{ProductDefinitionShape, RepresentationMap, ShapeItem},
-    IFC,
 };
 
 pub trait TransformableType: IfcType {

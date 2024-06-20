@@ -5,23 +5,12 @@ use std::ops::{Deref, DerefMut};
 
 use ifc_verify_derive::IfcVerify;
 
-use super::{
-    shared::{
-        element::{Element, ElementBuilder},
-        object::{Object, ObjectBuilder},
-        product::{Product, ProductBuilder},
-        root::{Root, RootBuilder},
-    },
-    walltype::WallType,
-    Structure,
-};
 use crate::{
     id::{IdOr, TypedId},
     ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
-    prelude::{ProductDefinitionShape, TransformableType},
+    prelude::*,
     relations::rel_associates_material::MaterialRelatable,
-    IFC,
 };
 
 /// The wall represents a vertical construction that may bound or

@@ -10,7 +10,7 @@ use crate::{
 use super::IFCParse;
 
 #[derive(IfcVerify)]
-pub(crate) struct Dummy {
+pub struct Dummy {
     pub s: String,
 }
 

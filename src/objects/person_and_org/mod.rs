@@ -3,15 +3,12 @@ mod serialize;
 
 use ifc_verify_derive::IfcVerify;
 
-use crate::id::{IdOr, TypedId};
-use crate::ifc_type::{IfcType, IfcVerify};
-use crate::parser::list::IfcList;
-use crate::parser::optional::OptionalParameter;
-use crate::IFC;
-
-use super::actor_role::ActorRole;
-use super::organization::Organization;
-use super::person::Person;
+use crate::{
+    id::{IdOr, TypedId},
+    ifc_type::{IfcType, IfcVerify},
+    parser::{list::IfcList, optional::OptionalParameter},
+    prelude::*,
+};
 
 /// Identification of a person within an organization.
 ///
