@@ -36,17 +36,8 @@ impl<'a> IfcSiteBuilder<'a> {
     }
 
     pub fn new_building<'b>(&'b mut self, name: &str, position: DVec3) -> IfcBuildingBuilder<'b> {
-        let relative_placement_id = self
-            .ifc
-            .data
-            .get(self.site)
-            .object_placement
-            .custom()
-            .expect("Site Placement Exists")
-            .clone();
         let position = Axis3D::new(Point3D::from(position), &mut self.ifc);
-        let local_placement = LocalPlacement::new(position, &mut self.ifc)
-            .relative_to(relative_placement_id, &mut self.ifc);
+        let local_placement = LocalPlacement::new_relative(position, self.site, &mut self.ifc);
         let owner_history = self.ifc.data.id_of::<OwnerHistory>().last().unwrap();
         let building = Building::new(name)
             .owner_history(owner_history, &mut self.ifc)

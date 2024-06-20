@@ -38,18 +38,8 @@ impl<'a> IfcStoreyBuilder<'a> {
             self.ifc,
         );
 
-        let relative_placement_id = self
-            .ifc
-            .data
-            .get(self.storey)
-            .object_placement
-            .custom()
-            .expect("Storey Placement Exists")
-            .clone();
-
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new(position, self.ifc)
-            .relative_to(relative_placement_id, &mut self.ifc);
+        let local_placement = LocalPlacement::new_relative(position, self.storey, self.ifc);
 
         let roof = Roof::new(name)
             .owner_history(self.owner_history, self.ifc)

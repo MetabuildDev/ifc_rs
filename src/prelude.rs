@@ -2,6 +2,7 @@ pub use super::geometry::prelude::*;
 pub use super::material::prelude::*;
 pub use super::objects::prelude::*;
 pub use super::relations::prelude::*;
+pub use super::traits::prelude::*;
 pub use super::units::prelude::*;
 
 pub use super::{

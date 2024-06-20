@@ -53,17 +53,11 @@ impl<'a> IfcStoreyBuilder<'a> {
 
         let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
 
-        let mut opening_element = OpeningElement::new(name)
+        let local_placement = LocalPlacement::new_relative(position, wall, self.ifc);
+        let opening_element = OpeningElement::new(name)
             .owner_history(self.owner_history, self.ifc)
-            .representation(product_shape, self.ifc);
-
-        if let Some(&wall_placement_id) = self.ifc.data.get::<Wall>(wall).object_placement.custom()
-        {
-            let local_placement =
-                LocalPlacement::new(position, self.ifc).relative_to(wall_placement_id, self.ifc);
-
-            opening_element = opening_element.object_placement(local_placement, self.ifc);
-        }
+            .representation(product_shape, self.ifc)
+            .object_placement(local_placement, self.ifc);
 
         let opening_element_id = self.ifc.data.insert_new(opening_element);
 
