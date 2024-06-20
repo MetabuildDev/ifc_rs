@@ -4,8 +4,11 @@ use std::{
 };
 
 use crate::{
-    id::Id,
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    id::TypedId,
+    parser::{
+        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser,
+    },
+    relations::prelude::RepresentationMap,
 };
 
 use super::type_object::TypeObject;
@@ -25,7 +28,7 @@ pub struct TypeProduct {
     /// describes a block definition of the shape of the product style.
     /// By providing more than one representation map, a multi-view
     /// block definition can be given.
-    pub representation_maps: OptionalParameter<Id>,
+    pub representation_maps: OptionalParameter<IfcList<TypedId<RepresentationMap>>>,
 
     /// The tag (or label) identifier at the particular type of a
     /// product, e.g. the article number (like the EAN). It is the

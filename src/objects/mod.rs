@@ -24,6 +24,8 @@ pub mod shared;
 pub mod site;
 pub mod slab;
 pub mod slabtype;
+pub mod space;
+pub mod spacetype;
 pub mod storey;
 pub mod wall;
 pub mod walltype;
@@ -57,7 +59,11 @@ impl Objects {
             opening_element::OpeningElement::parse_any(),
             window::Window::parse_any(),
             windowtype::WindowType::parse_any(),
-            project::Project::parse_any(),
+            alt((
+                project::Project::parse_any(),
+                space::Space::parse_any(),
+                spacetype::SpaceType::parse_any(),
+            )),
         ))
     }
 }

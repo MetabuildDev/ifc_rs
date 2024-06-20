@@ -25,14 +25,14 @@ pub struct RelAggregates {
     /// The object definition, either an object type or an object
     /// occurrence, that represents the aggregation. It is the whole
     /// within the whole/part relationship.
-    #[ifc_types(Project, Site, Building)]
+    #[ifc_types(Project, Site, Building, Storey)]
     pub relating_object: Id,
 
     /// The object definitions, either object occurrences or object
     /// types, that are being aggregated. They are defined as the
     /// parts in the whole/part relationship. No order is implied
     /// between the parts.
-    #[ifc_types(Site, Building, Storey)]
+    #[ifc_types(Site, Building, Storey, Space)]
     pub related_objects: IfcList<Id>,
 }
 

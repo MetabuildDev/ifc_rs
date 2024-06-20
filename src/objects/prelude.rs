@@ -29,6 +29,8 @@ pub use super::shared::{
 pub use super::site::Site;
 pub use super::slab::Slab;
 pub use super::slabtype::{type_enum::SlabTypeEnum, SlabType};
+pub use super::space::Space;
+pub use super::spacetype::{type_enum::SpaceTypeEnum, SpaceType};
 pub use super::storey::Storey;
 pub use super::wall::Wall;
 pub use super::walltype::{type_enum::WallTypeEnum, WallType};

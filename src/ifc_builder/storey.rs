@@ -10,6 +10,7 @@ pub struct IfcStoreyBuilder<'a> {
 
     pub(crate) storey: TypedId<Storey>,
 
+    pub(crate) spaces: HashSet<TypedId<Space>>,
     pub(crate) walls: HashSet<TypedId<Wall>>,
     pub(crate) slabs: HashSet<TypedId<Slab>>,
     pub(crate) roofs: HashSet<TypedId<Roof>>,
@@ -45,6 +46,9 @@ pub struct IfcStoreyBuilder<'a> {
     pub(crate) window_type_to_window: HashMap<TypedId<WindowType>, HashSet<TypedId<Window>>>,
     pub(crate) material_to_window:
         HashMap<TypedId<MaterialConstituentSet>, HashSet<TypedId<Window>>>,
+
+    // Space relations
+    pub(crate) space_type_to_space: HashMap<TypedId<SpaceType>, HashSet<TypedId<Space>>>,
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
@@ -65,6 +69,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             owner_history,
             sub_context,
 
+            spaces: HashSet::new(),
             walls: HashSet::new(),
             slabs: HashSet::new(),
             roofs: HashSet::new(),
@@ -88,6 +93,8 @@ impl<'a> IfcStoreyBuilder<'a> {
 
             window_type_to_window: HashMap::new(),
             material_to_window: HashMap::new(),
+
+            space_type_to_space: HashMap::new(),
         }
     }
 }
@@ -315,5 +322,13 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
         }
 
         self.ifc.data.insert_new(spatial_relation);
+
+        // rel aggregates
+        let rel_agg = RelAggregates::new(
+            "StoreySpacesLink",
+            self.storey.id(),
+            self.spaces.iter().map(|id| id.id()),
+        );
+        self.ifc.data.insert_new(rel_agg);
     }
 }

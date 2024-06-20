@@ -1,4 +1,5 @@
 use glam::{DVec2, DVec3};
+use ifc4::ifc_builder::spaces::SpaceParameter;
 use ifc4::ifc_builder::windows::WindowParameter;
 use ifc4::prelude::*;
 
@@ -21,7 +22,7 @@ fn main() {
     {
         let mut site_builder = builder.new_site("ExampleSite", DVec3::ZERO);
         let mut building_builder = site_builder.new_building("ExampleBuilding", DVec3::ZERO);
-        let mut mk_storey = |elevation: f64| {
+        let mut mk_storey = |elevation: f64, wall_height: f64| {
             let mut storey_builder = building_builder.new_storey("ExampleStorey", elevation);
 
             let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
@@ -31,6 +32,26 @@ fn main() {
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,
                 0.0,
+            );
+
+            let story_footprint = vec![
+                DVec2::ZERO,
+                DVec2::new(0.0, 4.0),
+                DVec2::new(2.0, 6.0),
+                DVec2::new(4.0, 4.0),
+                DVec2::new(4.0, 0.0),
+                DVec2::ZERO,
+            ];
+
+            let space_type = storey_builder.space_type("ExampleWallType", SpaceTypeEnum::Space);
+            storey_builder.space(
+                space_type,
+                "ExampleSpaceDefault",
+                SpaceParameter {
+                    coords: story_footprint.clone(),
+                    height: wall_height,
+                    placement: DVec3::new(0.0, 0.0, 0.0),
+                },
             );
 
             let wall_type = storey_builder.wall_type(
@@ -44,7 +65,7 @@ fn main() {
                 wall_type,
                 "ExampleWallDefault",
                 VerticalWallParameter {
-                    height: 2.0,
+                    height: wall_height,
                     length: 4.0,
                     placement: DVec3::new(0.0, 0.0, 0.0),
                 },
@@ -61,14 +82,7 @@ fn main() {
                 slab_type,
                 "ExampleSlab",
                 HorizontalArbitrarySlabParameter {
-                    coords: vec![
-                        DVec2::ZERO,
-                        DVec2::new(0.0, 4.0),
-                        DVec2::new(2.0, 6.0),
-                        DVec2::new(4.0, 4.0),
-                        DVec2::new(4.0, 0.0),
-                        DVec2::ZERO,
-                    ],
+                    coords: story_footprint.clone(),
                     placement: DVec3::new(0.0, 0.0, 0.0),
                 },
             );
@@ -106,21 +120,15 @@ fn main() {
                 roof_type,
                 "ExampleRoof",
                 HorizontalArbitraryRoofParameter {
-                    coords: vec![
-                        DVec2::ZERO,
-                        DVec2::new(0.0, 4.0),
-                        DVec2::new(2.0, 6.0),
-                        DVec2::new(4.0, 4.0),
-                        DVec2::new(4.0, 0.0),
-                        DVec2::ZERO,
-                    ],
-                    placement: DVec3::new(0.0, 0.0, 2.0),
+                    coords: story_footprint,
+                    placement: DVec3::new(0.0, 0.0, wall_height),
                 },
             );
         };
 
-        mk_storey(0.0);
-        mk_storey(2.0);
+        let wall_height = 2.0;
+        mk_storey(0.0, wall_height);
+        mk_storey(2.0, wall_height);
     }
 
     std::fs::write("examples/builder_example.ifc", builder.build()).unwrap();

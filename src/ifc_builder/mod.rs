@@ -6,6 +6,7 @@ pub mod primary;
 pub mod roofs;
 pub mod site;
 pub mod slabs;
+pub mod spaces;
 pub mod storey;
 pub mod transforms;
 pub mod walls;

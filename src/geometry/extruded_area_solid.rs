@@ -25,7 +25,7 @@ use super::shape_representation::ShapeItem;
 pub struct ExtrudedAreaSolid {
     /// The surface defining the area to be swept. It is given as a
     /// profile definition within the xy plane of the position coordinate system.
-    #[ifc_types(RectangleProfileDef)]
+    #[ifc_types(RectangleProfileDef, ArbitraryClosedProfileDef<C: Curve>)]
     pub swept_area: Id,
 
     /// Position coordinate system for the resulting swept solid of the sweeping
