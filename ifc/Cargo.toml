@@ -2,6 +2,17 @@
 name = "ifc"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+keywords = ["ifc", "standard", "buildings"]
+authors = [
+  "Michael Hübner <michael.hueber@metabuild.de>",
+  "Gerasimos Kougianos <gerasimos.kougianos@metabuild.io>",
+  "Robert Walter <robert.walter@metabuild.io>",
+]
+description = "A rust implementation of the IFC standard"
+homepage = "https://github.com/MetabuildDev/ifc"
+repository = "https://github.com/MetabuildDev/ifc"
+readme = "README.md"
 
 [dependencies]
 anyhow = "1.0.86"
