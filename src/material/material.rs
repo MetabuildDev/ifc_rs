@@ -8,6 +8,7 @@ use crate::{
         comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
         IFCParse, IFCParser,
     },
+    relations::rel_associates_material::RelatableMaterial,
     IFC,
 };
 
@@ -78,6 +79,7 @@ impl Display for Material {
 }
 
 impl IfcType for Material {}
+impl RelatableMaterial for Material {}
 
 #[cfg(test)]
 mod test {

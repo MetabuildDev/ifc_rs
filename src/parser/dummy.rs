@@ -21,19 +21,11 @@ impl IFCParse for Dummy {
     where
         Self: Sized,
     {
-        #[cfg(test)]
-        {
-            winnow::combinator::fail
-        }
+        use super::p_space_or_comment_surrounded;
+        use winnow::{combinator::repeat_till, token::any, Parser};
 
-        #[cfg(not(test))]
-        {
-            use super::p_space_or_comment_surrounded;
-            use winnow::{combinator::repeat_till, token::any, Parser};
-
-            repeat_till(.., any, p_space_or_comment_surrounded(";"))
-                .map(|(s, _): (String, _)| Self { s })
-        }
+        repeat_till(.., any, p_space_or_comment_surrounded(";"))
+            .map(|(s, _): (String, _)| Self { s })
     }
 }
 

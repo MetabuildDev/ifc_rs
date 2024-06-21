@@ -105,7 +105,6 @@ mod test {
         Ok(())
     }
 
-    #[ignore = "not enough struct implemented yet"]
     #[test]
     fn load_archicad_file() -> Result<()> {
         let ifc = IFC::from_file("resources/AC20-FZK-Haus.ifc")?;

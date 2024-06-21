@@ -7,6 +7,8 @@ use crate::{
     prelude::*,
 };
 
+use super::indexed_poly_curve::Curve;
+
 mod deserialize;
 mod serialize;
 
@@ -54,6 +56,7 @@ impl PolyLine {
 }
 
 impl IfcType for PolyLine {}
+impl Curve for PolyLine {}
 impl ShapeItem for PolyLine {}
 
 #[cfg(test)]

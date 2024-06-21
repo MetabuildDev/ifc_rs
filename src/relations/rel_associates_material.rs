@@ -26,7 +26,12 @@ pub struct RelAssociatesMaterial {
     rel_associates: RelAssociates,
 
     /// Material definition assigned to the elements or element types.
-    #[ifc_types(MaterialConstituentSet, MaterialLayerSetUsage, MaterialLayerSet)]
+    #[ifc_types(
+        MaterialConstituentSet,
+        MaterialLayerSetUsage,
+        MaterialLayerSet,
+        Material
+    )]
     pub relating_material: Id,
 }
 
