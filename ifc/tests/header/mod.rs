@@ -1,11 +1,11 @@
 use chrono::DateTime;
-use ifc4::meta::header::description::{FileDescription, ImplementationLevel, ViewDefinition};
-use ifc4::meta::header::details::{
+use ifc::meta::header::description::{FileDescription, ImplementationLevel, ViewDefinition};
+use ifc::meta::header::details::{
     Author, Authorization, FileDetails, FileName, Organization, OriginatingSystem,
     PreprocessorVersion, TimeStamp,
 };
-use ifc4::meta::header::schema::{FileSchema, FileSchemas};
-use ifc4::meta::header::Header;
+use ifc::meta::header::schema::{FileSchema, FileSchemas};
+use ifc::meta::header::Header;
 
 use crate::common::example_version;
 

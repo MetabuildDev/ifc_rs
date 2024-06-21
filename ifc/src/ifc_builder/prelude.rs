@@ -4,6 +4,7 @@ pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
 pub use super::site::IfcSiteBuilder;
 pub use super::slabs::HorizontalArbitrarySlabParameter;
+pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;
 pub use super::walls::VerticalWallParameter;

@@ -1,0 +1,18 @@
+[package]
+name = "ifc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+chrono = { version = "0.4", features = ["serde"] }
+glam = "0.25"
+itertools = "0.13"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+strum = { version = "0.26", features = ["derive"] }
+winnow = "0.6"
+destructure_traitobject = "0.3.0"
+downcast-rs = "1.2.1"
+ifc_verify_derive = { path = "../ifc_verify_derive" }
+uuid = { version = "1.8", features = ["v4"] }

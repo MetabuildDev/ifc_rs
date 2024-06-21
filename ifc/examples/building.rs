@@ -1,5 +1,5 @@
 use glam::{DVec2, DVec3};
-use ifc4::prelude::*;
+use ifc::prelude::*;
 use std::fs::write;
 
 struct VerticalWallParameter {

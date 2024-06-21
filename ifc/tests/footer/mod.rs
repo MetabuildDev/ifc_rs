@@ -1,4 +1,4 @@
-use ifc4::meta::footer::Footer;
+use ifc::meta::footer::Footer;
 
 use crate::common::example_version;
 

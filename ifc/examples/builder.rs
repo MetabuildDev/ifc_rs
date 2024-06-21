@@ -1,7 +1,5 @@
 use glam::{DVec2, DVec3};
-use ifc4::ifc_builder::spaces::SpaceParameter;
-use ifc4::ifc_builder::windows::WindowParameter;
-use ifc4::prelude::*;
+use ifc::prelude::*;
 
 fn main() {
     let mut builder = IfcProjectBuilder::new(
