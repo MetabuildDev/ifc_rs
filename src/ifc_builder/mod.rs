@@ -2,7 +2,7 @@ pub mod building;
 pub mod materials;
 pub mod openings;
 pub mod prelude;
-pub mod primary;
+pub mod project;
 pub mod roofs;
 pub mod site;
 pub mod slabs;
@@ -30,8 +30,8 @@ pub struct OwnerInfo<'a> {
 pub(crate) mod test {
     use crate::prelude::*;
 
-    pub fn create_builder() -> IfcBuilder {
-        IfcBuilder::new(
+    pub fn create_builder() -> IfcProjectBuilder {
+        IfcProjectBuilder::new(
             ApplicationInfo {
                 developer: Person::empty().given_name("Mario"),
                 version: "0.0.1",

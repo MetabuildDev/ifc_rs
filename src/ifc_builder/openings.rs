@@ -16,50 +16,57 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         opening_information: VerticalOpeningParameter,
     ) -> TypedId<OpeningElement> {
-        let position = Axis3D::new(Point3D::from(opening_information.placement), self.ifc);
-        let wall_material_set_usage = *self
+        let position = Axis3D::new(
+            Point3D::from(opening_information.placement),
+            &mut self.project.ifc,
+        );
+        let wall_material_set_usage = self
+            .project
             .material_to_wall
             .iter()
             .find_map(|(mat, walls)| walls.contains(&wall).then_some(mat))
+            .copied()
             .unwrap();
         let opening_thickness =
             self.calculate_material_layer_set_thickness(wall_material_set_usage);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    opening_information.length,
-                    opening_thickness,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            opening_information.length * 0.5,
-                            opening_thickness * 0.5,
-                        )),
-                        self.ifc,
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    RectangleProfileDef::new(
+                        ProfileType::Area,
+                        opening_information.length,
+                        opening_thickness,
+                    )
+                    // center of the rectangle
+                    .position(
+                        Axis2D::new(
+                            Point2D::from(DVec2::new(
+                                opening_information.length * 0.5,
+                                opening_thickness * 0.5,
+                            )),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    // vertical wall opening (z-up)
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    opening_information.height,
+                    &mut self.project.ifc,
                 ),
-                // vertical wall opening (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                opening_information.height,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
 
-        let local_placement = LocalPlacement::new_relative(position, wall, self.ifc);
+        let local_placement = LocalPlacement::new_relative(position, wall, &mut self.project.ifc);
         let opening_element = OpeningElement::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .representation(product_shape, self.ifc)
-            .object_placement(local_placement, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc);
 
-        let opening_element_id = self.ifc.data.insert_new(opening_element);
+        let opening_element_id = self.project.ifc.data.insert_new(opening_element);
 
         self.opening_elements.insert(opening_element_id);
         self.opening_elements_to_wall

@@ -4,7 +4,7 @@ use ifc4::ifc_builder::windows::WindowParameter;
 use ifc4::prelude::*;
 
 fn main() {
-    let mut builder = IfcBuilder::new(
+    let mut builder = IfcProjectBuilder::new(
         ApplicationInfo {
             developer: Person::empty().given_name("Mario"),
             version: "0.0.1",

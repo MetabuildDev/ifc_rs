@@ -1,5 +1,4 @@
 use crate::{
-    id::{Id, TypedId},
     parser::{
         comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
         IFCParse,

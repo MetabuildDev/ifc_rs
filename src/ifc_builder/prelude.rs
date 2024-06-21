@@ -1,6 +1,6 @@
 pub use super::building::IfcBuildingBuilder;
 pub use super::openings::VerticalOpeningParameter;
-pub use super::primary::IfcBuilder;
+pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
 pub use super::site::IfcSiteBuilder;
 pub use super::slabs::HorizontalArbitrarySlabParameter;

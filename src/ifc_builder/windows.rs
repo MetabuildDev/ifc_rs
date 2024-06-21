@@ -19,10 +19,10 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_partitioning_type: WindowPartitioningTypeEnum,
     ) -> TypedId<WindowType> {
         let window_type = WindowType::new(name, window_type, window_partitioning_type)
-            .owner_history(self.owner_history, self.ifc)
+            .owner_history(self.owner_history, &mut self.project.ifc)
             .name(name);
 
-        let window_type_id = self.ifc.data.insert_new(window_type);
+        let window_type_id = self.project.ifc.data.insert_new(window_type);
 
         self.window_type_to_window
             .insert(window_type_id, HashSet::new());
@@ -40,66 +40,72 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_parameter: WindowParameter,
     ) -> TypedId<Window> {
         let wall = self.opening_elements_to_wall.get(&opening_element).unwrap();
-        let wall_material_set_usage = *self
+        let wall_material_set_usage = self
+            .project
             .material_to_wall
             .iter()
             .find_map(|(mat, walls)| walls.contains(&wall).then_some(mat))
+            .copied()
             .unwrap();
         // NOTE: we may want to pass this as an extra param, but for now we just center the window
         // in the opening element gap
         let window_thickness =
             self.calculate_material_layer_set_thickness(wall_material_set_usage) / 3.0;
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    window_parameter.width,
-                    window_thickness,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            window_parameter.width * 0.5,
-                            window_thickness * 0.5,
-                        )),
-                        self.ifc,
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    RectangleProfileDef::new(
+                        ProfileType::Area,
+                        window_parameter.width,
+                        window_thickness,
+                    )
+                    // center of the rectangle
+                    .position(
+                        Axis2D::new(
+                            Point2D::from(DVec2::new(
+                                window_parameter.width * 0.5,
+                                window_thickness * 0.5,
+                            )),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    window_parameter.height,
+                    &mut self.project.ifc,
                 ),
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                window_parameter.height,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
 
         let position = Axis3D::new(
             Point3D::from(window_parameter.placement + DVec3::new(0., window_thickness, 0.)),
-            self.ifc,
+            &mut self.project.ifc,
         );
-        let local_placement = LocalPlacement::new_relative(position, opening_element, self.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, opening_element, &mut self.project.ifc);
 
         let window = Window::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .representation(product_shape, self.ifc)
-            .object_placement(local_placement, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc);
 
-        let window_id = self.ifc.data.insert_new(window);
+        let window_id = self.project.ifc.data.insert_new(window);
 
         self.windows.insert(window_id);
         self.opening_elements_to_window
             .insert(opening_element, window_id);
         self.window_type_to_window
-            .get_mut(&window_type)
-            .unwrap()
+            .entry(window_type)
+            .or_default()
             .insert(window_id);
-        self.material_to_window
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_window
+            .entry(material)
+            .or_default()
             .insert(window_id);
 
         window_id

@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::prelude::*;
 
 impl<'a> IfcStoreyBuilder<'a> {
@@ -11,8 +9,8 @@ impl<'a> IfcStoreyBuilder<'a> {
     ) -> TypedId<MaterialLayer> {
         let material = self.material(material_name);
         let material_layer =
-            MaterialLayer::new(thickness, is_ventilated).material(material, self.ifc);
-        self.ifc.data.insert_new(material_layer)
+            MaterialLayer::new(thickness, is_ventilated).material(material, &mut self.project.ifc);
+        self.project.ifc.data.insert_new(material_layer)
     }
 
     pub fn material_layer_set(
@@ -22,13 +20,13 @@ impl<'a> IfcStoreyBuilder<'a> {
         let mut material_layer_set = MaterialLayerSet::new();
 
         for layer in layer {
-            material_layer_set = material_layer_set.add_layer(layer, self.ifc);
+            material_layer_set = material_layer_set.add_layer(layer, &mut self.project.ifc);
         }
 
-        let id = self.ifc.data.insert_new(material_layer_set);
-        self.material_to_wall_type.insert(id, HashSet::new());
-        self.material_to_slab_type.insert(id, HashSet::new());
-        self.material_to_roof_type.insert(id, HashSet::new());
+        let id = self.project.ifc.data.insert_new(material_layer_set);
+        self.project.material_to_wall_type.entry(id).or_default();
+        self.project.material_to_slab_type.entry(id).or_default();
+        self.project.material_to_roof_type.entry(id).or_default();
 
         id
     }
@@ -40,13 +38,18 @@ impl<'a> IfcStoreyBuilder<'a> {
         sense: DirectionSenseEnum,
         offset: f64,
     ) -> TypedId<MaterialLayerSetUsage> {
-        let material_layer_set_usage =
-            MaterialLayerSetUsage::new(material_layer_set, direction, sense, offset, self.ifc);
+        let material_layer_set_usage = MaterialLayerSetUsage::new(
+            material_layer_set,
+            direction,
+            sense,
+            offset,
+            &mut self.project.ifc,
+        );
 
-        let id = self.ifc.data.insert_new(material_layer_set_usage);
-        self.material_to_wall.insert(id, HashSet::new());
-        self.material_to_slab.insert(id, HashSet::new());
-        self.material_to_roof.insert(id, HashSet::new());
+        let id = self.project.ifc.data.insert_new(material_layer_set_usage);
+        self.project.material_to_wall.entry(id).or_default();
+        self.project.material_to_slab.entry(id).or_default();
+        self.project.material_to_roof.entry(id).or_default();
 
         id
     }
@@ -55,15 +58,19 @@ impl<'a> IfcStoreyBuilder<'a> {
         &self,
         material: TypedId<MaterialLayerSetUsage>,
     ) -> f64 {
-        let layer_set_usage = self.ifc.data.get(material);
-        let layer_set = self.ifc.data.get(layer_set_usage.spatial_element_structure);
+        let layer_set_usage = self.project.ifc.data.get(material);
+        let layer_set = self
+            .project
+            .ifc
+            .data
+            .get(layer_set_usage.spatial_element_structure);
 
         layer_set
             .material_layers
             .0
             .iter()
             .map(|layer_id| {
-                let layer = self.ifc.data.get(*layer_id);
+                let layer = self.project.ifc.data.get(*layer_id);
                 layer.layer_thickness.0
             })
             .sum()
@@ -76,8 +83,8 @@ impl<'a> IfcStoreyBuilder<'a> {
     ) -> TypedId<MaterialConstituent> {
         let material = self.material(material_name);
         let material_constituent =
-            MaterialConstituent::new(material, self.ifc).name(constituent_name);
-        self.ifc.data.insert_new(material_constituent)
+            MaterialConstituent::new(material, &mut self.project.ifc).name(constituent_name);
+        self.project.ifc.data.insert_new(material_constituent)
     }
 
     pub fn material_constituent_set(
@@ -88,18 +95,18 @@ impl<'a> IfcStoreyBuilder<'a> {
 
         for constituent in constituents {
             material_constituent_set =
-                material_constituent_set.add_constituent(constituent, self.ifc);
+                material_constituent_set.add_constituent(constituent, &mut self.project.ifc);
         }
 
-        let id = self.ifc.data.insert_new(material_constituent_set);
-        self.material_to_window.insert(id, HashSet::new());
+        let id = self.project.ifc.data.insert_new(material_constituent_set);
+        self.project.material_to_window.entry(id).or_default();
 
         id
     }
 
     pub fn material(&mut self, name: &str) -> TypedId<Material> {
         let material = Material::new(name);
-        self.ifc.data.insert_new(material)
+        self.project.ifc.data.insert_new(material)
     }
 }
 

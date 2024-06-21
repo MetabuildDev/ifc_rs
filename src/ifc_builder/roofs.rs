@@ -17,34 +17,40 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         roof_information: HorizontalArbitraryRoofParameter,
     ) {
-        let position = Axis3D::new(Point3D::from(roof_information.placement), self.ifc);
+        let position = Axis3D::new(
+            Point3D::from(roof_information.placement),
+            &mut self.project.ifc,
+        );
         let roof_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                ArbitraryClosedProfileDef::new(
-                    ProfileType::Area,
-                    IndexedPolyCurve::new(
-                        PointList2D::new(roof_information.coords.into_iter()),
-                        self.ifc,
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    ArbitraryClosedProfileDef::new(
+                        ProfileType::Area,
+                        IndexedPolyCurve::new(
+                            PointList2D::new(roof_information.coords.into_iter()),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    // horizontal roof (z-up)
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    roof_thickness,
+                    &mut self.project.ifc,
                 ),
-                // horizontal roof (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                roof_thickness,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new_relative(position, self.storey, self.ifc);
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
         let roof = Roof::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
 
         self.roof(material, roof_type, roof);
     }
@@ -56,15 +62,16 @@ impl<'a> IfcStoreyBuilder<'a> {
         roof_type: RoofTypeEnum,
     ) -> TypedId<RoofType> {
         let roof_type = RoofType::new(name, roof_type)
-            .owner_history(self.owner_history, self.ifc)
+            .owner_history(self.owner_history, &mut self.project.ifc)
             .name(name);
 
-        let roof_type_id = self.ifc.data.insert_new(roof_type);
+        let roof_type_id = self.project.ifc.data.insert_new(roof_type);
 
         self.roof_type_to_roof.insert(roof_type_id, HashSet::new());
-        self.material_to_roof_type
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_roof_type
+            .entry(material)
+            .or_default()
             .insert(roof_type_id);
 
         roof_type_id
@@ -76,16 +83,17 @@ impl<'a> IfcStoreyBuilder<'a> {
         roof_type: TypedId<RoofType>,
         roof: Roof,
     ) {
-        let roof_id = self.ifc.data.insert_new(roof);
+        let roof_id = self.project.ifc.data.insert_new(roof);
 
         self.roofs.insert(roof_id);
         self.roof_type_to_roof
-            .get_mut(&roof_type)
-            .unwrap()
+            .entry(roof_type)
+            .or_default()
             .insert(roof_id);
-        self.material_to_roof
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_roof
+            .entry(material)
+            .or_default()
             .insert(roof_id);
     }
 }

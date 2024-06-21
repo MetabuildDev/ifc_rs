@@ -17,51 +17,56 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         space_information: SpaceParameter,
     ) {
-        let shape_repr_3d = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                ArbitraryClosedProfileDef::new(
-                    ProfileType::Area,
-                    IndexedPolyCurve::new(
-                        PointList2D::new(space_information.coords.into_iter()),
-                        self.ifc,
+        let shape_repr_3d = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    ArbitraryClosedProfileDef::new(
+                        ProfileType::Area,
+                        IndexedPolyCurve::new(
+                            PointList2D::new(space_information.coords.into_iter()),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    space_information.height,
+                    &mut self.project.ifc,
                 ),
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                space_information.height,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
         // TODO: add the footprint curve as an additional shaperepresentation to the space's
         // `ProductDefinitionShape.representations` vec
         let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr_3d, self.ifc);
+            ProductDefinitionShape::new().add_representation(shape_repr_3d, &mut self.project.ifc);
 
-        let position = Axis3D::new(Point3D::from(space_information.placement), self.ifc);
-        let local_placement = LocalPlacement::new_relative(position, self.storey, self.ifc);
+        let position = Axis3D::new(
+            Point3D::from(space_information.placement),
+            &mut self.project.ifc,
+        );
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
         let space = Space::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
 
-        let space_id = self.ifc.data.insert_new(space);
+        let space_id = self.project.ifc.data.insert_new(space);
 
         self.spaces.insert(space_id);
         self.space_type_to_space
-            .get_mut(&space_type)
-            .unwrap()
+            .entry(space_type)
+            .or_default()
             .insert(space_id);
     }
 
     pub fn space_type(&mut self, name: &str, space_type: SpaceTypeEnum) -> TypedId<SpaceType> {
         let space_type = SpaceType::new(name, space_type)
-            .owner_history(self.owner_history, self.ifc)
+            .owner_history(self.owner_history, &mut self.project.ifc)
             .name(name);
 
-        let space_type_id = self.ifc.data.insert_new(space_type);
+        let space_type_id = self.project.ifc.data.insert_new(space_type);
 
         self.space_type_to_space
             .insert(space_type_id, HashSet::new());

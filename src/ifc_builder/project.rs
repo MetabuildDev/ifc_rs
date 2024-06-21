@@ -1,17 +1,36 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use glam::DVec3;
 
 use crate::prelude::*;
 
-pub struct IfcBuilder {
+pub struct IfcProjectBuilder {
     pub(crate) ifc: IFC,
+
+    pub(crate) owner_history: TypedId<OwnerHistory>,
+    pub(crate) sub_context: TypedId<GeometricRepresentationContext>,
 
     pub(crate) project: TypedId<Project>,
     pub(crate) sites: HashSet<TypedId<Site>>,
+
+    // Materials
+    pub(crate) material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
+    // TODO: Required??
+    pub(crate) material_to_wall_type:
+        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
+    pub(crate) material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Slab>>>,
+    // TODO: Required??
+    pub(crate) material_to_slab_type:
+        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<SlabType>>>,
+    pub(crate) material_to_roof: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Roof>>>,
+    // TODO: Required??
+    pub(crate) material_to_roof_type:
+        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<RoofType>>>,
+    pub(crate) material_to_window:
+        HashMap<TypedId<MaterialConstituentSet>, HashSet<TypedId<Window>>>,
 }
 
-impl IfcBuilder {
+impl IfcProjectBuilder {
     pub fn new(
         application_info: ApplicationInfo<'_>,
         owner_info: OwnerInfo<'_>,
@@ -80,23 +99,31 @@ impl IfcBuilder {
 
         Self {
             ifc,
+            owner_history: owner_history_id,
+            sub_context: context_id,
             project: project_id,
             sites: HashSet::new(),
+            material_to_wall: HashMap::new(),
+            material_to_wall_type: HashMap::new(),
+            material_to_slab: HashMap::new(),
+            material_to_slab_type: HashMap::new(),
+            material_to_roof: HashMap::new(),
+            material_to_roof_type: HashMap::new(),
+            material_to_window: HashMap::new(),
         }
     }
 
     pub fn new_site<'a>(&'a mut self, name: &str, position: DVec3) -> IfcSiteBuilder<'a> {
         let position = Axis3D::new(Point3D::from(position), &mut self.ifc);
         let local_placement = LocalPlacement::new(position, &mut self.ifc);
-        let owner_history = self.ifc.data.id_of::<OwnerHistory>().last().unwrap();
         let site = Site::new(name)
-            .owner_history(owner_history, &mut self.ifc)
+            .owner_history(self.owner_history, &mut self.ifc)
             .object_placement(local_placement, &mut self.ifc);
         let site_id = self.ifc.data.insert_new(site);
 
         self.sites.insert(site_id);
 
-        IfcSiteBuilder::new(&mut self.ifc, site_id, owner_history)
+        IfcSiteBuilder::new(self, site_id, self.owner_history)
     }
 
     pub fn build(mut self) -> String {

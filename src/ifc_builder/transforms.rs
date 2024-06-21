@@ -68,7 +68,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         t: TypedId<T>,
         transform_parameter: &TransformParameter,
     ) {
-        let transformable = self.ifc.data.get(t);
+        let transformable = self.project.ifc.data.get(t);
 
         if let Some(shape_id) = transformable.shape() {
             let transform = CartesianTransformationOperator3DnonUniform::new(
@@ -79,13 +79,13 @@ impl<'a> IfcStoreyBuilder<'a> {
                 Direction3D::from(transform_parameter.z_rotation),
                 1.0,
                 1.0,
-                self.ifc,
+                &mut self.project.ifc,
             );
-            let transform_id = self.ifc.data.insert_new(transform);
+            let transform_id = self.project.ifc.data.insert_new(transform);
 
             // access to shape is still unique since we don't change it anywhere
             // else inside the following loop just afterwards
-            let product_shape = self.ifc.data.get(shape_id);
+            let product_shape = self.project.ifc.data.get(shape_id);
 
             let transforms: Vec<_> = product_shape
                 .representations
@@ -94,21 +94,28 @@ impl<'a> IfcStoreyBuilder<'a> {
                 .into_iter()
                 .map(|shape_repr| {
                     let representation_map = RepresentationMap::new(
-                        Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), self.ifc),
+                        Axis3D::new(
+                            Point3D::from(DVec3::new(0.0, 0.0, 0.0)),
+                            &mut self.project.ifc,
+                        ),
                         shape_repr,
-                        self.ifc,
+                        &mut self.project.ifc,
                     );
-                    let r = ShapeRepresentation::new(self.sub_context, self.ifc)
+                    let r = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
                         .repr_type("MappedRepresentation")
                         .add_item(
-                            MappedItem::new(representation_map, transform_id, self.ifc),
-                            self.ifc,
+                            MappedItem::new(
+                                representation_map,
+                                transform_id,
+                                &mut self.project.ifc,
+                            ),
+                            &mut self.project.ifc,
                         );
-                    self.ifc.data.insert_new(r)
+                    self.project.ifc.data.insert_new(r)
                 })
                 .collect();
 
-            self.ifc.data.get_mut(shape_id).representations.0 = transforms;
+            self.project.ifc.data.get_mut(shape_id).representations.0 = transforms;
         }
     }
 }

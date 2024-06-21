@@ -17,34 +17,40 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         slab_information: HorizontalArbitrarySlabParameter,
     ) {
-        let position = Axis3D::new(Point3D::from(slab_information.placement), self.ifc);
+        let position = Axis3D::new(
+            Point3D::from(slab_information.placement),
+            &mut self.project.ifc,
+        );
         let slab_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                ArbitraryClosedProfileDef::new(
-                    ProfileType::Area,
-                    IndexedPolyCurve::new(
-                        PointList2D::new(slab_information.coords.into_iter()),
-                        self.ifc,
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    ArbitraryClosedProfileDef::new(
+                        ProfileType::Area,
+                        IndexedPolyCurve::new(
+                            PointList2D::new(slab_information.coords.into_iter()),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    // horizontal slab (z-up)
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    slab_thickness,
+                    &mut self.project.ifc,
                 ),
-                // horizontal slab (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                slab_thickness,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new_relative(position, self.storey, self.ifc);
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
         let slab = Slab::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
 
         self.slab(material, slab_type, slab);
     }
@@ -56,15 +62,16 @@ impl<'a> IfcStoreyBuilder<'a> {
         slab_type: SlabTypeEnum,
     ) -> TypedId<SlabType> {
         let slab_type = SlabType::new(name, slab_type)
-            .owner_history(self.owner_history, self.ifc)
+            .owner_history(self.owner_history, &mut self.project.ifc)
             .name(name);
 
-        let slab_type_id = self.ifc.data.insert_new(slab_type);
+        let slab_type_id = self.project.ifc.data.insert_new(slab_type);
 
         self.slab_type_to_slab.insert(slab_type_id, HashSet::new());
-        self.material_to_slab_type
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_slab_type
+            .entry(material)
+            .or_default()
             .insert(slab_type_id);
 
         slab_type_id
@@ -76,16 +83,17 @@ impl<'a> IfcStoreyBuilder<'a> {
         slab_type: TypedId<SlabType>,
         slab: Slab,
     ) {
-        let slab_id = self.ifc.data.insert_new(slab);
+        let slab_id = self.project.ifc.data.insert_new(slab);
 
         self.slabs.insert(slab_id);
         self.slab_type_to_slab
-            .get_mut(&slab_type)
-            .unwrap()
+            .entry(slab_type)
+            .or_default()
             .insert(slab_id);
-        self.material_to_slab
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_slab
+            .entry(material)
+            .or_default()
             .insert(slab_id);
     }
 }

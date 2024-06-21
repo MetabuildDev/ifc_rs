@@ -5,7 +5,7 @@ use glam::DVec3;
 use crate::prelude::*;
 
 pub struct IfcBuildingBuilder<'a> {
-    pub(crate) ifc: &'a mut IFC,
+    pub(crate) project: &'a mut IfcProjectBuilder,
 
     pub(crate) owner_history: TypedId<OwnerHistory>,
     pub(crate) sub_context: TypedId<GeometricRepresentationSubContext>,
@@ -16,18 +16,19 @@ pub struct IfcBuildingBuilder<'a> {
 
 impl<'a> IfcBuildingBuilder<'a> {
     pub(crate) fn new(
-        ifc: &'a mut IFC,
+        project: &'a mut IfcProjectBuilder,
         building: TypedId<Building>,
         owner_history: TypedId<OwnerHistory>,
     ) -> Self {
-        let sub_context = ifc
+        let sub_context = project
+            .ifc
             .data
             .id_of::<GeometricRepresentationSubContext>()
             .last()
             .unwrap();
 
         Self {
-            ifc,
+            project,
             building,
             owner_history,
             sub_context,
@@ -36,17 +37,17 @@ impl<'a> IfcBuildingBuilder<'a> {
     }
 
     pub fn new_storey<'b>(&'b mut self, name: &str, elevation: f64) -> IfcStoreyBuilder<'b> {
-        let position = Axis3D::new(Point3D::from(DVec3::Z * elevation), &mut self.ifc);
-        let local_placement = LocalPlacement::new_relative(position, self.building, &mut self.ifc);
-        let owner_history = self.ifc.data.id_of::<OwnerHistory>().last().unwrap();
+        let position = Axis3D::new(Point3D::from(DVec3::Z * elevation), &mut self.project.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, self.building, &mut self.project.ifc);
         let storey = Storey::new(name)
-            .owner_history(owner_history, &mut self.ifc)
-            .object_placement(local_placement, &mut self.ifc);
-        let storey_id = self.ifc.data.insert_new(storey);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc);
+        let storey_id = self.project.ifc.data.insert_new(storey);
 
         self.storeys.insert(storey_id);
 
-        IfcStoreyBuilder::new(self.ifc, storey_id, owner_history)
+        IfcStoreyBuilder::new(&mut self.project, storey_id, self.owner_history)
     }
 }
 
@@ -58,6 +59,6 @@ impl<'a> Drop for IfcBuildingBuilder<'a> {
             self.building.id(),
             self.storeys.iter().map(|id| id.id()),
         );
-        self.ifc.data.insert_new(rel_agg);
+        self.project.ifc.data.insert_new(rel_agg);
     }
 }

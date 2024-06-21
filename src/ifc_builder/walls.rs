@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use glam::{DVec2, DVec3};
 
 use crate::prelude::*;
@@ -18,42 +16,48 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         wall_information: VerticalWallParameter,
     ) -> TypedId<Wall> {
-        let position = Axis3D::new(Point3D::from(wall_information.placement), self.ifc);
+        let position = Axis3D::new(
+            Point3D::from(wall_information.placement),
+            &mut self.project.ifc,
+        );
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, self.ifc).add_item(
-            ExtrudedAreaSolid::new(
-                RectangleProfileDef::new(
-                    ProfileType::Area,
-                    wall_information.length,
-                    wall_thickness,
-                )
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(
-                            wall_information.length * 0.5,
-                            wall_thickness * 0.5,
-                        )),
-                        self.ifc,
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    RectangleProfileDef::new(
+                        ProfileType::Area,
+                        wall_information.length,
+                        wall_thickness,
+                    )
+                    // center of the rectangle
+                    .position(
+                        Axis2D::new(
+                            Point2D::from(DVec2::new(
+                                wall_information.length * 0.5,
+                                wall_thickness * 0.5,
+                            )),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
                     ),
-                    self.ifc,
+                    // vertical wall (z-up)
+                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    wall_information.height,
+                    &mut self.project.ifc,
                 ),
-                // vertical wall (z-up)
-                Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                wall_information.height,
-                self.ifc,
-            ),
-            self.ifc,
-        );
+                &mut self.project.ifc,
+            );
 
-        let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, self.ifc);
-        let local_placement = LocalPlacement::new_relative(position, self.storey, self.ifc);
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
         let wall = Wall::new(name)
-            .owner_history(self.owner_history, self.ifc)
-            .object_placement(local_placement, self.ifc)
-            .representation(product_shape, self.ifc);
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
 
         self.wall(material, wall_type, wall)
     }
@@ -65,15 +69,16 @@ impl<'a> IfcStoreyBuilder<'a> {
         wall_type: WallTypeEnum,
     ) -> TypedId<WallType> {
         let wall_type = WallType::new(name, wall_type)
-            .owner_history(self.owner_history, self.ifc)
+            .owner_history(self.owner_history, &mut self.project.ifc)
             .name(name);
 
-        let wall_type_id = self.ifc.data.insert_new(wall_type);
+        let wall_type_id = self.project.ifc.data.insert_new(wall_type);
 
-        self.wall_type_to_wall.insert(wall_type_id, HashSet::new());
-        self.material_to_wall_type
-            .get_mut(&material)
-            .unwrap()
+        self.wall_type_to_wall.entry(wall_type_id).or_default();
+        self.project
+            .material_to_wall_type
+            .entry(material)
+            .or_default()
             .insert(wall_type_id);
 
         wall_type_id
@@ -85,16 +90,17 @@ impl<'a> IfcStoreyBuilder<'a> {
         wall_type: TypedId<WallType>,
         wall: Wall,
     ) -> TypedId<Wall> {
-        let wall_id = self.ifc.data.insert_new(wall);
+        let wall_id = self.project.ifc.data.insert_new(wall);
 
         self.walls.insert(wall_id);
         self.wall_type_to_wall
-            .get_mut(&wall_type)
-            .unwrap()
+            .entry(wall_type)
+            .or_default()
             .insert(wall_id);
-        self.material_to_wall
-            .get_mut(&material)
-            .unwrap()
+        self.project
+            .material_to_wall
+            .entry(material)
+            .or_default()
             .insert(wall_id);
 
         wall_id
