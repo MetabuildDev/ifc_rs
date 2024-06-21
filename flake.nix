@@ -9,7 +9,7 @@
     };
 
     fenix = {
-      url = "github:nix-community/fenix";
+      url = "github:Robwalt/fenix?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
