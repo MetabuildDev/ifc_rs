@@ -72,13 +72,13 @@ impl<'a> IfcStoreyBuilder<'a> {
 
         if let Some(shape_id) = transformable.shape() {
             let transform = CartesianTransformationOperator3DnonUniform::new(
-                Direction3D::from(transform_parameter.x_rotation),
-                Direction3D::from(transform_parameter.y_rotation),
                 Point3D::from(transform_parameter.translation),
-                1.0,
-                Direction3D::from(transform_parameter.z_rotation),
-                1.0,
-                1.0,
+                (
+                    Direction3D::from(transform_parameter.x_rotation),
+                    Direction3D::from(transform_parameter.y_rotation),
+                    Direction3D::from(transform_parameter.z_rotation),
+                ),
+                (1.0, 1.0, 1.0),
                 &mut self.project.ifc,
             );
             let transform_id = self.project.ifc.data.insert_new(transform);
@@ -122,6 +122,8 @@ impl<'a> IfcStoreyBuilder<'a> {
 
 #[cfg(test)]
 mod test {
+    use std::str::FromStr;
+
     use glam::DVec3;
 
     use crate::prelude::*;

@@ -109,6 +109,8 @@ impl<'a> IfcStoreyBuilder<'a> {
 
 #[cfg(test)]
 mod test {
+    use std::str::FromStr;
+
     use glam::DVec3;
 
     use crate::prelude::*;

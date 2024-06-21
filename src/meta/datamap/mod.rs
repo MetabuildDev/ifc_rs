@@ -51,15 +51,14 @@ impl DataMap {
         self.get_untyped(typed_id.id()).downcast_ref().unwrap()
     }
 
-    pub fn get_untyped(&self, id: impl Into<Id>) -> &Box<dyn IfcType> {
-        self.0.get(&id.into()).unwrap()
+    pub fn get_untyped(&self, id: impl Into<Id>) -> &dyn IfcType {
+        &**self.0.get(&id.into()).unwrap()
     }
 
     pub fn get_mut<T: IfcType>(&mut self, typed_id: TypedId<T>) -> &mut T {
         self.0
             .get_mut(&typed_id.id())
-            .map(|any| any.downcast_mut())
-            .flatten()
+            .and_then(|any| any.downcast_mut())
             .unwrap()
     }
 
@@ -74,9 +73,10 @@ impl DataMap {
     }
 
     pub fn id_of<T: IfcType>(&self) -> impl Iterator<Item = TypedId<T>> + '_ {
-        self.0.iter().filter_map(|(id, ifc_type)| {
-            (ifc_type.type_id() == TypeId::of::<T>()).then(|| TypedId::new(*id))
-        })
+        self.0
+            .iter()
+            .filter(|&(_, ifc_type)| (ifc_type.type_id() == TypeId::of::<T>()))
+            .map(|(id, _)| TypedId::new(*id))
     }
 }
 

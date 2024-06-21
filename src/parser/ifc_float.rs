@@ -30,9 +30,9 @@ impl From<f64> for IfcFloat {
     }
 }
 
-impl Into<f64> for IfcFloat {
-    fn into(self) -> f64 {
-        self.0
+impl From<IfcFloat> for f64 {
+    fn from(val: IfcFloat) -> Self {
+        val.0
     }
 }
 
@@ -121,7 +121,7 @@ pub fn format_double(d: f64) -> String {
         .fract()
         .to_string()
         .chars()
-        .filter(|c| c.is_digit(10) && *c != '0')
+        .filter(|c| c.is_ascii_digit() && *c != '0')
         .count()
         > 10;
 

@@ -57,7 +57,7 @@ pub struct MaterialLayerSetUsage {
     /// direction of -y).
     pub offset_from_reference_line: IfcFloat,
 
-    ///	Extent of the extrusion of the elements body shape representation to
+    /// Extent of the extrusion of the elements body shape representation to
     /// which the IfcMaterialLayerSetUsage applies. It is used as the
     /// reference value for the upper OffsetValues[2] provided by the
     /// IfcMaterialLayerSetWithOffsets subtype for included material layers.
@@ -93,7 +93,7 @@ impl IFCParse for MaterialLayerSetUsage {
             Self {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYERSETUSAGE("),
 
-                spatial_element_structure: Id::parse().map(|id| TypedId::new(id)),
+                spatial_element_structure: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
                 layer_set_direction: LayerSetDirectionEnum::parse(),
                 _: Comma::parse(),

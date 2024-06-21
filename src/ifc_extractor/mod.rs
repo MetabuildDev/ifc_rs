@@ -24,18 +24,16 @@ impl IfcExtractor {
         self.ifc
             .data
             .find_all_of_type::<RelAggregates>()
-            .filter_map(|(_, rel_aggregate)| {
-                (rel_aggregate.relating_object == id.id()).then(|| {
-                    rel_aggregate.related_objects.0.iter().filter_map(|id| {
-                        self.ifc
-                            .data
-                            .get_untyped(*id)
-                            .downcast_ref::<RELATED>()
-                            .map(|s| (TypedId::<RELATED>::new(*id), s))
-                    })
+            .filter(|&(_, rel_aggregate)| (rel_aggregate.relating_object == id.id()))
+            .flat_map(|(_, rel_aggregate)| {
+                rel_aggregate.related_objects.0.iter().filter_map(|id| {
+                    self.ifc
+                        .data
+                        .get_untyped(*id)
+                        .downcast_ref::<RELATED>()
+                        .map(|s| (TypedId::<RELATED>::new(*id), s))
                 })
             })
-            .flatten()
             .collect()
     }
 
@@ -46,15 +44,12 @@ impl IfcExtractor {
         self.ifc
             .data
             .find_all_of_type::<RelContainedInSpatialStructure>()
-            .filter_map(|(_, rel_structure)| {
-                (rel_structure.relating_structure == id.id())
-                    .then(|| rel_structure.related_elements.0.clone())
-            })
-            .flatten()
+            .filter(|&(_, rel_structure)| (rel_structure.relating_structure == id.id()))
+            .flat_map(|(_, rel_structure)| rel_structure.related_elements.0.clone())
             .collect()
     }
 
-    pub fn related_type<S>(&self, id: TypedId<S>) -> &Box<dyn IfcType>
+    pub fn related_type<S>(&self, id: TypedId<S>) -> &dyn IfcType
     where
         S: Structure,
     {
@@ -168,24 +163,21 @@ mod test {
 
         let sites = projects
             .iter()
-            .map(|(id, _)| ifc.relations_of::<Project, Site>(*id))
-            .flatten()
+            .flat_map(|(id, _)| ifc.relations_of::<Project, Site>(*id))
             .collect::<Vec<_>>();
 
         println!("site count: {}", sites.len());
 
         let buildings = sites
             .iter()
-            .map(|(id, _)| ifc.relations_of::<Site, Building>(*id))
-            .flatten()
+            .flat_map(|(id, _)| ifc.relations_of::<Site, Building>(*id))
             .collect::<Vec<_>>();
 
         println!("building count: {}", buildings.len());
 
         let storeys = buildings
             .iter()
-            .map(|(id, _)| ifc.relations_of::<Building, Storey>(*id))
-            .flatten()
+            .flat_map(|(id, _)| ifc.relations_of::<Building, Storey>(*id))
             .collect::<Vec<_>>();
 
         println!("storey count: {}", storeys.len());

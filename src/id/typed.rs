@@ -33,10 +33,7 @@ impl<T: IfcType> PartialEq for TypedId<T> {
 
 impl<T: IfcType> Clone for TypedId<T> {
     fn clone(&self) -> Self {
-        Self {
-            id: self.id.clone(),
-            t: PhantomData,
-        }
+        *self
     }
 }
 

@@ -73,7 +73,7 @@ impl IFCParse for RelDeclares {
 
                 root: Root::parse(),
                 _ :Comma::parse(),
-                relating_context: Id::parse().map(|id| TypedId::new(id)),
+                relating_context: Id::parse().map(TypedId::new),
                 _ : Comma::parse(),
                 related_definitions: IfcList::parse(),
 

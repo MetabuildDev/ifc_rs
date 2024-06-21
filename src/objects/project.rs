@@ -27,7 +27,7 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn new<'a>(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<Label>) -> Self {
         Self {
             context: Context::new(Root::new(name.into())),
         }

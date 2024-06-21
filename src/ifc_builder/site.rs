@@ -47,7 +47,7 @@ impl<'a> IfcSiteBuilder<'a> {
 
         self.buildings.insert(building_id);
 
-        IfcBuildingBuilder::new(&mut self.project, building_id, self.owner_history)
+        IfcBuildingBuilder::new(self.project, building_id, self.owner_history)
     }
 }
 

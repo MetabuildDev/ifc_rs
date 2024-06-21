@@ -61,7 +61,7 @@ impl IFCParse for RelVoidsElement {
                 _ :Comma::parse(),
                 relating_building_element: Id::parse(),
                 _: Comma::parse(),
-                related_opening_element: Id::parse().map(|id| TypedId::new(id)),
+                related_opening_element: Id::parse().map(TypedId::new),
 
                 _: p_space_or_comment_surrounded(");"),
             }

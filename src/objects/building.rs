@@ -40,7 +40,7 @@ pub struct Building {
 }
 
 impl Building {
-    pub fn new<'a>(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<Label>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
                 Product::new(Object::new(Root::new(name.into()))),

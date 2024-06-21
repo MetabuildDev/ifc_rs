@@ -45,8 +45,8 @@ pub struct Roof {
     #[inherited]
     element: Element,
 
-    ///	Predefined generic types for a roof that are specified in an enumeration.
-    ///	There may be a property set given for the predefined types.
+    /// Predefined generic types for a roof that are specified in an enumeration.
+    /// There may be a property set given for the predefined types.
     ///
     /// Note: The PredefinedType shall only be used, if no IfcRoofType is
     /// assigned, providing its own IfcRoofType.PredefinedType.
@@ -54,7 +54,7 @@ pub struct Roof {
 }
 
 impl Roof {
-    pub fn new<'a>(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<Label>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             predefined_type: OptionalParameter::omitted(),

@@ -42,13 +42,12 @@ impl LocalPlacement {
         relative: TypedId<T>,
         ifc: &mut IFC,
     ) -> Self {
-        let relative = ifc.get_placement_id(relative).expect(
-            format!(
+        let relative = ifc.get_placement_id(relative).unwrap_or_else(|| {
+            panic!(
                 "Relative position of {} couldn't be found",
                 std::any::type_name::<T>()
             )
-            .as_str(),
-        );
+        });
         Self::new(placement, ifc).relative_to(relative, ifc)
     }
 }

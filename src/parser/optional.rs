@@ -23,10 +23,7 @@ impl<T: IFCParse> OptionalParameter<T> {
     }
 
     pub fn is_custom(&self) -> bool {
-        match self {
-            OptionalParameter::Custom(_) => true,
-            _ => false,
-        }
+        matches!(self, OptionalParameter::Custom(_))
     }
 
     pub fn custom(&self) -> Option<&T> {
@@ -44,17 +41,11 @@ impl<T: IFCParse> OptionalParameter<T> {
     }
 
     pub fn is_inherited(&self) -> bool {
-        match self {
-            OptionalParameter::Inherited(_) => true,
-            _ => false,
-        }
+        matches!(self, OptionalParameter::Inherited(_))
     }
 
     pub fn is_omitted(&self) -> bool {
-        match self {
-            OptionalParameter::Omitted(_) => true,
-            _ => false,
-        }
+        matches!(self, OptionalParameter::Omitted(_))
     }
 }
 

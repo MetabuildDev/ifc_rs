@@ -42,13 +42,13 @@ pub struct CartesianTransformationOperator3DnonUniform {
 
 impl CartesianTransformationOperator3DnonUniform {
     pub fn new(
-        axis_x: impl Into<IdOr<Direction3D>>,
-        axis_y: impl Into<IdOr<Direction3D>>,
         local_origin: impl Into<IdOr<Point3D>>,
-        scale: f64,
-        axis_z: impl Into<IdOr<Direction3D>>,
-        scale_y: f64,
-        scale_z: f64,
+        (axis_x, axis_y, axis_z): (
+            impl Into<IdOr<Direction3D>>,
+            impl Into<IdOr<Direction3D>>,
+            impl Into<IdOr<Direction3D>>,
+        ),
+        (scale, scale_y, scale_z): (f64, f64, f64),
         ifc: &mut IFC,
     ) -> Self {
         Self {

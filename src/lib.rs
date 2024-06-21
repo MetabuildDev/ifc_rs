@@ -2,7 +2,7 @@
 
 use anyhow::{anyhow, Context, Result};
 use parser::IFCParse;
-use std::{fmt::Display, fs, path::Path};
+use std::{fmt::Display, fs, path::Path, str::FromStr};
 use winnow::{seq, Parser};
 
 use meta::{
@@ -22,7 +22,7 @@ pub mod id;
 pub mod ifc_builder;
 pub mod ifc_extractor;
 pub mod ifc_type;
-pub mod material;
+pub mod materials;
 pub mod meta;
 pub mod objects;
 pub mod parser;
@@ -46,8 +46,12 @@ impl IFC {
 
         Self::from_str(s)
     }
+}
 
-    pub fn from_str(mut s: &str) -> Result<Self> {
+impl FromStr for IFC {
+    type Err = anyhow::Error;
+
+    fn from_str(mut s: &str) -> Result<Self> {
         let me = seq!(Self {
             header: Header::parse(),
             data: DataMap::parse(),

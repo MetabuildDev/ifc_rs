@@ -77,6 +77,8 @@ impl<'a> IfcStoreyBuilder<'a> {
 
 #[cfg(test)]
 mod test {
+    use std::str::FromStr;
+
     use glam::{DVec2, DVec3};
 
     use crate::ifc_builder::spaces::SpaceParameter;

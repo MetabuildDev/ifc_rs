@@ -33,7 +33,7 @@ impl IFCParse for MeasureWithUnit {
 
                 value: IdOr::parse(),
                 _: Comma::parse(),
-                unit: Id::parse().map(|id| TypedId::new(id)),
+                unit: Id::parse().map(TypedId::new),
 
                 _: p_space_or_comment_surrounded(");"),
             }

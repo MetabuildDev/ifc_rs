@@ -65,10 +65,10 @@ pub struct GeometricRepresentationSubContext {
     /// the geographic reference point from the local zero point.
     #[ifc_types(Axis2D, Axis3D)]
     pub world_coord_system: OptionalParameter<Id>,
-    ///	Direction of the true north, or geographic northing direction, relative to the underlying
-    ///	project coordinate system. It is given by a 2 dimensional direction within the xy-plane of
-    ///	the project coordinate system. If not present, it defaults to 0. 1., meaning that the
-    ///	positive Y axis of the project coordinate system equals the geographic northing direction.
+    /// Direction of the true north, or geographic northing direction, relative to the underlying
+    /// project coordinate system. It is given by a 2 dimensional direction within the xy-plane of
+    /// the project coordinate system. If not present, it defaults to 0. 1., meaning that the
+    /// positive Y axis of the project coordinate system equals the geographic northing direction.
     ///
     /// NOTE  If a geographic placement is provided using IfcMapConversion then the true north is for information only. In case of inconsistency, the value provided with IfcMapConversion shall take precedence.
     #[ifc_types(Axis2D, Axis3D)]

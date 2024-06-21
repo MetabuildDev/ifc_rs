@@ -10,7 +10,7 @@ use crate::{
     geometry::Geometry,
     id::Id,
     ifc_type::IfcType,
-    material::Materials,
+    materials::Materials,
     objects::Objects,
     parser::{dummy::Dummy, p_space_or_comment_surrounded, IFCParse, IFCParser},
     relations::Relation,

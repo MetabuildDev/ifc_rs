@@ -34,7 +34,7 @@ impl<T: IfcType> IdOr<T> {
 
     pub(crate) fn or_insert(self, ifc: &mut IFC) -> TypedId<T> {
         match self {
-            Self::Id(id) => id.into(),
+            Self::Id(id) => id,
             Self::Custom(t) => ifc.data.insert_new(t),
         }
     }

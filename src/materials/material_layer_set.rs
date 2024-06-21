@@ -31,6 +31,12 @@ pub struct MaterialLayerSet {
     pub description: OptionalParameter<Label>,
 }
 
+impl Default for MaterialLayerSet {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MaterialLayerSet {
     pub fn new() -> Self {
         Self {

@@ -25,7 +25,7 @@ pub struct PolyLine {
 }
 
 impl PolyLine {
-    pub fn from<'a, C: CartesianPoint>(points: impl Iterator<Item = C>, ifc: &mut IFC) -> Self {
+    pub fn from<C: CartesianPoint>(points: impl Iterator<Item = C>, ifc: &mut IFC) -> Self {
         Self {
             points: IfcList(
                 points

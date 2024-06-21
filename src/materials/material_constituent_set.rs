@@ -32,6 +32,12 @@ pub struct MaterialConstituentSet {
     pub material_constituents: IfcList<TypedId<MaterialConstituent>>,
 }
 
+impl Default for MaterialConstituentSet {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MaterialConstituentSet {
     pub fn new() -> Self {
         Self {

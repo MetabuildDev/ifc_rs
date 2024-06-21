@@ -53,7 +53,7 @@ pub struct Slab {
 }
 
 impl Slab {
-    pub fn new<'a>(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<Label>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             predefined_type: OptionalParameter::omitted(),
@@ -201,7 +201,7 @@ pub mod test {
                         ifc.data.get_untyped(world_coord_system.location)
                     );
 
-                    for (index, item) in shape.items(&ifc).enumerate() {
+                    for (index, item) in shape.items(ifc).enumerate() {
                         println!("\t\t\titem {index}: {item}");
                     }
                 }

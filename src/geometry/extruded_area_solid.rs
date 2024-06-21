@@ -73,7 +73,7 @@ impl IFCParse for ExtrudedAreaSolid {
                 _: Comma::parse(),
                 position: OptionalParameter::parse(),
                 _: Comma::parse(),
-                extruded_direction: Id::parse().map(|id| TypedId::new(id)),
+                extruded_direction: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
                 depth: IfcFloat::parse(),
 

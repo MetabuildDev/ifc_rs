@@ -26,7 +26,7 @@ impl IFCParse for DerivedUnitElement {
             Self {
                 _: p_space_or_comment_surrounded("IFCDERIVEDUNITELEMENT("),
 
-                unit: Id::parse().map(|id| TypedId::new(id)),
+                unit: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
                 exponent: IfcInteger::parse(),
 

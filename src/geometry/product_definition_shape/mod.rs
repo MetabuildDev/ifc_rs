@@ -36,6 +36,12 @@ pub struct ProductDefinitionShape {
     pub representations: IfcList<TypedId<ShapeRepresentation>>,
 }
 
+impl Default for ProductDefinitionShape {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ProductDefinitionShape {
     pub fn new() -> Self {
         Self {

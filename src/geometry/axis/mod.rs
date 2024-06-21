@@ -24,8 +24,8 @@ pub struct Axis2D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.
     pub location: TypedId<Point2D>,
-    ///	The direction used to determine the direction of the local X axis. If a value is omited
-    ///	that it defaults to [1.0, 0.0].
+    /// The direction used to determine the direction of the local X axis. If a value is omited
+    /// that it defaults to [1.0, 0.0].
     pub local_x: OptionalParameter<TypedId<Direction2D>>,
 }
 
@@ -56,7 +56,7 @@ pub struct Axis3D {
     /// The geometric position of a reference point, such as the center of a circle, of the item to
     /// be located.
     pub location: TypedId<Point3D>,
-    ///	The exact direction of the local Z Axis. If a value is omited that it defaults to [0.0, 0.0, 0.1]
+    /// The exact direction of the local Z Axis. If a value is omited that it defaults to [0.0, 0.0, 0.1]
     pub local_z: OptionalParameter<TypedId<Direction3D>>,
     /// The direction used to determine the direction of the local X Axis. If necessary an
     /// adjustment is made to maintain orthogonality to the Axis direction. If Axis and/or

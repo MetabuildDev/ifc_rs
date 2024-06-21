@@ -33,7 +33,7 @@ pub struct Wall {
 }
 
 impl Wall {
-    pub fn new<'a>(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<Label>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             predefined_type: OptionalParameter::omitted(),
@@ -204,7 +204,7 @@ pub mod test {
                         ifc.data.get_untyped(world_coord_system.location)
                     );
 
-                    for (index, item) in shape.items(&ifc).enumerate() {
+                    for (index, item) in shape.items(ifc).enumerate() {
                         println!("\t\t\titem {index}: {item}");
                     }
                 }
@@ -224,17 +224,12 @@ pub mod test {
         let mut ifc = IFC::default();
 
         let person_id = ifc.data.insert_new(Person::empty());
-        let application = Application::new(
-            person_id.clone(),
-            "0.0.1",
-            "create_wall_test",
-            "IFC4",
-            &mut ifc,
-        );
+        let application =
+            Application::new(person_id, "0.0.1", "create_wall_test", "IFC4", &mut ifc);
         let application_id = ifc.data.insert_new(application);
 
         let person_and_org = PersonAndOrganization::new(
-            person_id.clone(),
+            person_id,
             Organization::new(None, "organization_name", None),
             &mut ifc,
         );
@@ -245,7 +240,7 @@ pub mod test {
 
         let axis = Axis3D::new(Point3D::from(DVec3::new(0.0, 0.0, 0.0)), &mut ifc);
         let axis_id = ifc.data.insert_new(axis);
-        let local_placement = LocalPlacement::new(axis_id.clone(), &mut ifc);
+        let local_placement = LocalPlacement::new(axis_id, &mut ifc);
 
         let representation = new_product_definition_shape(&mut ifc, axis_id.into());
 

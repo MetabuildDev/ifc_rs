@@ -54,7 +54,7 @@ impl IFCParse for RelFillsElement {
 
                 root: Root::parse(),
                 _ :Comma::parse(),
-                relating_opening_element: Id::parse().map(|id| TypedId::new(id)),
+                relating_opening_element: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
                 related_building_element: Id::parse(),
 

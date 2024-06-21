@@ -44,7 +44,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             .project
             .material_to_wall
             .iter()
-            .find_map(|(mat, walls)| walls.contains(&wall).then_some(mat))
+            .find_map(|(mat, walls)| walls.contains(wall).then_some(mat))
             .copied()
             .unwrap();
         // NOTE: we may want to pass this as an extra param, but for now we just center the window
@@ -130,7 +130,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             },
         );
 
-        let window_id = self.wall_window(
+        self.wall_window(
             window_material,
             window_type,
             opening_element,
@@ -140,14 +140,14 @@ impl<'a> IfcStoreyBuilder<'a> {
                 width: 0.5,
                 placement: DVec3::new(0.0, 0.0, 0.0),
             },
-        );
-
-        window_id
+        )
     }
 }
 
 #[cfg(test)]
 mod test {
+    use std::str::FromStr;
+
     use glam::DVec3;
 
     use crate::prelude::*;

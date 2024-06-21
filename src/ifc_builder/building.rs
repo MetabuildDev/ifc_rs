@@ -47,7 +47,7 @@ impl<'a> IfcBuildingBuilder<'a> {
 
         self.storeys.insert(storey_id);
 
-        IfcStoreyBuilder::new(&mut self.project, storey_id, self.owner_history)
+        IfcStoreyBuilder::new(self.project, storey_id, self.owner_history)
     }
 }
 

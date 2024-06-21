@@ -49,11 +49,8 @@ fn main() {
     let building_id = ifc.data.insert_new(building);
 
     // create relation between project and building
-    let project_building_relation = RelAggregates::new(
-        "ProjectBuildingLink",
-        project_id.id(),
-        [building_id.id().into()],
-    );
+    let project_building_relation =
+        RelAggregates::new("ProjectBuildingLink", project_id.id(), [building_id.id()]);
     ifc.data.insert_new(project_building_relation);
 
     // create subcontext for our model (wall)
@@ -155,13 +152,7 @@ fn create_person_and_applicaton(
     let person = Person::empty().id(person_name).given_name(person_name);
     let person_id = ifc.data.insert_new(person);
 
-    let application = Application::new(
-        person_id.clone(),
-        "0.0.1",
-        application_name,
-        application_id,
-        ifc,
-    );
+    let application = Application::new(person_id, "0.0.1", application_name, application_id, ifc);
     let application_id = ifc.data.insert_new(application);
 
     (person_id, application_id)
@@ -174,7 +165,7 @@ fn create_owner_history(
     application: TypedId<Application>,
 ) -> TypedId<OwnerHistory> {
     let person_and_org = PersonAndOrganization::new(
-        person.clone(),
+        person,
         Organization::new(None, organization_name, None),
         ifc,
     );
@@ -234,13 +225,13 @@ fn create_wall(
     let scale_z = 1.0;
 
     let transformation = CartesianTransformationOperator3DnonUniform::new(
-        Direction3D::from(x),
-        Direction3D::from(y),
         Point3D::from(origin),
-        scale,
-        Direction3D::from(z),
-        scale_y,
-        scale_z,
+        (
+            Direction3D::from(x),
+            Direction3D::from(y),
+            Direction3D::from(z),
+        ),
+        (scale, scale_y, scale_z),
         ifc,
     );
 
