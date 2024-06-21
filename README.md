@@ -1,6 +1,11 @@
 # IFC4
 
-A parser for the IFC4 format
+🚧🚧 This crate is still work in progress. The API will most likely change a lot in the future. Use at your own risk! 🚧🚧
+
+# Current functionality
+
+- A parser for a subset of the IFC4 STEP format
+- Some builders to create geometric elements in IFC4 STEP format files
 
 # Current Architecture
 
@@ -16,7 +21,7 @@ rust --> |std::fmt::Display| ifc
 
 # Docs
 
-- [IFC4](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
-- [Minimal File for Starters](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/annex/annex-e/wall-standard-case.ifc)
-- [Autodesk Viewer (Main Target for now)](https://viewer.autodesk.com/)
-- [New detailed example files](https://www.ifcwiki.org/index.php?title=KIT_IFC_Examples)
+- [IFC4 Standard Docs](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
+- [Minimal File with a Wall for Starters](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/annex/annex-e/wall-standard-case.ifc)
+- [Autodesk Viewer (Main Target for importing IFC files for now)](https://viewer.autodesk.com/)
+- [Other detailed example files](https://www.ifcwiki.org/index.php?title=KIT_IFC_Examples)
