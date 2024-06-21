@@ -149,7 +149,11 @@ impl Display for Storey {
     }
 }
 
-impl IfcType for Storey {}
+impl IfcType for Storey {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
 impl Structure for Storey {}
 
 #[cfg(test)]

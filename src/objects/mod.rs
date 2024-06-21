@@ -1,3 +1,7 @@
+use roof::Roof;
+use slab::Slab;
+use wall::Wall;
+use window::Window;
 use winnow::combinator::alt;
 
 use crate::{
@@ -32,7 +36,18 @@ pub mod walltype;
 pub mod window;
 pub mod windowtype;
 
-pub trait Structure: IfcType {}
+pub enum StructureType<'a> {
+    Wall(&'a Wall),
+    Slab(&'a Slab),
+    Roof(&'a Roof),
+    Window(&'a Window),
+}
+
+pub trait Structure: IfcType {
+    fn structure_type(&self) -> Option<StructureType<'_>> {
+        None
+    }
+}
 
 pub struct Objects;
 

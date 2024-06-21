@@ -148,7 +148,11 @@ impl Display for Building {
     }
 }
 
-impl IfcType for Building {}
+impl IfcType for Building {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
 impl Structure for Building {}
 
 #[cfg(test)]

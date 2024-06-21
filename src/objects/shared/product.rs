@@ -62,6 +62,21 @@ impl Product {
             representation: OptionalParameter::omitted(),
         }
     }
+
+    pub fn shapes<'a>(&'a self, ifc: &'a IFC) -> Vec<&'a ShapeRepresentation> {
+        self.representation
+            .custom()
+            .map(|repr_id| {
+                let repr = ifc.data.get(*repr_id);
+
+                repr.representations
+                    .0
+                    .iter()
+                    .map(|shape_id| ifc.data.get(*shape_id))
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
 }
 
 pub trait ProductBuilder: Sized {

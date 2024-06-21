@@ -3,7 +3,7 @@ use std::{any::Any, fmt::Display};
 use anyhow::Result;
 use downcast_rs::{self, impl_downcast, Downcast};
 
-use crate::IFC;
+use crate::{objects::Structure, IFC};
 
 pub trait IfcVerify: Any {
     fn verify_id_types(&self, _ifc: &IFC) -> Result<()> {
@@ -15,5 +15,9 @@ pub trait IfcVerify: Any {
     }
 }
 
-pub trait IfcType: Downcast + Any + Display + IfcVerify {}
+pub trait IfcType: Downcast + Any + Display + IfcVerify {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        None
+    }
+}
 impl_downcast!(IfcType);

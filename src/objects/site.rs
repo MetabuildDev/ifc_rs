@@ -205,7 +205,11 @@ impl Display for Site {
     }
 }
 
-impl IfcType for Site {}
+impl IfcType for Site {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
 impl Structure for Site {}
 
 #[cfg(test)]

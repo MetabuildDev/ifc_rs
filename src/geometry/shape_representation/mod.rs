@@ -14,16 +14,18 @@ use crate::{
 
 pub trait ShapeItem: IfcType {}
 
-pub enum ShapeItems<'a> {
+pub enum ShapeItemEnum<'a> {
     PolyLine(IfcList<PointType<'a>>),
     ExtrudedAreaSolid(&'a ExtrudedAreaSolid),
+    Dummy(&'a Dummy),
 }
 
-impl<'a> Display for ShapeItems<'a> {
+impl<'a> Display for ShapeItemEnum<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ShapeItems::PolyLine(list) => write!(f, "{list}"),
-            ShapeItems::ExtrudedAreaSolid(solid) => write!(f, "{solid}"),
+            ShapeItemEnum::PolyLine(list) => write!(f, "{list}"),
+            ShapeItemEnum::ExtrudedAreaSolid(solid) => write!(f, "{solid}"),
+            ShapeItemEnum::Dummy(dummy) => write!(f, "{dummy}"),
         }
     }
 }
@@ -85,14 +87,16 @@ impl ShapeRepresentation {
         self
     }
 
-    pub fn items<'a>(&'a self, ifc: &'a IFC) -> impl Iterator<Item = ShapeItems<'a>> {
+    pub fn items<'a>(&'a self, ifc: &'a IFC) -> impl Iterator<Item = ShapeItemEnum<'a>> {
         self.items.iter().map(|item_id| {
             let item = ifc.data.get_untyped(*item_id);
 
             if let Some(poly_line) = item.downcast_ref::<PolyLine>() {
-                ShapeItems::PolyLine(poly_line.points(ifc))
+                ShapeItemEnum::PolyLine(poly_line.points(ifc))
             } else if let Some(extruded_area_solid) = item.downcast_ref::<ExtrudedAreaSolid>() {
-                ShapeItems::ExtrudedAreaSolid(extruded_area_solid)
+                ShapeItemEnum::ExtrudedAreaSolid(extruded_area_solid)
+            } else if let Some(dummy) = item.downcast_ref::<Dummy>() {
+                ShapeItemEnum::Dummy(dummy)
             } else {
                 todo!()
             }

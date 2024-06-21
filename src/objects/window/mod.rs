@@ -12,7 +12,7 @@ use super::{
         product::{Product, ProductBuilder},
         root::{Root, RootBuilder},
     },
-    Structure,
+    Structure, StructureType,
 };
 use crate::{
     id::TypedId,
@@ -182,8 +182,16 @@ impl DerefMut for Window {
     }
 }
 
-impl IfcType for Window {}
-impl Structure for Window {}
+impl IfcType for Window {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
+impl Structure for Window {
+    fn structure_type(&self) -> Option<StructureType<'_>> {
+        Some(StructureType::Window(self))
+    }
+}
 impl MaterialRelatable for Window {}
 
 impl TransformableType for Window {

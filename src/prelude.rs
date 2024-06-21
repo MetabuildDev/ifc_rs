@@ -10,6 +10,7 @@ pub use winnow::Parser;
 pub use super::{
     id::{Id, IdOr, TypedId},
     ifc_builder::prelude::*,
+    ifc_extractor::prelude::*,
     IFC,
 };
 

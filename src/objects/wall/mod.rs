@@ -13,6 +13,8 @@ use crate::{
     relations::rel_associates_material::MaterialRelatable,
 };
 
+use super::StructureType;
+
 /// The wall represents a vertical construction that may bound or
 /// subdivide spaces. Wall are usually vertical, or nearly vertical,
 /// planar elements, often designed to bear structural loads.
@@ -88,8 +90,16 @@ impl DerefMut for Wall {
     }
 }
 
-impl IfcType for Wall {}
-impl Structure for Wall {}
+impl IfcType for Wall {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
+impl Structure for Wall {
+    fn structure_type(&self) -> Option<StructureType<'_>> {
+        Some(StructureType::Wall(self))
+    }
+}
 impl MaterialRelatable for Wall {}
 
 impl TransformableType for Wall {
@@ -137,7 +147,7 @@ pub mod test {
     pub fn print_wall_hierarchy(ifc: &IFC) {
         use crate::objects::wall::Wall;
 
-        for wall in ifc.data.find_all_of_type::<Wall>() {
+        for (_, wall) in ifc.data.find_all_of_type::<Wall>() {
             println!("wall: {wall}");
 
             if let Some(owner_history) = wall

@@ -127,7 +127,11 @@ impl DerefMut for Space {
     }
 }
 
-impl IfcType for Space {}
+impl IfcType for Space {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
 impl Structure for Space {}
 
 #[cfg(test)]

@@ -6,13 +6,14 @@ use std::ops::{Deref, DerefMut};
 use ifc_verify_derive::IfcVerify;
 
 use crate::{
-    id::{IdOr, TypedId},
+    id::TypedId,
     ifc_type::{IfcType, IfcVerify},
-    objects::slabtype::SlabType,
     parser::{label::Label, optional::OptionalParameter},
     prelude::*,
     relations::rel_associates_material::MaterialRelatable,
 };
+
+use super::StructureType;
 
 /// A slab is a component of the construction that normally encloses a space
 /// vertically. The slab may provide the lower support (floor) or upper
@@ -48,7 +49,7 @@ pub struct Slab {
     /// Note: The use of the predefined type directly at the occurrence object
     /// level of IfcSlab is only permitted, if no type object `IfcSlabType`
     /// is assigned.
-    pub predefined_type: OptionalParameter<IdOr<SlabType>>,
+    pub predefined_type: OptionalParameter<SlabTypeEnum>,
 }
 
 impl Slab {
@@ -59,14 +60,8 @@ impl Slab {
         }
     }
 
-    pub fn predefined_type(
-        mut self,
-        predefined_type: impl Into<IdOr<SlabType>>,
-        ifc: &mut IFC,
-    ) -> Self {
-        let id_or: IdOr<_> = predefined_type.into();
-        let id_or: IdOr<_> = id_or.or_insert(ifc).into();
-        self.predefined_type = id_or.into();
+    pub fn predefined_type(mut self, slab_type: SlabTypeEnum) -> Self {
+        self.predefined_type = slab_type.into();
         self
     }
 }
@@ -109,8 +104,16 @@ impl DerefMut for Slab {
     }
 }
 
-impl IfcType for Slab {}
-impl Structure for Slab {}
+impl IfcType for Slab {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
+impl Structure for Slab {
+    fn structure_type(&self) -> Option<StructureType<'_>> {
+        Some(StructureType::Slab(self))
+    }
+}
 impl MaterialRelatable for Slab {}
 
 impl TransformableType for Slab {
@@ -125,25 +128,31 @@ pub mod test {
 
     use crate::geometry::axis::Axis3D;
     use crate::geometry::product_definition_shape::ProductDefinitionShape;
-    use crate::id::IdOr;
     use crate::objects::slab::Slab;
     use crate::parser::IFCParse;
     use crate::IFC;
 
     #[test]
     fn slab_round_trip() {
-        let example = "IFCSLAB('1wAj$J2Az2V8wnBiVYd3bU',#2,$,$,$,#29,#24,$,$);";
+        let examples = [
+            "IFCSLAB('1wAj$J2Az2V8wnBiVYd3bU',#2,$,$,$,#29,#24,$,$);",
+            "IFCSLAB('2RGlQk4xH47RHK93zcTzUL',#12,'Slab-033',$,$,#59253,#59286,'DA0A17AC-B773-47AC-99-C5-D390C73AD5CC',.FLOOR.);",
+            "IFCSLAB('07Enbsqm9C7AQC9iyBwfSD',#12,'Dach-1',$,$,#59508,#59549,'E142B455-80E4-4B96-83-EC-E1589CA998DB',.ROOF.);",
+            "IFCSLAB('1pPHnf7cXCpPsNEnQf8_6B',#12,'Bodenplatte',$,$,#34464,#34505,'E4D9CD4B-CA43-4735-94-BD-1FD4376BD455',.BASESLAB.);"
+        ];
 
-        let slab: Slab = Slab::parse().parse(example).unwrap();
-        let str_slab = slab.to_string();
+        for (index, example) in examples.into_iter().enumerate() {
+            let slab: Slab = Slab::parse().parse(example).unwrap();
+            let str_slab = slab.to_string();
 
-        assert_eq!(example, str_slab);
+            assert_eq!(example, str_slab, "example {} failed", index);
+        }
     }
 
     pub fn print_slab_hierarchy(ifc: &IFC) {
         use crate::objects::slab::Slab;
 
-        for slab in ifc.data.find_all_of_type::<Slab>() {
+        for (_, slab) in ifc.data.find_all_of_type::<Slab>() {
             println!("slab: {slab}");
 
             if let Some(owner_history) = slab.owner_history.custom().map(|&id| ifc.data.get(id)) {
@@ -198,11 +207,8 @@ pub mod test {
                 }
             }
 
-            if let Some(id_or) = slab.predefined_type.custom() {
-                match id_or {
-                    IdOr::Id(id) => println!("\tslab_type: {}", ifc.data.get_untyped(*id)),
-                    IdOr::Custom(wall_type) => println!("\twall_type: {}", wall_type),
-                }
+            if let Some(slab_type) = slab.predefined_type.custom() {
+                println!("slab_type: {}", slab_type)
             }
         }
     }

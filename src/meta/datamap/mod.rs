@@ -67,10 +67,10 @@ impl DataMap {
         self.0.contains_key(id)
     }
 
-    pub fn find_all_of_type<T: IfcType>(&self) -> impl Iterator<Item = &T> {
+    pub fn find_all_of_type<T: IfcType>(&self) -> impl Iterator<Item = (TypedId<T>, &T)> {
         self.0
-            .values()
-            .filter_map(|ifc_type| ifc_type.downcast_ref())
+            .iter()
+            .filter_map(|(id, ifc_type)| ifc_type.downcast_ref().map(|t| (TypedId::new(*id), t)))
     }
 
     pub fn id_of<T: IfcType>(&self) -> impl Iterator<Item = TypedId<T>> + '_ {

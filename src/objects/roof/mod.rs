@@ -12,7 +12,7 @@ use super::{
         product::{Product, ProductBuilder},
         root::{Root, RootBuilder},
     },
-    Structure,
+    Structure, StructureType,
 };
 use crate::{
     id::TypedId,
@@ -106,8 +106,16 @@ impl DerefMut for Roof {
     }
 }
 
-impl IfcType for Roof {}
-impl Structure for Roof {}
+impl IfcType for Roof {
+    fn to_structure(&self) -> Option<&dyn Structure> {
+        Some(self)
+    }
+}
+impl Structure for Roof {
+    fn structure_type(&self) -> Option<StructureType<'_>> {
+        Some(StructureType::Roof(self))
+    }
+}
 impl MaterialRelatable for Roof {}
 
 impl TransformableType for Roof {

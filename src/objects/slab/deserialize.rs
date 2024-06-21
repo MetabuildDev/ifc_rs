@@ -1,5 +1,6 @@
 use comma::Comma;
 use optional::OptionalParameter;
+use winnow::combinator::alt;
 
 use crate::{objects::shared::element::Element, parser::*};
 
@@ -9,7 +10,7 @@ impl IFCParse for Slab {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
-                _: p_space_or_comment_surrounded("IFCSLAB("),
+                _: alt((p_space_or_comment_surrounded("IFCSLAB("), p_space_or_comment_surrounded("IFCSLABSTANDARDCASE("))),
 
                 element: Element::parse(),
                 _: Comma::parse(),

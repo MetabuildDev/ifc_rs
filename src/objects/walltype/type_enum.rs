@@ -9,7 +9,7 @@ use crate::parser::*;
 /// This enumeration defines the different types of walls that can further specify an IfcWall or IfcWallType.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcwalltypeenum.htm
-#[derive(EnumString, VariantNames, Display, Clone, Copy)]
+#[derive(EnumString, VariantNames, Display, Clone, Copy, Debug)]
 pub enum WallTypeEnum {
     /// A movable wall that is either movable, such as folding wall or a sliding wall,
     /// or can be easily removed as a removable partitioning or mounting wall.
