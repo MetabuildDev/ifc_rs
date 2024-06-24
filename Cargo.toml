@@ -2,6 +2,6 @@
 resolver = "2"
 
 members = [
-    "ifc",
-    "ifc_verify_derive"
+    "ifc_rs",
+    "ifc_rs_verify_derive"
 ]
