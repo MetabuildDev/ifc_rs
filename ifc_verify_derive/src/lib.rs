@@ -75,8 +75,8 @@ pub fn ifc_type_builder(item: TokenStream) -> TokenStream {
                         .clone();
 
                     match collected.clone() {
-                        IfcTypesTokenType::Types(types) => DataType::new(&field.ty)
-                            .map(|data_type| {
+                        IfcTypesTokenType::Types(types) => {
+                            DataType::new(&field.ty).and_then(|data_type| {
                                 if data_type.needs_arguments() && types.is_empty() {
                                     None
                                 } else {
@@ -88,7 +88,7 @@ pub fn ifc_type_builder(item: TokenStream) -> TokenStream {
                                     }))
                                 }
                             })
-                            .flatten(),
+                        }
                         IfcTypesTokenType::Inherited => {
                             Some(FieldType::Inherited(InheritedField { variable_name }))
                         }

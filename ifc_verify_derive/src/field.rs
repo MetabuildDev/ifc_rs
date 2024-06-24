@@ -5,7 +5,7 @@ use syn::{
     Attribute, Ident, Token,
 };
 
-use crate::data_type::{DataType, IdOrList};
+use crate::data_type::{DataType, IdOrListType};
 
 #[derive(Clone)]
 pub enum IfcTypesTokenType {
@@ -42,15 +42,10 @@ impl IfcTypesTokenType {
         } else {
             Self::Types(
                 tt.into_iter()
-                    .map(|t| {
-                        let types = match t {
-                            IfcTypesTokenType::Types(types) => types,
-                            IfcTypesTokenType::Inherited => unreachable!(),
-                        };
-
-                        types
+                    .flat_map(|t| match t {
+                        IfcTypesTokenType::Types(types) => types,
+                        IfcTypesTokenType::Inherited => unreachable!(),
                     })
-                    .flatten()
                     .collect(),
             )
         }
@@ -64,7 +59,6 @@ impl Parse for IfcTypesTokenType {
         let types: Vec<_> = input
             .parse_terminated(|i| i.parse::<Ident>(), Token![,])?
             .into_iter()
-            .map(|ident| ident)
             .collect();
 
         Ok(Self::Types(types))
@@ -149,7 +143,7 @@ impl ToTokens for Field {
 
         let check = match &self.data_type {
             DataType::Id(id_or_list) => match id_or_list {
-                IdOrList::Id => {
+                IdOrListType::Id => {
                     let multiple = self.loop_check();
 
                     quote! {
@@ -160,7 +154,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::List => {
+                IdOrListType::List => {
                     let multiple = self.loop_check();
 
                     quote! {
@@ -174,7 +168,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::TypedId(typed) => {
+                IdOrListType::TypedId(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -185,7 +179,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::TypedIdList(typed) => {
+                IdOrListType::TypedIdList(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -200,7 +194,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::IdOr(typed) => {
+                IdOrListType::IdOr(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -213,7 +207,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::IdOrList(typed) => {
+                IdOrListType::IdOrList(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -232,7 +226,7 @@ impl ToTokens for Field {
                 }
             },
             DataType::OptionalParameter(optional) => match optional {
-                IdOrList::Id => {
+                IdOrListType::Id => {
                     let multiple = self.loop_check();
 
                     quote! {
@@ -244,7 +238,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::List => {
+                IdOrListType::List => {
                     let multiple = self.loop_check();
 
                     quote! {
@@ -260,7 +254,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::TypedId(typed) => {
+                IdOrListType::TypedId(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -273,7 +267,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::TypedIdList(typed) => {
+                IdOrListType::TypedIdList(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -290,7 +284,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::IdOr(typed) => {
+                IdOrListType::IdOr(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {
@@ -305,7 +299,7 @@ impl ToTokens for Field {
 
                     }
                 }
-                IdOrList::IdOrList(typed) => {
+                IdOrListType::IdOrList(typed) => {
                     let single = self.single_check(typed);
 
                     quote! {

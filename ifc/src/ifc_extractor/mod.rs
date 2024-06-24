@@ -74,30 +74,28 @@ impl IfcExtractor {
         self.ifc
             .data
             .find_all_of_type::<RelAssociatesMaterial>()
-            .filter_map(|(_, rel_material)| {
+            .filter(|(_, rel_material)| {
                 rel_material
                     .related_objects
                     .0
                     .iter()
                     .any(|obj_id| *obj_id == id.id())
-                    .then(|| {
-                        self.ifc
-                            .data
-                            .get_untyped(rel_material.relating_material)
-                            .downcast_ref::<MaterialLayerSetUsage>()
-                            .map(|set_usage| {
-                                self.ifc
-                                    .data
-                                    .get(set_usage.spatial_element_structure)
-                                    .material_layers
-                                    .0
-                                    .iter()
-                                    .map(|material_layer_id| self.ifc.data.get(*material_layer_id))
-                            })
-                    })
-                    .flatten()
             })
-            .flatten()
+            .filter_map(|(_, rel_material)| {
+                self.ifc
+                    .data
+                    .get_untyped(rel_material.relating_material)
+                    .downcast_ref::<MaterialLayerSetUsage>()
+            })
+            .flat_map(|set_usage| {
+                self.ifc
+                    .data
+                    .get(set_usage.spatial_element_structure)
+                    .material_layers
+                    .0
+                    .iter()
+            })
+            .map(|material_layer_id| self.ifc.data.get(*material_layer_id))
             .collect()
     }
 
@@ -108,28 +106,21 @@ impl IfcExtractor {
         self.ifc
             .data
             .find_all_of_type::<RelAssociatesMaterial>()
-            .filter_map(|(_, rel_material)| {
+            .filter(|(_, rel_material)| {
                 rel_material
                     .related_objects
                     .0
                     .iter()
                     .any(|obj_id| *obj_id == id.id())
-                    .then(|| {
-                        self.ifc
-                            .data
-                            .get_untyped(rel_material.relating_material)
-                            .downcast_ref::<MaterialConstituentSet>()
-                            .map(|constituent_set| {
-                                constituent_set
-                                    .material_constituents
-                                    .0
-                                    .iter()
-                                    .map(|constituent_id| self.ifc.data.get(*constituent_id))
-                            })
-                    })
-                    .flatten()
             })
-            .flatten()
+            .filter_map(|(_, rel_material)| {
+                self.ifc
+                    .data
+                    .get_untyped(rel_material.relating_material)
+                    .downcast_ref::<MaterialConstituentSet>()
+            })
+            .flat_map(|constituent_set| constituent_set.material_constituents.0.iter())
+            .map(|constituent_id| self.ifc.data.get(*constituent_id))
             .collect()
     }
 }

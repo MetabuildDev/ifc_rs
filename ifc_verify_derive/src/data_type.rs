@@ -3,7 +3,7 @@ use quote::ToTokens;
 use syn::{GenericArgument, PathArguments, PathSegment, Type};
 
 #[derive(Debug)]
-pub enum IdOrList {
+pub enum IdOrListType {
     Id,
     List,
     TypedId(TokenStream),
@@ -12,15 +12,13 @@ pub enum IdOrList {
     IdOrList(TokenStream),
 }
 
-impl IdOrList {
+impl IdOrListType {
     pub fn check_segment(segment: &PathSegment) -> Option<Self> {
         match segment.ident.to_string().as_str() {
             "Id" => Some(Self::Id),
             "IfcList" => match &segment.arguments {
-                PathArguments::AngleBracketed(args) => args
-                    .args
-                    .first()
-                    .map(|generic_type| -> Option<Self> {
+                PathArguments::AngleBracketed(args) => {
+                    args.args.first().and_then(|generic_type| -> Option<Self> {
                         if let GenericArgument::Type(Type::Path(path)) = generic_type {
                             match path.path.segments[0].ident.to_string().as_str() {
                                 "Id" => Some(Self::List),
@@ -49,7 +47,7 @@ impl IdOrList {
                             None
                         }
                     })
-                    .flatten(),
+                }
 
                 _ => unreachable!(),
             },
@@ -71,17 +69,14 @@ impl IdOrList {
     }
 
     pub fn needs_arguments(&self) -> bool {
-        match self {
-            Self::Id | Self::List => true,
-            _ => false,
-        }
+        matches!(self, Self::Id | Self::List)
     }
 }
 
 #[derive(Debug)]
 pub enum DataType {
-    Id(IdOrList),
-    OptionalParameter(IdOrList),
+    Id(IdOrListType),
+    OptionalParameter(IdOrListType),
 }
 
 impl DataType {
@@ -90,27 +85,25 @@ impl DataType {
             Type::Path(path) => {
                 let segment = &path.path.segments[0];
 
-                IdOrList::check_segment(segment)
-                    .map(|t| Self::Id(t))
+                IdOrListType::check_segment(segment)
+                    .map(Self::Id)
                     .or_else(|| {
                         (segment.ident.to_string().as_str() == "OptionalParameter")
                             .then(|| match &segment.arguments {
-                                PathArguments::AngleBracketed(args) => args
-                                    .args
-                                    .first()
-                                    .map(|generic_type| {
+                                PathArguments::AngleBracketed(args) => {
+                                    args.args.first().and_then(|generic_type| {
                                         if let GenericArgument::Type(Type::Path(path)) =
                                             generic_type
                                         {
                                             let segment = &path.path.segments[0];
 
-                                            IdOrList::check_segment(segment)
-                                                .map(|t| Self::OptionalParameter(t))
+                                            IdOrListType::check_segment(segment)
+                                                .map(Self::OptionalParameter)
                                         } else {
                                             None
                                         }
                                     })
-                                    .flatten(),
+                                }
 
                                 _ => unreachable!(),
                             })
