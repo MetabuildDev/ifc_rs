@@ -14,15 +14,14 @@ homepage = "https://github.com/MetabuildDev/ifc_rs"
 repository = "https://github.com/MetabuildDev/ifc_rs"
 
 [dependencies]
-anyhow = "1.0.86"
-chrono = { version = "0.4", features = ["serde"] }
-glam = "0.25"
-itertools = "0.13"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-strum = { version = "0.26", features = ["derive"] }
-winnow = "0.6"
-destructure_traitobject = "0.3.0"
-downcast-rs = "1.2.1"
-ifc_rs_verify_derive = { version = "0.1.0-alpha-rc1", path = "../ifc_rs_verify_derive" }
-uuid = { version = "1.8", features = ["v4"] }
+anyhow.workspace = true
+chrono.workspace = true
+downcast-rs.workspace = true
+glam.workspace = true
+ifc_rs_verify_derive.workspace = true
+itertools.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+strum.workspace = true
+uuid.workspace = true
+winnow.workspace = true

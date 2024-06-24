@@ -1,9 +1,9 @@
-name: Run Nix Flake Check
+name: All Nix Checks
 
 on: [push]
 
 jobs:
-  build-and-flake-check:
+  checks:
     runs-on: native
     steps:
       - name: Checkout code
@@ -11,3 +11,9 @@ jobs:
       - name: Run Nix Flake Check
         run: |
           nix flake check
+      - name: Run Cargo Machete
+        run: |
+          nix run .#exec-deps-check
+      - name: Run Cargo Nextest
+        run: |
+          nix run .#exec-tests
