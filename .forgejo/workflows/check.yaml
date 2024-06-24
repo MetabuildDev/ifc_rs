@@ -1,0 +1,13 @@
+name: Build and Run Nix Flake Check
+
+on: [push]
+
+jobs:
+  build-and-flake-check:
+    runs-on: native
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Nix Flake Check
+        run: |
+          nix flake check
