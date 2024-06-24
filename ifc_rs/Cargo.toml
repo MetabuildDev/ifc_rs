@@ -25,3 +25,11 @@ serde_json.workspace = true
 strum.workspace = true
 uuid.workspace = true
 winnow.workspace = true
+
+[dev-dependencies]
+insta.workspace = true
+regex.workspace = true
+
+[profile.dev.package]
+insta.opt-level = 3 
+similar.opt-level = 3
