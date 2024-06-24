@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
     flake-parts = {
@@ -9,7 +9,7 @@
     };
 
     fenix = {
-      url = "github:Robwalt/fenix?ref=main";
+      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -18,11 +18,6 @@
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = inputs.flake-utils.lib.defaultSystems;
-      imports = [ ./nix/bevy.nix ];
-      perSystem =
-        { pkgs, ... }:
-        {
-          formatter = pkgs.nixfmt;
-        };
+      imports = [ ./nix ];
     };
 }
