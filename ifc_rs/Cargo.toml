@@ -24,5 +24,5 @@ strum = { version = "0.26", features = ["derive"] }
 winnow = "0.6"
 destructure_traitobject = "0.3.0"
 downcast-rs = "1.2.1"
-ifc_rs_verify_derive = { path = "../ifc_rs_verify_derive" }
+ifc_rs_verify_derive = { version = "0.1.0-alpha-rc1", path = "../ifc_rs_verify_derive" }
 uuid = { version = "1.8", features = ["v4"] }

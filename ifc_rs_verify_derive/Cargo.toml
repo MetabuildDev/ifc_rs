@@ -3,7 +3,10 @@ name = "ifc_rs_verify_derive"
 version = "0.1.0-alpha-rc2"
 edition = "2021"
 license = "MIT"
+authors = [ "Michael Hübner <michael.hueber@metabuild.de>" ]
 description = "A proc-macro crate for the ifc crate"
+homepage = "https://github.com/MetabuildDev/ifc_rs"
+repository = "https://github.com/MetabuildDev/ifc_rs"
 
 [lib]
 proc-macro = true
