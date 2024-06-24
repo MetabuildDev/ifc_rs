@@ -1,6 +1,6 @@
 [package]
 name = "ifc_rs"
-version = "0.1.0-alpha-rc1"
+version = "0.1.0-alpha-rc2"
 edition = "2021"
 license = "MIT"
 keywords = ["ifc", "standard", "buildings"]
@@ -24,6 +24,5 @@ strum = { version = "0.26", features = ["derive"] }
 winnow = "0.6"
 destructure_traitobject = "0.3.0"
 downcast-rs = "1.2.1"
-ifc_rs_verify_derive = "0.1.0-alpha-rc1"
-# ifc_rs_verify_derive = { path = "../ifc_rs_verify_derive" }
+ifc_rs_verify_derive = { path = "../ifc_rs_verify_derive" }
 uuid = { version = "1.8", features = ["v4"] }

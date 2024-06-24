@@ -1,6 +1,6 @@
 [package]
 name = "ifc_rs_verify_derive"
-version = "0.1.0-alpha-rc1"
+version = "0.1.0-alpha-rc2"
 edition = "2021"
 license = "MIT"
 description = "A proc-macro crate for the ifc crate"
