@@ -12,7 +12,6 @@ authors = [
 description = "A rust implementation of the IFC standard"
 homepage = "https://github.com/MetabuildDev/ifc_rs"
 repository = "https://github.com/MetabuildDev/ifc_rs"
-readme = "README.md"
 
 [dependencies]
 anyhow = "1.0.86"
