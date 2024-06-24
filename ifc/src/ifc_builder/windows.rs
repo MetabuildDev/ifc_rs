@@ -44,7 +44,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             .project
             .material_to_wall
             .iter()
-            .find_map(|(mat, walls)| walls.contains(wall).then_some(mat))
+            .find_map(|(mat, associates)| associates.is_related_to(*wall).then_some(mat))
             .copied()
             .unwrap();
         // NOTE: we may want to pass this as an extra param, but for now we just center the window
@@ -105,8 +105,15 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project
             .material_to_window
             .entry(material)
-            .or_default()
-            .insert(window_id);
+            .or_insert_with(|| {
+                RelAssociatesMaterial::new(
+                    format!("Material{material:?}ToWindows"),
+                    material,
+                    &mut self.project.ifc,
+                )
+                .owner_history(self.owner_history, &mut self.project.ifc)
+            })
+            .relate_push(window_id, &mut self.project.ifc);
 
         window_id
     }

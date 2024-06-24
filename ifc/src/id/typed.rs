@@ -1,4 +1,7 @@
-use std::{fmt::Display, marker::PhantomData};
+use std::{
+    fmt::{Debug, Display},
+    marker::PhantomData,
+};
 
 use winnow::Parser;
 
@@ -9,10 +12,16 @@ use crate::{
 
 use super::{Id, IdOr};
 
-#[derive(Debug, PartialOrd, Ord)]
+#[derive(PartialOrd, Ord)]
 pub struct TypedId<T: IfcType> {
     id: Id,
     t: PhantomData<T>,
+}
+
+impl<T: IfcType> Debug for TypedId<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{id}", id = self.id.0)
+    }
 }
 
 impl<T: IfcType> Copy for TypedId<T> {}

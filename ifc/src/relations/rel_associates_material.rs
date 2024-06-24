@@ -46,6 +46,10 @@ impl RelAssociatesMaterial {
             relating_material: material_layer_set.into().or_insert(ifc).id(),
         }
     }
+
+    pub fn is_related_to(&self, id: impl Into<Id>) -> bool {
+        self.rel_associates.related_objects.0.contains(&id.into())
+    }
 }
 
 impl<T: MaterialRelatable> RelAssociatesBuilder<T> for RelAssociatesMaterial {

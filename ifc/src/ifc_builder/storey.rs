@@ -110,44 +110,6 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
             self.project.ifc.data.insert_new(wall_wall_type_relation);
         }
 
-        // relate material set usage to wall
-        for (index, (material, walls)) in self.project.material_to_wall.iter().enumerate() {
-            let mut material_wall_association = RelAssociatesMaterial::new(
-                format!("MaterialToWall{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for wall in walls {
-                material_wall_association =
-                    material_wall_association.relate_obj(*wall, &mut self.project.ifc);
-            }
-
-            self.project.ifc.data.insert_new(material_wall_association);
-        }
-
-        // relate material set to wall type
-        for (index, (material, wall_types)) in self.project.material_to_wall_type.iter().enumerate()
-        {
-            let mut wall_type_material_association = RelAssociatesMaterial::new(
-                format!("MaterialToWallType{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for wall_type in wall_types {
-                wall_type_material_association =
-                    wall_type_material_association.relate_obj(*wall_type, &mut self.project.ifc);
-            }
-
-            self.project
-                .ifc
-                .data
-                .insert_new(wall_type_material_association);
-        }
-
         // relate storey to walls
         for wall in self.walls.iter() {
             spatial_relation = spatial_relation.relate_structure(*wall, &mut self.project.ifc);
@@ -172,44 +134,6 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
             self.project.ifc.data.insert_new(slab_slab_type_relation);
         }
 
-        // relate material set usage to slab
-        for (index, (material, slabs)) in self.project.material_to_slab.iter().enumerate() {
-            let mut material_slab_association = RelAssociatesMaterial::new(
-                format!("MaterialToSlab{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for slab in slabs {
-                material_slab_association =
-                    material_slab_association.relate_obj(*slab, &mut self.project.ifc);
-            }
-
-            self.project.ifc.data.insert_new(material_slab_association);
-        }
-
-        // relate material set to slab type
-        for (index, (material, slab_types)) in self.project.material_to_slab_type.iter().enumerate()
-        {
-            let mut slab_type_material_association = RelAssociatesMaterial::new(
-                format!("MaterialToSlabType{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for slab_type in slab_types {
-                slab_type_material_association =
-                    slab_type_material_association.relate_obj(*slab_type, &mut self.project.ifc);
-            }
-
-            self.project
-                .ifc
-                .data
-                .insert_new(slab_type_material_association);
-        }
-
         // relate storey to slabs
         for slab in self.slabs.iter() {
             spatial_relation = spatial_relation.relate_structure(*slab, &mut self.project.ifc);
@@ -232,44 +156,6 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
             }
 
             self.project.ifc.data.insert_new(roof_roof_type_relation);
-        }
-
-        // relate material set usage to roof
-        for (index, (material, roofs)) in self.project.material_to_roof.iter().enumerate() {
-            let mut material_roof_association = RelAssociatesMaterial::new(
-                format!("MaterialToRoof{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for roof in roofs {
-                material_roof_association =
-                    material_roof_association.relate_obj(*roof, &mut self.project.ifc);
-            }
-
-            self.project.ifc.data.insert_new(material_roof_association);
-        }
-
-        // relate material set to roof type
-        for (index, (material, roof_types)) in self.project.material_to_roof_type.iter().enumerate()
-        {
-            let mut roof_type_material_association = RelAssociatesMaterial::new(
-                format!("MaterialToRoofType{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for roof_type in roof_types {
-                roof_type_material_association =
-                    roof_type_material_association.relate_obj(*roof_type, &mut self.project.ifc);
-            }
-
-            self.project
-                .ifc
-                .data
-                .insert_new(roof_type_material_association);
         }
 
         // relate storey to roofs
@@ -315,26 +201,6 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
                 .ifc
                 .data
                 .insert_new(window_window_type_relation);
-        }
-
-        // relate material set to window
-        for (index, (material, windows)) in self.project.material_to_window.iter().enumerate() {
-            let mut material_window_association = RelAssociatesMaterial::new(
-                format!("MaterialToWindow{index}"),
-                *material,
-                &mut self.project.ifc,
-            )
-            .owner_history(self.owner_history, &mut self.project.ifc);
-
-            for window in windows {
-                material_window_association =
-                    material_window_association.relate_obj(*window, &mut self.project.ifc);
-            }
-
-            self.project
-                .ifc
-                .data
-                .insert_new(material_window_association);
         }
 
         // relate opening elements to windows

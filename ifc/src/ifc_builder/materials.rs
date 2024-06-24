@@ -23,12 +23,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             material_layer_set = material_layer_set.add_layer(layer, &mut self.project.ifc);
         }
 
-        let id = self.project.ifc.data.insert_new(material_layer_set);
-        self.project.material_to_wall_type.entry(id).or_default();
-        self.project.material_to_slab_type.entry(id).or_default();
-        self.project.material_to_roof_type.entry(id).or_default();
-
-        id
+        self.project.ifc.data.insert_new(material_layer_set)
     }
 
     pub fn material_layer_set_usage(
@@ -46,12 +41,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             &mut self.project.ifc,
         );
 
-        let id = self.project.ifc.data.insert_new(material_layer_set_usage);
-        self.project.material_to_wall.entry(id).or_default();
-        self.project.material_to_slab.entry(id).or_default();
-        self.project.material_to_roof.entry(id).or_default();
-
-        id
+        self.project.ifc.data.insert_new(material_layer_set_usage)
     }
 
     pub(super) fn calculate_material_layer_set_thickness(
@@ -98,10 +88,7 @@ impl<'a> IfcStoreyBuilder<'a> {
                 material_constituent_set.add_constituent(constituent, &mut self.project.ifc);
         }
 
-        let id = self.project.ifc.data.insert_new(material_constituent_set);
-        self.project.material_to_window.entry(id).or_default();
-
-        id
+        self.project.ifc.data.insert_new(material_constituent_set)
     }
 
     pub fn material(&mut self, name: &str) -> TypedId<Material> {

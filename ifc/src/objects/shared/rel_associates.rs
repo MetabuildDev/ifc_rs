@@ -41,11 +41,15 @@ impl RelAssociates {
 pub trait RelAssociatesBuilder<T: IfcType>: Sized {
     fn rel_associates_mut(&mut self) -> &mut RelAssociates;
 
-    fn relate_obj(mut self, object: impl Into<IdOr<T>>, ifc: &mut IFC) -> Self {
+    fn relate_push(&mut self, object: impl Into<IdOr<T>>, ifc: &mut IFC) {
         self.rel_associates_mut()
             .related_objects
             .0
             .push(object.into().or_insert(ifc).id());
+    }
+
+    fn relate_obj(mut self, object: impl Into<IdOr<T>>, ifc: &mut IFC) -> Self {
+        self.relate_push(object, ifc);
         self
     }
 }

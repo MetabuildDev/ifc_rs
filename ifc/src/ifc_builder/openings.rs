@@ -24,7 +24,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             .project
             .material_to_wall
             .iter()
-            .find_map(|(mat, walls)| walls.contains(&wall).then_some(mat))
+            .find_map(|(mat, associates)| associates.is_related_to(wall).then_some(mat))
             .copied()
             .unwrap();
         let opening_thickness =

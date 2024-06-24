@@ -71,8 +71,15 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project
             .material_to_roof_type
             .entry(material)
-            .or_default()
-            .insert(roof_type_id);
+            .or_insert_with(|| {
+                RelAssociatesMaterial::new(
+                    format!("Material{material:?}ToRoofType"),
+                    material,
+                    &mut self.project.ifc,
+                )
+                .owner_history(self.owner_history, &mut self.project.ifc)
+            })
+            .relate_push(roof_type_id, &mut self.project.ifc);
 
         roof_type_id
     }
@@ -93,8 +100,15 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project
             .material_to_roof
             .entry(material)
-            .or_default()
-            .insert(roof_id);
+            .or_insert_with(|| {
+                RelAssociatesMaterial::new(
+                    format!("Material{material:?}ToRoof"),
+                    material,
+                    &mut self.project.ifc,
+                )
+                .owner_history(self.owner_history, &mut self.project.ifc)
+            })
+            .relate_push(roof_id, &mut self.project.ifc);
     }
 }
 

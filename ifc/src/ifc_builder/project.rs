@@ -14,20 +14,14 @@ pub struct IfcProjectBuilder {
     pub(crate) sites: HashSet<TypedId<Site>>,
 
     // Materials
-    pub(crate) material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Wall>>>,
+    pub(crate) material_to_wall: HashMap<TypedId<MaterialLayerSetUsage>, RelAssociatesMaterial>,
+    pub(crate) material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, RelAssociatesMaterial>,
+    pub(crate) material_to_roof: HashMap<TypedId<MaterialLayerSetUsage>, RelAssociatesMaterial>,
+    pub(crate) material_to_window: HashMap<TypedId<MaterialConstituentSet>, RelAssociatesMaterial>,
     // TODO: Required??
-    pub(crate) material_to_wall_type:
-        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<WallType>>>,
-    pub(crate) material_to_slab: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Slab>>>,
-    // TODO: Required??
-    pub(crate) material_to_slab_type:
-        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<SlabType>>>,
-    pub(crate) material_to_roof: HashMap<TypedId<MaterialLayerSetUsage>, HashSet<TypedId<Roof>>>,
-    // TODO: Required??
-    pub(crate) material_to_roof_type:
-        HashMap<TypedId<MaterialLayerSet>, HashSet<TypedId<RoofType>>>,
-    pub(crate) material_to_window:
-        HashMap<TypedId<MaterialConstituentSet>, HashSet<TypedId<Window>>>,
+    pub(crate) material_to_wall_type: HashMap<TypedId<MaterialLayerSet>, RelAssociatesMaterial>,
+    pub(crate) material_to_slab_type: HashMap<TypedId<MaterialLayerSet>, RelAssociatesMaterial>,
+    pub(crate) material_to_roof_type: HashMap<TypedId<MaterialLayerSet>, RelAssociatesMaterial>,
 }
 
 impl IfcProjectBuilder {
@@ -103,8 +97,9 @@ impl IfcProjectBuilder {
             sub_context: context_id,
             project: project_id,
             sites: HashSet::new(),
-            material_to_wall: HashMap::new(),
+
             material_to_wall_type: HashMap::new(),
+            material_to_wall: HashMap::new(),
             material_to_slab: HashMap::new(),
             material_to_slab_type: HashMap::new(),
             material_to_roof: HashMap::new(),
@@ -127,6 +122,18 @@ impl IfcProjectBuilder {
     }
 
     pub fn build(mut self) -> String {
+        self.material_to_wall
+            .into_values()
+            .chain(self.material_to_slab.into_values())
+            .chain(self.material_to_roof.into_values())
+            .chain(self.material_to_window.into_values())
+            .chain(self.material_to_wall_type.into_values())
+            .chain(self.material_to_slab_type.into_values())
+            .chain(self.material_to_roof_type.into_values())
+            .for_each(|associate_relations| {
+                self.ifc.data.insert_new(associate_relations);
+            });
+
         // rel aggregates
         let rel_agg = RelAggregates::new(
             "ProjectSitesLink",
