@@ -1,10 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use std::{
-    fmt::Display,
-    ops::{Deref, DerefMut},
-};
+use std::ops::{Deref, DerefMut};
 
 use glam::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
@@ -14,20 +11,6 @@ use crate::{
     parser::ifc_float::{IfcDVec2, IfcDVec3},
     IFC,
 };
-
-pub enum PointType<'a> {
-    D2(&'a Point2D),
-    D3(&'a Point3D),
-}
-
-impl<'a> Display for PointType<'a> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PointType::D2(d2) => write!(f, "{d2}"),
-            PointType::D3(d3) => write!(f, "{d3}"),
-        }
-    }
-}
 
 pub trait CartesianPoint: IfcType {}
 
@@ -41,7 +24,7 @@ pub trait CartesianPoint: IfcType {}
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
-pub struct Point2D(IfcDVec2);
+pub struct Point2D(pub(crate) IfcDVec2);
 
 impl Deref for Point2D {
     type Target = IfcDVec2;
@@ -76,7 +59,7 @@ impl CartesianPoint for Point2D {}
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesianpoint.htm
 #[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
-pub struct Point3D(IfcDVec3);
+pub struct Point3D(pub(crate) IfcDVec3);
 
 impl Deref for Point3D {
     type Target = IfcDVec3;

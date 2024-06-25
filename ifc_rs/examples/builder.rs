@@ -69,6 +69,11 @@ fn main() {
                 },
             );
 
+            storey_builder.transform(
+                wall,
+                &TransformParameter::default().translation(DVec3::new(1.0, 0.0, 0.0)),
+            );
+
             let slab_type = storey_builder.slab_type(
                 material_layer_set,
                 "ExampleSlabType",
@@ -129,5 +134,5 @@ fn main() {
         mk_storey(2.0, wall_height);
     }
 
-    std::fs::write("examples/builder_example.ifc", builder.build()).unwrap();
+    std::fs::write("ifc_rs/examples/builder_example.ifc", builder.build()).unwrap();
 }

@@ -1,6 +1,7 @@
 mod deserialize;
 mod serialize;
 
+use glam::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
@@ -11,6 +12,17 @@ use crate::{
 };
 
 use super::{indexed_poly_curve::Curve, rectangle_profile_def::ProfileDef};
+
+#[derive(Debug)]
+pub enum Points {
+    D2(Vec<DVec2>),
+    D3(Vec<DVec3>),
+}
+
+pub struct MappedArbitraryClosedProfileDef {
+    pub profile_type: ProfileType,
+    pub points: Points,
+}
 
 /// The closed profile IfcArbitraryClosedProfileDef defines an arbitrary
 /// two-dimensional profile for the use within the swept surface geometry,
@@ -49,6 +61,32 @@ impl ArbitraryClosedProfileDef {
     pub fn profile_name(mut self, name: impl Into<Label>) -> Self {
         self.profile_name = name.into().into();
         self
+    }
+
+    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedArbitraryClosedProfileDef {
+        MappedArbitraryClosedProfileDef {
+            profile_type: self.profile_type,
+
+            points: {
+                let untyped = ifc.data.get_untyped(self.outer_curve);
+
+                if let Some(indexed_poly_curve) = untyped.downcast_ref::<IndexedPolyCurve>() {
+                    let untyped_points = ifc.data.get_untyped(indexed_poly_curve.points);
+
+                    if let Some(list_2d) = untyped_points.downcast_ref::<PointList2D>() {
+                        Points::D2(list_2d.coord_list.0.iter().map(|point| point.0).collect())
+                    } else if let Some(list_3d) = untyped_points.downcast_ref::<PointList3D>() {
+                        Points::D3(list_3d.coord_list.0.iter().map(|point| point.0).collect())
+                    } else {
+                        unreachable!("checked by type checker");
+                    }
+                } else if let Some(poly_line) = untyped.downcast_ref::<PolyLine>() {
+                    poly_line.points(ifc)
+                } else {
+                    unreachable!("checked by type checker");
+                }
+            },
+        }
     }
 }
 

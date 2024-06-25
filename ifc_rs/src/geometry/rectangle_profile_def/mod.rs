@@ -10,7 +10,15 @@ use crate::parser::label::Label;
 use crate::prelude::*;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
+use super::axis::AxisMappings;
 use super::profile_type::ProfileType;
+
+pub struct MappedRectangleProfileDef<'a> {
+    pub axis: Option<AxisMappings<'a>>,
+    pub x_dim: f64,
+    pub y_dim: f64,
+}
+
 /// IfcRectangleProfileDef defines a rectangle as the profile definition used by the swept surface
 /// geometry or the swept area solid. It is given by its X extent and its Y extent, and placed within
 /// the 2D position coordinate system, established by the Position attribute. It is placed centric
@@ -60,6 +68,26 @@ impl RectangleProfileDef {
     ) -> Self {
         self.position = position.into().or_insert(ifc).id().into();
         self
+    }
+
+    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedRectangleProfileDef<'a> {
+        let axis = self.position.custom().map(|id| {
+            let untyped = ifc.data.get_untyped(*id);
+
+            if let Some(d2) = untyped.downcast_ref::<Axis2D>() {
+                AxisMappings::map_2d(d2, ifc)
+            } else if let Some(d3) = untyped.downcast_ref::<Axis3D>() {
+                AxisMappings::map_3d(d3, ifc)
+            } else {
+                unreachable!("already checked by type checker");
+            }
+        });
+
+        MappedRectangleProfileDef {
+            axis,
+            x_dim: self.x_dim.0,
+            y_dim: self.y_dim.0,
+        }
     }
 }
 

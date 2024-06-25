@@ -67,6 +67,20 @@ impl IfcExtractor {
             .unwrap()
     }
 
+    pub fn related_voids<'a, S>(&'a self, id: TypedId<S>) -> Vec<&'a OpeningElement>
+    where
+        S: Structure,
+    {
+        self.ifc
+            .data
+            .find_all_of_type::<RelVoidsElement>()
+            .filter_map(|(_id, rel_voids)| {
+                (rel_voids.relating_building_element == id.id())
+                    .then(|| self.ifc.data.get(rel_voids.related_opening_element))
+            })
+            .collect()
+    }
+
     pub fn related_materials<S>(&self, id: TypedId<S>) -> Vec<&MaterialLayer>
     where
         S: Structure,
@@ -136,111 +150,5 @@ impl Deref for IfcExtractor {
 
     fn deref(&self) -> &Self::Target {
         &self.ifc
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use crate::prelude::*;
-    use anyhow::Result;
-
-    #[test]
-    fn archicad_file_extractor() -> Result<()> {
-        let ifc = IfcExtractor::from(IFC::from_file("resources/AC20-FZK-Haus.ifc")?);
-
-        let projects = ifc.projects();
-
-        println!("project count: {}", projects.len());
-
-        let sites = projects
-            .iter()
-            .flat_map(|(id, _)| ifc.relations_of::<Project, Site>(*id))
-            .collect::<Vec<_>>();
-
-        println!("site count: {}", sites.len());
-
-        let buildings = sites
-            .iter()
-            .flat_map(|(id, _)| ifc.relations_of::<Site, Building>(*id))
-            .collect::<Vec<_>>();
-
-        println!("building count: {}", buildings.len());
-
-        let storeys = buildings
-            .iter()
-            .flat_map(|(id, _)| ifc.relations_of::<Building, Storey>(*id))
-            .collect::<Vec<_>>();
-
-        println!("storey count: {}", storeys.len());
-
-        for (storey_index, (storey_id, _storey)) in storeys.into_iter().enumerate() {
-            let spaces = ifc.relations_of::<Storey, Space>(storey_id);
-            let storey_structures = ifc.contained_structures(storey_id);
-
-            println!(
-                "\tstorey {} has {} space(s) and {} related structures",
-                storey_index + 1,
-                spaces.len(),
-                storey_structures.len()
-            );
-
-            storey_structures.iter().for_each(|id| {
-                let structure_ifc_type = ifc.data.get_untyped(*id);
-                println!("\t\t\tstructure name: {}", structure_ifc_type.type_name());
-
-                if let Some(structure) = structure_ifc_type.to_structure() {
-                    if let Some(structure_type) = structure.structure_type() {
-                        match structure_type {
-                            StructureType::Wall(wall) => {
-                                let wall_id = TypedId::<Wall>::new(*id);
-
-                                let wall_type = ifc
-                                    .related_type(wall_id)
-                                    .downcast_ref::<WallType>()
-                                    .unwrap();
-                                let materials = ifc.related_materials(wall_id);
-                                let shapes = wall.shapes(&ifc);
-
-                                println!(
-                                    "\t\t\t\twall with wall type {:?}, materials {} and shapes {}",
-                                    wall_type.predefined_type,
-                                    materials.len(),
-                                    shapes.len()
-                                );
-
-                                for (shape_index, shape) in shapes.iter().enumerate() {
-                                    for (item_index, item) in shape.items(&ifc).enumerate() {
-                                        println!(
-                                            "\t\t\t\t\titem {} of shape {} is {}",
-                                            item_index, shape_index, item
-                                        );
-                                    }
-                                }
-                            }
-                            StructureType::Slab(_slab) => (),
-                            StructureType::Roof(_roof) => (),
-                            StructureType::Window(_window) => (),
-                        }
-                    }
-                }
-
-                if let Some(dummy) = structure_ifc_type.downcast_ref::<Dummy>() {
-                    println!("\t\t\t\t{}", dummy.s);
-                }
-            });
-
-            for (space_index, (space_id, _space)) in spaces.into_iter().enumerate() {
-                let space_structures = ifc.contained_structures(space_id);
-
-                println!(
-                    "\t\tspace {} of storey {} has {} related structures",
-                    space_index + 1,
-                    storey_index + 1,
-                    space_structures.len()
-                );
-            }
-        }
-
-        Ok(())
     }
 }

@@ -14,6 +14,20 @@ pub trait TransformableType: IfcType {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>>;
 }
 
+pub enum MappedTransform<'a> {
+    Uniform(&'a CartesianTransformationOperator3D),
+    NonUniform(&'a CartesianTransformationOperator3DnonUniform),
+}
+
+impl Display for MappedTransform<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MappedTransform::Uniform(uniform) => write!(f, "{uniform}"),
+            MappedTransform::NonUniform(non_uniform) => write!(f, "{non_uniform}"),
+        }
+    }
+}
+
 /// The IfcMappedItem is the inserted instance of a source definition (to be compared with a block
 /// / shared cell / macro definition). The instance is inserted by applying a Cartesian
 /// transformation operator as the MappingTarget.
@@ -49,19 +63,59 @@ pub struct MappedItem {
     // See issue #46
     /// A representation item that is the target onto which the mapping source is mapped. It is
     /// constraint to be a Cartesian transformation operator.
-    pub target: IdOr<CartesianTransformationOperator3DnonUniform>,
+    #[ifc_types(
+        CartesianTransformationOperator3DnonUniform,
+        CartesianTransformationOperator3D
+    )]
+    pub target: Id,
 }
 
 impl MappedItem {
-    pub fn new(
+    pub fn new<T: Transform3D>(
         source: impl Into<IdOr<RepresentationMap>>,
-        target: impl Into<IdOr<CartesianTransformationOperator3DnonUniform>>,
+        target: impl Into<IdOr<T>>,
         ifc: &mut IFC,
     ) -> Self {
         Self {
             source: source.into().or_insert(ifc).into(),
             target: target.into().or_insert(ifc).into(),
         }
+    }
+
+    pub fn mappings<'a>(
+        &'a self,
+        ifc: &'a IFC,
+    ) -> ((&'a Axis3D, &'a ShapeRepresentation), MappedTransform<'a>) {
+        let repr_map = match &self.source {
+            IdOr::Id(id) => ifc.data.get(*id),
+            IdOr::Custom(repr_map) => repr_map,
+        };
+
+        let origin = match &repr_map.origin {
+            IdOr::Id(id) => ifc.data.get(*id),
+            IdOr::Custom(origin) => origin,
+        };
+
+        let shape = match &repr_map.representation {
+            IdOr::Id(id) => ifc.data.get(*id),
+            IdOr::Custom(repr) => repr,
+        };
+
+        let transform_untyped = ifc.data.get_untyped(self.target);
+
+        let mapped_transform = if let Some(uniform) =
+            transform_untyped.downcast_ref::<CartesianTransformationOperator3D>()
+        {
+            MappedTransform::Uniform(uniform)
+        } else if let Some(non_uniform) =
+            transform_untyped.downcast_ref::<CartesianTransformationOperator3DnonUniform>()
+        {
+            MappedTransform::NonUniform(non_uniform)
+        } else {
+            unreachable!("type check already resolved these 2 valid types");
+        };
+
+        ((origin, shape), mapped_transform)
     }
 }
 
@@ -84,7 +138,7 @@ impl IFCParse for MappedItem {
                 _: p_space_or_comment_surrounded("IFCMAPPEDITEM("),
                 source: IdOr::parse(),
                 _: Comma::parse(),
-                target: IdOr::parse(),
+                target: Id::parse(),
                 _: p_space_or_comment_surrounded(");"),
             }
         }

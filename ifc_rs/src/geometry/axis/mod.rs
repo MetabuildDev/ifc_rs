@@ -10,7 +10,27 @@ use crate::{
     prelude::*,
 };
 
+pub enum AxisMappings<'a> {
+    D2(MappedAxis2D<'a>),
+    D3(MappedAxis3D<'a>),
+}
+
+impl<'a> AxisMappings<'a> {
+    pub fn map_2d(axis: &'a Axis2D, ifc: &'a IFC) -> Self {
+        Self::D2(axis.mappings(ifc))
+    }
+
+    pub fn map_3d(axis: &'a Axis3D, ifc: &'a IFC) -> Self {
+        Self::D3(axis.mappings(ifc))
+    }
+}
+
 pub trait AxisPlacement: IfcType {}
+
+pub struct MappedAxis2D<'a> {
+    pub location: &'a Point2D,
+    pub local_x: Option<&'a Direction2D>,
+}
 
 /// The IfcAxis2Placement2D provides location and orientation to place items in a two-dimensional
 /// space. The attribute RefDirection defines the x axis, the y axis is derived.
@@ -38,10 +58,24 @@ impl Axis2D {
             local_x: OptionalParameter::omitted(),
         }
     }
+
+    pub fn mappings<'a>(&self, ifc: &'a IFC) -> MappedAxis2D<'a> {
+        MappedAxis2D {
+            location: ifc.data.get(self.location),
+            local_x: self.local_x.custom().map(|id| ifc.data.get(*id)),
+        }
+    }
 }
 
 impl IfcType for Axis2D {}
 impl AxisPlacement for Axis2D {}
+
+#[derive(Debug)]
+pub struct MappedAxis3D<'a> {
+    pub location: &'a Point3D,
+    pub local_z: Option<&'a Direction3D>,
+    pub local_x: Option<&'a Direction3D>,
+}
 
 /// The IfcAxis2Placement3D provides location and orientations to place items in a
 /// three-dimensional space. The attribute Axis defines the Z direction, RefDirection the X
@@ -72,6 +106,14 @@ impl Axis3D {
             location: id,
             local_z: OptionalParameter::omitted(),
             local_x: OptionalParameter::omitted(),
+        }
+    }
+
+    pub fn mappings<'a>(&self, ifc: &'a IFC) -> MappedAxis3D<'a> {
+        MappedAxis3D {
+            location: ifc.data.get(self.location),
+            local_z: self.local_z.custom().map(|id| ifc.data.get(*id)),
+            local_x: self.local_x.custom().map(|id| ifc.data.get(*id)),
         }
     }
 }

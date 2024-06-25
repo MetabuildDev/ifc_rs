@@ -13,6 +13,18 @@ use std::fmt::Display;
 
 use super::shape_representation::ShapeItem;
 
+pub enum MappedProfileDef<'a> {
+    Rectangle(MappedRectangleProfileDef<'a>),
+    Arbitrary(MappedArbitraryClosedProfileDef),
+}
+
+pub struct MappedExtrudedAreaSolid<'a> {
+    pub profile_def: MappedProfileDef<'a>,
+    pub position: Option<MappedAxis3D<'a>>,
+    pub extruded_direction: &'a Direction3D,
+    pub depth: f64,
+}
+
 /// The IfcExtrudedAreaSolid is defined by sweeping a cross section
 /// provided by a profile definition. The direction of the extrusion
 /// is given by the ExtrudedDirection attribute and the length of the
@@ -25,7 +37,7 @@ use super::shape_representation::ShapeItem;
 pub struct ExtrudedAreaSolid {
     /// The surface defining the area to be swept. It is given as a
     /// profile definition within the xy plane of the position coordinate system.
-    #[ifc_types(RectangleProfileDef, ArbitraryClosedProfileDef<C: Curve>)]
+    #[ifc_types(RectangleProfileDef, ArbitraryClosedProfileDef)]
     pub swept_area: Id,
 
     /// Position coordinate system for the resulting swept solid of the sweeping
@@ -60,6 +72,33 @@ impl ExtrudedAreaSolid {
     pub fn position(mut self, position: impl Into<IdOr<Axis3D>>, ifc: &mut IFC) -> Self {
         self.position = position.into().or_insert(ifc).into();
         self
+    }
+
+    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedExtrudedAreaSolid<'a> {
+        let swept_area = ifc.data.get_untyped(self.swept_area);
+
+        let profile_def = if let Some(rectangle) = swept_area.downcast_ref::<RectangleProfileDef>()
+        {
+            MappedProfileDef::Rectangle(rectangle.mappings(ifc))
+        } else if let Some(arbitrary) = swept_area.downcast_ref::<ArbitraryClosedProfileDef>() {
+            MappedProfileDef::Arbitrary(arbitrary.mappings(ifc))
+        } else {
+            unreachable!("already checked by type checker");
+        };
+
+        let position = self
+            .position
+            .custom()
+            .map(|id| ifc.data.get(*id).mappings(ifc));
+        let direction = ifc.data.get(self.extruded_direction);
+        let depth = self.depth.0;
+
+        MappedExtrudedAreaSolid {
+            profile_def,
+            position,
+            extruded_direction: direction,
+            depth,
+        }
     }
 }
 

@@ -7,7 +7,7 @@ use winnow::Parser;
 use crate::parser::*;
 
 /// This enumeration defines the basic types for opening elements.
-#[derive(EnumString, VariantNames, Display, Clone, Copy)]
+#[derive(EnumString, VariantNames, Display, Clone, Copy, Debug)]
 pub enum OpeningElementTypeEnum {
     /// An opening as subtraction feature that cuts through the element it
     /// voids. It thereby creates a hole. An opening in addiion have a

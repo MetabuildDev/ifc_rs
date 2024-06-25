@@ -21,4 +21,4 @@ result-*
 
 .direnv
 
-examples/*.ifc
+*.ifc

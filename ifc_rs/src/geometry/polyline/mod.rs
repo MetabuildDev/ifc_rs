@@ -35,23 +35,27 @@ impl PolyLine {
         }
     }
 
-    pub fn points<'a>(&'a self, ifc: &'a IFC) -> IfcList<PointType<'a>> {
-        IfcList(
-            self.points
-                .iter()
-                .map(|point_id| {
-                    let point = ifc.data.get_untyped(*point_id);
+    pub fn points<'a>(&'a self, ifc: &'a IFC) -> Points {
+        // use the first point to determine whether it is 2D or 3D
+        let point = ifc.data.get_untyped(self.points.0[0]);
 
-                    if let Some(point_2d) = point.downcast_ref::<Point2D>() {
-                        PointType::D2(point_2d)
-                    } else if let Some(point_3d) = point.downcast_ref::<Point3D>() {
-                        PointType::D3(point_3d)
-                    } else {
-                        unreachable!()
-                    }
-                })
-                .collect(),
-        )
+        if point.downcast_ref::<Point2D>().is_some() {
+            Points::D2(
+                self.points
+                    .iter()
+                    .map(|id| ifc.data.get(TypedId::<Point2D>::new(*id)).0 .0)
+                    .collect(),
+            )
+        } else if point.downcast_ref::<Point3D>().is_some() {
+            Points::D3(
+                self.points
+                    .iter()
+                    .map(|id| ifc.data.get(TypedId::<Point3D>::new(*id)).0 .0)
+                    .collect(),
+            )
+        } else {
+            unreachable!("checked by type checker")
+        }
     }
 }
 
