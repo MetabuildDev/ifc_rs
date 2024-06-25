@@ -94,8 +94,7 @@ pub mod schema {
     )]
     pub enum FileSchema {
         IFC2X3,
-        // oof, fix issue where case sensivity matters
-        IFC4x2,
+        IFC4X2,
         IFC4,
     }
 }
