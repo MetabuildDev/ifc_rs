@@ -35,6 +35,17 @@
             echo SUCCESS
           '';
         };
+        exec-doc-coverage = pkgs.writeShellApplication {
+          name = "check-docs";
+          runtimeInputs = [
+            self'.packages.rust-nightly
+            pkgs.clang
+          ];
+          text = ''
+            RUSTDOCFLAGS='-Z unstable-options --show-coverage' cargo doc
+            echo SUCCESS
+          '';
+        };
       };
     };
 }
