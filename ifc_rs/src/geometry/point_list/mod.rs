@@ -39,6 +39,7 @@ impl PointList2D {
 }
 
 impl IfcType for PointList2D {}
+impl PointList for PointList2D {}
 
 /// The IfcCartesianPointList3D defines an ordered collection of two-dimentional
 /// Cartesian points. Each Cartesian point is provided as an two-dimensional
@@ -66,7 +67,4 @@ impl PointList3D {
 }
 
 impl IfcType for PointList3D {}
-
-pub trait PointList: IfcType {}
-impl PointList for PointList2D {}
 impl PointList for PointList3D {}

@@ -50,7 +50,4 @@ impl IndexedPolyCurve {
 }
 
 impl IfcType for IndexedPolyCurve {}
-
-// TODO: move this trait to a more general module for curves
-pub trait Curve: IfcType {}
 impl Curve for IndexedPolyCurve {}

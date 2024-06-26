@@ -9,7 +9,6 @@ use crate::{
     id::{IdOr, TypedId},
     parser::{label::Label, optional::OptionalParameter},
     prelude::*,
-    relations::rel_associates_material::MaterialRelatable,
 };
 
 use super::StructureType;

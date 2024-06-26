@@ -2,8 +2,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{id::Id, parser::list::IfcList, prelude::*};
 
-use super::indexed_poly_curve::Curve;
-
 mod deserialize;
 mod serialize;
 

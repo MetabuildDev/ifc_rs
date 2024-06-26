@@ -8,7 +8,6 @@ use crate::{
         IFCParse, IFCParser,
     },
     prelude::*,
-    relations::rel_associates_material::RelatableMaterial,
 };
 
 /// IfcMaterial is a homogeneous or inhomogeneous substance that can be

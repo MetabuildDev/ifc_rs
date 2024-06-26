@@ -10,8 +10,6 @@ use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
 use crate::prelude::*;
 
-use super::axis::AxisPlacement;
-
 /// The IfcGeometricRepresentationContext defines the context that applies to several shape
 /// representations of products within a project. It defines the type of the context in which the
 /// shape representation is defined, and the numeric precision applicable to the geometric representation

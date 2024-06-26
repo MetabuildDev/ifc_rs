@@ -11,8 +11,6 @@ use crate::{
     prelude::*,
 };
 
-pub trait ShapeItem: IfcType {}
-
 pub enum ShapeItemEnum<'a> {
     MappedItem(&'a MappedItem),
     ExtrudedAreaSolid(&'a ExtrudedAreaSolid),

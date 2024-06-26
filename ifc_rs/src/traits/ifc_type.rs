@@ -3,7 +3,7 @@ use std::{any::Any, fmt::Display};
 use anyhow::Result;
 use downcast_rs::{self, impl_downcast, Downcast};
 
-use crate::{objects::Structure, IFC};
+use crate::prelude::*;
 
 /// Trait which is mostly automatically implemented via the `ifc_rs_verify_derive` crate. It is used
 /// to verify that objects referencing other objects by ID are of a type that fits the purpose. For

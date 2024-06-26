@@ -3,7 +3,6 @@ mod serialize;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use super::person_and_org::PersonOrOrg;
 use crate::id::{Id, IdOr};
 use crate::parser::label::Label;
 use crate::prelude::*;

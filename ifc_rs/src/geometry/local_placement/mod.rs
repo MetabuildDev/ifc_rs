@@ -11,8 +11,6 @@ use crate::{
     prelude::*,
 };
 
-use super::axis::AxisPlacement;
-
 /// An IfcLocalPlacement defines the relative placement of a product in
 /// relation to the placement of another product or the absolute placement
 /// of a product within the geometric representation context of the project.

@@ -10,8 +10,6 @@ use crate::{
     prelude::*,
 };
 
-use super::{indexed_poly_curve::Curve, rectangle_profile_def::ProfileDef};
-
 #[derive(Debug)]
 pub enum Points {
     D2(Vec<DVec2>),

@@ -8,8 +8,6 @@ use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
 use crate::prelude::*;
 
-pub trait Address: IfcType {}
-
 ///  Address to which telephone, electronic mail and other forms of
 ///  telecommunications should be addressed.
 ///

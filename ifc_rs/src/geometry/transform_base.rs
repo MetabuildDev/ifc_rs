@@ -8,8 +8,6 @@ use crate::{
     prelude::*,
 };
 
-pub trait Transform3D: IfcType {}
-
 pub struct TransformBaseMapping<'a> {
     pub translation: Option<&'a Point3D>,
 

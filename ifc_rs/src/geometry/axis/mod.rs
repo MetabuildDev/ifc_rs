@@ -20,8 +20,6 @@ impl<'a> AxisMappings<'a> {
     }
 }
 
-pub trait AxisPlacement: IfcType {}
-
 pub struct MappedAxis2D<'a> {
     pub location: &'a Point2D,
     pub local_x: Option<&'a Direction2D>,

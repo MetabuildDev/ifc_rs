@@ -18,7 +18,6 @@ use crate::{
     id::TypedId,
     parser::{label::Label, optional::OptionalParameter},
     prelude::*,
-    relations::rel_associates_material::MaterialRelatable,
 };
 
 /// A roof is the covering of the top part of a building, it protects the

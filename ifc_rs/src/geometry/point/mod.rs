@@ -11,8 +11,6 @@ use crate::{
     prelude::*,
 };
 
-pub trait CartesianPoint: IfcType {}
-
 /// An IfcCartesianPoint defines a point by coordinates in an orthogonal, right-handed Cartesian
 /// coordinate system. For the purpose of this specification only two and three dimensional
 /// Cartesian points are used.

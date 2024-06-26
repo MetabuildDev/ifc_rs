@@ -1,4 +1,3 @@
-use crate::geometry::rectangle_profile_def::ProfileDef;
 use crate::id::{IdOr, TypedId};
 use crate::prelude::*;
 use crate::{id::Id, parser::*};
@@ -8,8 +7,6 @@ use ifc_rs_verify_derive::IfcVerify;
 use optional::OptionalParameter;
 
 use std::fmt::Display;
-
-use super::shape_representation::ShapeItem;
 
 pub enum MappedProfileDef<'a> {
     Rectangle(MappedRectangleProfileDef<'a>),

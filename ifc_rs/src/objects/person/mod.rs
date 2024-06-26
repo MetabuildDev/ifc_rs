@@ -138,3 +138,4 @@ impl Person {
 }
 
 impl IfcType for Person {}
+impl PersonOrOrg for Person {}

@@ -3,14 +3,10 @@ use std::fmt::Display;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    id::{IdOr, TypedId},
+    id::IdOr,
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
     prelude::*,
 };
-
-pub trait TransformableType: IfcType {
-    fn shape(&self) -> Option<TypedId<ProductDefinitionShape>>;
-}
 
 pub enum MappedTransform<'a> {
     Uniform(&'a CartesianTransformationOperator3D),

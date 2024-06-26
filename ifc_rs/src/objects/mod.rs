@@ -43,12 +43,6 @@ pub enum StructureType<'a> {
     Window(&'a Window),
 }
 
-pub trait Structure: IfcType {
-    fn structure_type(&self) -> Option<StructureType<'_>> {
-        None
-    }
-}
-
 pub struct Objects;
 
 impl Objects {

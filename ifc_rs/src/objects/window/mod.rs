@@ -18,7 +18,6 @@ use crate::{
     id::TypedId,
     parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
     prelude::*,
-    relations::rel_associates_material::MaterialRelatable,
 };
 
 /// The window is a building element that is predominately used to provide

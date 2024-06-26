@@ -8,12 +8,6 @@ use crate::{
     prelude::*,
 };
 
-/// Material set usages & material sets which can be related to.
-pub trait RelatableMaterial: IfcType {}
-
-/// Objects which can be related to materials
-pub trait MaterialRelatable: IfcType {}
-
 /// The aggregation relationship IfcRelAggregates is a special type of
 /// the general composition/decomposition (or whole/part) relationship
 /// IfcRelDecomposes. The aggregation relationship can be applied to

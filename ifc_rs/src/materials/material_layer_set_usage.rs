@@ -9,7 +9,6 @@ use crate::{
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
     prelude::*,
-    relations::rel_associates_material::RelatableMaterial,
 };
 
 /// The IfcMaterialLayerSetUsage determines the usage of IfcMaterialLayerSet

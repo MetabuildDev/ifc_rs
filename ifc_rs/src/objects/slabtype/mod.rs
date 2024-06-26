@@ -3,9 +3,7 @@ use std::ops::Deref;
 use ifc_rs_verify_derive::IfcVerify;
 use type_enum::SlabTypeEnum;
 
-use crate::{
-    parser::label::Label, prelude::*, relations::rel_associates_material::MaterialRelatable,
-};
+use crate::{parser::label::Label, prelude::*};
 
 use super::shared::{
     element_type::ElementType, type_object::TypeObjectBuilder, type_product::TypeProductBuilder,

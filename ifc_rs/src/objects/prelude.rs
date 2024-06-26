@@ -41,4 +41,4 @@ pub use super::windowtype::{
     window_partitioning_type_enum::WindowPartitioningTypeEnum, window_type_enum::WindowTypeEnum,
     WindowType,
 };
-pub use super::{Structure, StructureType};
+pub use super::StructureType;
