@@ -1,6 +1,6 @@
 [package]
 name = "ifc_rs_verify_derive"
-version = "0.1.0-alpha-rc2"
+version = "0.1.0-alpha.1"
 edition = "2021"
 license = "MIT"
 authors = [ "Michael Hübner <michael.hueber@metabuild.de>" ]
