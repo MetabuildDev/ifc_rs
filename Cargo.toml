@@ -11,7 +11,7 @@ anyhow = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 downcast-rs = "1.2"
 glam = "0.25"
-ifc_rs_verify_derive = { version = "0.1.0-alpha.2", path = "./ifc_rs_verify_derive" }
+ifc_rs_verify_derive = { version = "0.1.0-alpha.3", path = "./ifc_rs_verify_derive" }
 itertools = "0.13"
 proc-macro2 = "1.0"
 quote = "1.0"
