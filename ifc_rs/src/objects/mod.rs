@@ -1,3 +1,4 @@
+use door::Door;
 use roof::Roof;
 use slab::Slab;
 use wall::Wall;
@@ -15,6 +16,8 @@ pub(crate) mod address;
 pub(crate) mod application;
 pub(crate) mod building;
 pub(crate) mod change_action;
+pub(crate) mod door;
+pub(crate) mod doortype;
 pub(crate) mod opening_element;
 pub(crate) mod organization;
 pub(crate) mod owner_history;
@@ -41,6 +44,7 @@ pub enum StructureType<'a> {
     Slab(&'a Slab),
     Roof(&'a Roof),
     Window(&'a Window),
+    Door(&'a Door),
 }
 
 pub struct Objects;
@@ -72,6 +76,8 @@ impl Objects {
                 project::Project::parse_any(),
                 space::Space::parse_any(),
                 spacetype::SpaceType::parse_any(),
+                door::Door::parse_any(),
+                doortype::DoorType::parse_any(),
             )),
         ))
     }

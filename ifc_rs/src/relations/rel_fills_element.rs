@@ -20,7 +20,7 @@ pub struct RelFillsElement {
     relating_opening_element: TypedId<OpeningElement>,
     /// Reference to building element that occupies fully or partially the
     /// associated opening.
-    #[ifc_types(Building, OpeningElement, Slab, Wall, Window)]
+    #[ifc_types(Building, OpeningElement, Slab, Wall, Window, Door)]
     pub related_building_element: Id,
 }
 

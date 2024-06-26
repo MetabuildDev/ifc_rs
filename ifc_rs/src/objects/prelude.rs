@@ -4,6 +4,10 @@ pub use super::address::*;
 pub use super::application::Application;
 pub use super::building::Building;
 pub use super::change_action::ChangeAction;
+pub use super::door::Door;
+pub use super::doortype::{
+    door_operation_type_enum::DoorOperationTypeEnum, door_type_enum::DoorTypeEnum, DoorType,
+};
 pub use super::opening_element::{
     opening_element_type_enum::OpeningElementTypeEnum, OpeningElement,
 };

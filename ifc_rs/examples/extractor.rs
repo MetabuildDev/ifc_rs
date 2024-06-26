@@ -147,6 +147,12 @@ fn print_structure(ifc: &IfcExtractor, structure: &dyn Structure, id: Id) {
 
                 print_items(items, ifc, 5);
             }
+            StructureType::Door(door) => {
+                let shapes = door.shapes(ifc);
+                let items = shapes.iter().flat_map(|shape| shape.items(ifc));
+
+                print_items(items, ifc, 5);
+            }
         }
     }
 }

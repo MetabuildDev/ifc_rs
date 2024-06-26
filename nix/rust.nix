@@ -18,6 +18,7 @@
         pkgs.libxkbcommon
         pkgs.openssl
         pkgs.cargo-nextest
+        pkgs.cargo-insta
       ];
     in
     {

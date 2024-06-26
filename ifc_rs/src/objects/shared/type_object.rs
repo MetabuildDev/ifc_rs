@@ -7,7 +7,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::Id,
-    parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{comma::Comma, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser},
     prelude::*,
 };
 
@@ -42,7 +42,7 @@ pub struct TypeObject {
     /// Set list of unique property sets, that are associated with the
     /// object type and are common to all object occurrences referring
     /// to this object type.
-    pub has_property_sets: OptionalParameter<Id>,
+    pub has_property_sets: OptionalParameter<IfcList<Id>>, // TODO: Property set type
 }
 
 impl TypeObject {
