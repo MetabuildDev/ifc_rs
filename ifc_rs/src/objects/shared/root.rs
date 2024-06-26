@@ -8,8 +8,6 @@ use uuid::Uuid;
 
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::IfcVerify,
-    objects::owner_history::OwnerHistory,
     parser::*,
     prelude::*,
 };

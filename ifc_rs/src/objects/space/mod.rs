@@ -11,13 +11,8 @@ use super::shared::{
     root::{Root, RootBuilder},
 };
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
-    prelude::{
-        SpaceTypeEnum, SpatialElement, SpatialElementBuilder, SpatialStructureElement,
-        SpatialStructureElementBuilder, Structure,
-    },
-    IFC,
+    prelude::*,
 };
 
 /// A space represents an area or volume bounded actually or theoretically.

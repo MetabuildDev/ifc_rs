@@ -4,14 +4,13 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{
         ifc_float::{IfcDVec2, IfcDVec3},
         label::Label,
         list::IfcList,
         optional::OptionalParameter,
     },
-    IFC,
+    prelude::*,
 };
 
 /// The IfcCartesianPointList2D defines an ordered collection of two-dimentional

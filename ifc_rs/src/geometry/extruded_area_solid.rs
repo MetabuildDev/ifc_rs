@@ -1,8 +1,6 @@
 use crate::geometry::rectangle_profile_def::ProfileDef;
 use crate::id::{IdOr, TypedId};
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::prelude::*;
-use crate::prelude::{Axis3D, Direction3D};
 use crate::{id::Id, parser::*};
 use comma::Comma;
 use ifc_float::IfcFloat;
@@ -73,8 +71,12 @@ impl ExtrudedAreaSolid {
         self.position = position.into().or_insert(ifc).into();
         self
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedExtrudedAreaSolid<'a> {
+impl<'a> IfcMappedType<'a> for ExtrudedAreaSolid {
+    type Target = MappedExtrudedAreaSolid<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         let swept_area = ifc.data.get_untyped(self.swept_area);
 
         let profile_def = if let Some(rectangle) = swept_area.downcast_ref::<RectangleProfileDef>()

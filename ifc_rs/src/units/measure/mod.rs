@@ -3,7 +3,7 @@ pub mod plane_angle;
 pub use plane_angle::PlaneAngleMeasure;
 
 use super::{IFCParse, IFCParser};
-use crate::ifc_type::IfcType;
+use crate::prelude::*;
 
 pub struct Measures;
 

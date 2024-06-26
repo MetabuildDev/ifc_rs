@@ -2,10 +2,7 @@ use std::fmt::Display;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::{
-    ifc_type::{IfcType, IfcVerify},
-    IFC,
-};
+use crate::prelude::*;
 
 use super::IFCParse;
 

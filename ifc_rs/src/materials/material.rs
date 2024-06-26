@@ -3,13 +3,12 @@ use std::fmt::Display;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
         IFCParse, IFCParser,
     },
+    prelude::*,
     relations::rel_associates_material::RelatableMaterial,
-    IFC,
 };
 
 /// IfcMaterial is a homogeneous or inhomogeneous substance that can be

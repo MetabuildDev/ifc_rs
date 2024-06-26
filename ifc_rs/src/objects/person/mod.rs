@@ -4,14 +4,10 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr, TypedId};
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
 use crate::prelude::*;
-
-use super::actor_role::ActorRole;
-use super::address::Address;
 
 /// An individual human being.
 ///

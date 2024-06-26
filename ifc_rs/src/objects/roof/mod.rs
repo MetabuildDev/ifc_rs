@@ -16,11 +16,9 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
-    prelude::{ProductDefinitionShape, RoofTypeEnum, TransformableType},
+    prelude::*,
     relations::rel_associates_material::MaterialRelatable,
-    IFC,
 };
 
 /// A roof is the covering of the top part of a building, it protects the

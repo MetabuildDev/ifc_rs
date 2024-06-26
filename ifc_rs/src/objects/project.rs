@@ -3,7 +3,6 @@ use std::{fmt::Display, ops::Deref};
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::{p_space_or_comment_surrounded, IFCParse, IFCParser};
 use crate::prelude::*;

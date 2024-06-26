@@ -4,16 +4,13 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::Id;
 use crate::id::IdOr;
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::comma::Comma;
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
-use crate::prelude::Root;
-use crate::prelude::RootBuilder;
-use crate::IFC;
+use crate::prelude::*;
 
 /// The objectified relationship IfcRelDefinesByType defines the relationship
 /// between an object type and object occurrences. The IfcRelDefinesByType is

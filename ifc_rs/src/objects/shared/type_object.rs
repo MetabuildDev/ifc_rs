@@ -7,7 +7,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::Id,
-    ifc_type::IfcVerify,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
     prelude::*,
 };

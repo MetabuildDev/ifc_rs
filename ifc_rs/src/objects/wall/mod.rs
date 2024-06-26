@@ -7,7 +7,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
     prelude::*,
     relations::rel_associates_material::MaterialRelatable,

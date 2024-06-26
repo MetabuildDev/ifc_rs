@@ -4,7 +4,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr, TypedId},
-    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
         IFCParser,

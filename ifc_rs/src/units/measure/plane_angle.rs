@@ -3,7 +3,6 @@ use std::fmt::Display;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     prelude::*,
     units::{ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse, IFCParser},
 };

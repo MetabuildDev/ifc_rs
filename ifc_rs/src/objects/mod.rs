@@ -5,8 +5,8 @@ use window::Window;
 use winnow::combinator::alt;
 
 use crate::{
-    ifc_type::IfcType,
     parser::{IFCParse, IFCParser},
+    prelude::*,
 };
 
 pub mod access_state;

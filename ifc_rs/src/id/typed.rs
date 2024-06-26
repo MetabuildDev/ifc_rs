@@ -5,10 +5,7 @@ use std::{
 
 use winnow::Parser;
 
-use crate::{
-    ifc_type::{IfcType, IfcVerify},
-    parser::IFCParse,
-};
+use crate::{parser::IFCParse, prelude::*};
 
 use super::{Id, IdOr};
 

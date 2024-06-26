@@ -6,7 +6,6 @@ use std::{
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::IfcVerify,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
     prelude::*,
 };

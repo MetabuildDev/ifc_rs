@@ -18,7 +18,7 @@ use winnow::combinator::*;
 use winnow::token::*;
 use winnow::{error::ErrorKind, Parser};
 
-use crate::ifc_type::IfcType;
+use crate::prelude::*;
 
 pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
 impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}

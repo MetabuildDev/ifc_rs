@@ -1,8 +1,8 @@
 use winnow::combinator::alt;
 
 use crate::{
-    ifc_type::IfcType,
     parser::{IFCParse, IFCParser},
+    prelude::*,
 };
 
 pub mod mapped_item;

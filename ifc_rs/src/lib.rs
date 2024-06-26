@@ -21,7 +21,6 @@ pub mod geometry;
 pub mod id;
 pub mod ifc_builder;
 pub mod ifc_extractor;
-pub mod ifc_type;
 pub mod materials;
 pub mod meta;
 pub mod objects;

@@ -4,10 +4,8 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, p_space_or_comment_surrounded, IFCParse},
     prelude::*,
-    prelude::{ProductDefinitionShape, RepresentationMap, ShapeItem},
 };
 
 pub trait TransformableType: IfcType {
@@ -81,11 +79,12 @@ impl MappedItem {
             target: target.into().or_insert(ifc).into(),
         }
     }
+}
 
-    pub fn mappings<'a>(
-        &'a self,
-        ifc: &'a IFC,
-    ) -> ((&'a Axis3D, &'a ShapeRepresentation), MappedTransform<'a>) {
+impl<'a> IfcMappedType<'a> for MappedItem {
+    type Target = ((&'a Axis3D, &'a ShapeRepresentation), MappedTransform<'a>);
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         let repr_map = match &self.source {
             IdOr::Id(id) => ifc.data.get(*id),
             IdOr::Custom(repr_map) => repr_map,

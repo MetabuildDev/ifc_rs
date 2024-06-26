@@ -1,8 +1,8 @@
 use winnow::combinator::alt;
 
 use crate::{
-    ifc_type::IfcType,
     parser::{IFCParse, IFCParser},
+    prelude::*,
 };
 
 pub mod arbitrary_closed_profile_def;

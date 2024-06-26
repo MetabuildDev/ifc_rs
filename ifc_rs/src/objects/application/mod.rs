@@ -3,12 +3,10 @@ mod serialize;
 
 use ifc_rs_verify_derive::IfcVerify;
 
+use super::person_and_org::PersonOrOrg;
 use crate::id::{Id, IdOr};
-use crate::ifc_type::{IfcType, IfcVerify};
-use crate::objects::person_and_org::PersonOrOrg;
 use crate::parser::label::Label;
 use crate::prelude::*;
-use crate::IFC;
 
 ///  IfcApplication holds the information about an IFC compliant application
 ///  developed by an application developer who is a member of buildingSMART.

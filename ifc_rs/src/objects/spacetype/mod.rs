@@ -4,10 +4,8 @@ use ifc_rs_verify_derive::IfcVerify;
 pub use type_enum::SpaceTypeEnum;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
-    prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
-    IFC,
+    prelude::*,
 };
 
 use super::shared::{

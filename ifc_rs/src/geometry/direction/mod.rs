@@ -5,9 +5,8 @@ use glam::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::ifc_float::{IfcDVec2, IfcDVec3},
-    IFC,
+    prelude::*,
 };
 
 /// The IfcDirection provides a direction in two or three dimensional space depending on the number

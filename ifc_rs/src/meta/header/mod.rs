@@ -3,9 +3,8 @@ mod serialize;
 
 use serde::{Deserialize, Serialize};
 
-use crate::ifc_type::{IfcType, IfcVerify};
-
 use super::version;
+use crate::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Header {

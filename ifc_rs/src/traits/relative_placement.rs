@@ -1,4 +1,4 @@
-use crate::{ifc_type::IfcType, prelude::*};
+use crate::prelude::*;
 
 pub trait RelativePlacement: IfcType {
     fn placement_id(&self) -> Option<Id>;

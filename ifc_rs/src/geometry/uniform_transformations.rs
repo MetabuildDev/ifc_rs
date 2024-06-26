@@ -4,7 +4,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    ifc_type::{IfcType, IfcVerify},
     parser::{p_space_or_comment_surrounded, IFCParse},
     prelude::*,
 };
@@ -47,8 +46,12 @@ impl CartesianTransformationOperator3D {
             base: Transform3DBase::new(local_origin, (axis_x, axis_y, axis_z), scale, ifc),
         }
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> TransformMapping<'a> {
+impl<'a> IfcMappedType<'a> for CartesianTransformationOperator3D {
+    type Target = TransformMapping<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         TransformMapping {
             base: self.base.mappings(ifc),
         }

@@ -6,7 +6,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    ifc_type::{IfcType, IfcVerify},
     parser::{label::Label, optional::OptionalParameter},
     prelude::*,
 };
@@ -62,8 +61,12 @@ impl ArbitraryClosedProfileDef {
         self.profile_name = name.into().into();
         self
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedArbitraryClosedProfileDef {
+impl<'a> IfcMappedType<'a> for ArbitraryClosedProfileDef {
+    type Target = MappedArbitraryClosedProfileDef;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         MappedArbitraryClosedProfileDef {
             profile_type: self.profile_type,
 

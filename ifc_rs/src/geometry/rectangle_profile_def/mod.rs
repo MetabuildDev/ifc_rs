@@ -4,7 +4,6 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::IdOr;
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::prelude::*;
@@ -69,8 +68,12 @@ impl RectangleProfileDef {
         self.position = position.into().or_insert(ifc).id().into();
         self
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> MappedRectangleProfileDef<'a> {
+impl<'a> IfcMappedType<'a> for RectangleProfileDef {
+    type Target = MappedRectangleProfileDef<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         let axis = self.position.custom().map(|id| {
             let untyped = ifc.data.get_untyped(*id);
 

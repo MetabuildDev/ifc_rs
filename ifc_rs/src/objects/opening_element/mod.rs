@@ -1,5 +1,5 @@
 mod deserialize;
-mod opening_element_type_enum;
+pub mod opening_element_type_enum;
 mod serialize;
 
 use std::ops::{Deref, DerefMut};
@@ -17,11 +17,8 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    ifc_type::{IfcType, IfcVerify},
-    objects::opening_element::opening_element_type_enum::OpeningElementTypeEnum,
     parser::{label::Label, optional::OptionalParameter},
-    prelude::{ProductDefinitionShape, TransformableType},
-    IFC,
+    prelude::*,
 };
 
 /// The opening element stands for opening, recess or chase, all reflecting

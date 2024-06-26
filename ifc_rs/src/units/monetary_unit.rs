@@ -3,11 +3,7 @@ use std::fmt::Display;
 use ifc_rs_verify_derive::IfcVerify;
 
 use super::{label::Label, IFCParse, IFCParser};
-use crate::{
-    ifc_type::{IfcType, IfcVerify},
-    units::p_space_or_comment_surrounded,
-    IFC,
-};
+use crate::{prelude::*, units::p_space_or_comment_surrounded};
 
 /// IfcMonetaryUnit is a unit to define currency for money.
 ///

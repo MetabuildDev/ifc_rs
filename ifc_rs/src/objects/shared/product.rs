@@ -6,12 +6,7 @@ use std::{
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    geometry::{
-        local_placement::LocalPlacement, point::Point3D,
-        product_definition_shape::ProductDefinitionShape,
-    },
     id::{Id, IdOr, TypedId},
-    ifc_type::IfcVerify,
     parser::{comma::Comma, optional::OptionalParameter, IFCParse, IFCParser},
     prelude::*,
 };

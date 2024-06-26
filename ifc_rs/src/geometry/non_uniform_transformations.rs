@@ -4,7 +4,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse,
@@ -68,8 +67,12 @@ impl CartesianTransformationOperator3DnonUniform {
             scale_z: IfcFloat(scale_z).into(),
         }
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> NonUniformTransformMapping<'a> {
+impl<'a> IfcMappedType<'a> for CartesianTransformationOperator3DnonUniform {
+    type Target = NonUniformTransformMapping<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         NonUniformTransformMapping {
             base: self.base.mappings(ifc),
 

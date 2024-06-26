@@ -2,9 +2,8 @@ use std::fmt::Display;
 use winnow::{combinator::alt, Parser};
 
 use crate::{
-    ifc_type::IfcType,
     parser::{IFCParse, IFCParser},
-    IFC,
+    prelude::*,
 };
 
 use super::{Id, TypedId};

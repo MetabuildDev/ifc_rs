@@ -3,12 +3,7 @@ mod serialize;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::{
-    id::TypedId,
-    ifc_type::{IfcType, IfcVerify},
-    parser::optional::OptionalParameter,
-    prelude::*,
-};
+use crate::{id::TypedId, parser::optional::OptionalParameter, prelude::*};
 
 pub enum AxisMappings<'a> {
     D2(MappedAxis2D<'a>),
@@ -58,8 +53,12 @@ impl Axis2D {
             local_x: OptionalParameter::omitted(),
         }
     }
+}
 
-    pub fn mappings<'a>(&self, ifc: &'a IFC) -> MappedAxis2D<'a> {
+impl<'a> IfcMappedType<'a> for Axis2D {
+    type Target = MappedAxis2D<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         MappedAxis2D {
             location: ifc.data.get(self.location),
             local_x: self.local_x.custom().map(|id| ifc.data.get(*id)),
@@ -108,8 +107,12 @@ impl Axis3D {
             local_x: OptionalParameter::omitted(),
         }
     }
+}
 
-    pub fn mappings<'a>(&self, ifc: &'a IFC) -> MappedAxis3D<'a> {
+impl<'a> IfcMappedType<'a> for Axis3D {
+    type Target = MappedAxis3D<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         MappedAxis3D {
             location: ifc.data.get(self.location),
             local_z: self.local_z.custom().map(|id| ifc.data.get(*id)),

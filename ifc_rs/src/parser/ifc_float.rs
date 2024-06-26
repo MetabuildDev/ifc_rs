@@ -5,9 +5,9 @@ use glam::{DVec2, DVec3};
 use winnow::ascii::float;
 use winnow::Parser;
 
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::geometry::{p_vec2, p_vec3};
 use crate::parser::{IFCParse, IFCParser};
+use crate::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct IfcFloat(pub f64);

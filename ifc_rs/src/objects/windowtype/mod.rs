@@ -5,11 +5,9 @@ use window_partitioning_type_enum::WindowPartitioningTypeEnum;
 use window_type_enum::WindowTypeEnum;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
-    prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
+    prelude::*,
     relations::rel_associates_material::MaterialRelatable,
-    IFC,
 };
 
 use super::shared::{

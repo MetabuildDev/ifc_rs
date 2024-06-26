@@ -3,8 +3,8 @@ use std::fmt::Display;
 use winnow::{ascii::dec_uint, combinator::preceded, Parser};
 
 use crate::{
-    ifc_type::IfcType,
     parser::{IFCParse, IFCParser},
+    prelude::*,
 };
 
 use super::TypedId;

@@ -5,7 +5,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::id::{Id, IdOr};
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::ifc_float::IfcFloat;
 use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;

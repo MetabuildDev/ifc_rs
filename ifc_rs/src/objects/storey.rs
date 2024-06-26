@@ -16,12 +16,11 @@ use super::{
     Structure,
 };
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
     parser::{
         comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
         p_space_or_comment_surrounded, IFCParse, IFCParser,
     },
-    IFC,
+    prelude::*,
 };
 
 /// The building storey has an elevation and typically represents a (nearly) horizontal aggregation

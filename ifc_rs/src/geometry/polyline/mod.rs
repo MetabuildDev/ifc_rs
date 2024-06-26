@@ -1,11 +1,6 @@
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::{
-    id::Id,
-    ifc_type::{IfcType, IfcVerify},
-    parser::list::IfcList,
-    prelude::*,
-};
+use crate::{id::Id, parser::list::IfcList, prelude::*};
 
 use super::indexed_poly_curve::Curve;
 

@@ -4,11 +4,7 @@ use ifc_rs_verify_derive::IfcVerify;
 use type_enum::WallTypeEnum;
 
 use crate::{
-    ifc_type::{IfcType, IfcVerify},
-    parser::label::Label,
-    prelude::{ElementTypeBuilder, Root, RootBuilder, TypeObject, TypeProduct},
-    relations::rel_associates_material::MaterialRelatable,
-    IFC,
+    parser::label::Label, prelude::*, relations::rel_associates_material::MaterialRelatable,
 };
 
 use super::shared::{

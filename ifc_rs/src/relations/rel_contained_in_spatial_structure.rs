@@ -3,7 +3,6 @@ use std::{fmt::Display, ops::Deref};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr};
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::{
     comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser,
 };

@@ -16,14 +16,9 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    ifc_type::{IfcType, IfcVerify},
-    objects::windowtype::{
-        window_partitioning_type_enum::WindowPartitioningTypeEnum, window_type_enum::WindowTypeEnum,
-    },
     parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
-    prelude::{ProductDefinitionShape, TransformableType},
+    prelude::*,
     relations::rel_associates_material::MaterialRelatable,
-    IFC,
 };
 
 /// The window is a building element that is predominately used to provide

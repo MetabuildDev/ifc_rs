@@ -3,11 +3,10 @@ mod serialize;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::ifc_type::{IfcType, IfcVerify};
 use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
-use crate::IFC;
+use crate::prelude::*;
 
 pub trait Address: IfcType {}
 

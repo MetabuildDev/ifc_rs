@@ -4,7 +4,6 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    ifc_type::{IfcType, IfcVerify},
     parser::{comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter, IFCParse},
     prelude::*,
 };
@@ -55,8 +54,12 @@ impl Transform3DBase {
             axis_z: IdOr::Id(axis_z.into().or_insert(ifc)).into(),
         }
     }
+}
 
-    pub fn mappings<'a>(&'a self, ifc: &'a IFC) -> TransformBaseMapping<'a> {
+impl<'a> IfcMappedType<'a> for Transform3DBase {
+    type Target = TransformBaseMapping<'a>;
+
+    fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         TransformBaseMapping {
             translation: self.local_origin.custom().map(|c| match c {
                 IdOr::Id(id) => ifc.data.get(*id),

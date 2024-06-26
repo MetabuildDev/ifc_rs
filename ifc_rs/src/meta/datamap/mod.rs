@@ -5,7 +5,7 @@ use std::{any::TypeId, collections::BTreeMap};
 
 use crate::{
     id::{Id, TypedId},
-    ifc_type::IfcType,
+    prelude::*,
 };
 
 /// CRITICAL: split up the index map into a proper struct with fields which hold Hashmaps mapping

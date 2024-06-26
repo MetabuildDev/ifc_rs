@@ -5,14 +5,9 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{IdOr, TypedId},
-    ifc_type::{IfcType, IfcVerify},
     parser::{optional::OptionalParameter, timestamp::IfcTimestamp},
     prelude::*,
 };
-
-use super::application::Application;
-use super::person::Person;
-use super::person_and_org::PersonAndOrganization;
 
 ///  IfcOwnerHistory defines all history and identification related information.
 ///  In order to provide fast access it is directly attached to all

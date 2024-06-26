@@ -4,7 +4,7 @@ use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
 use optional::OptionalParameter;
 
-use crate::{id::Id, ifc_type::IfcVerify, parser::*, prelude::*, units::unit_enum::IfcUnitEnum};
+use crate::{id::Id, parser::*, prelude::*, units::unit_enum::IfcUnitEnum};
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcnamedunit.htm
 #[derive(IfcVerify)]

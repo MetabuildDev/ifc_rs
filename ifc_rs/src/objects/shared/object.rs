@@ -4,7 +4,6 @@ use std::{fmt::Display, ops::Deref};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    ifc_type::IfcVerify,
     parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
     prelude::*,
 };

@@ -2,7 +2,7 @@ pub mod prelude;
 
 use std::ops::Deref;
 
-use crate::{ifc_type::IfcType, prelude::*};
+use crate::prelude::*;
 
 pub struct IfcExtractor {
     ifc: IFC,

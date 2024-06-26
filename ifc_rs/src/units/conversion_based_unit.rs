@@ -5,7 +5,6 @@ use ifc_rs_verify_derive::IfcVerify;
 use super::{label::Label, shared::named_unit::NamedUnit, IFCParse, IFCParser};
 use crate::{
     id::IdOr,
-    ifc_type::{IfcType, IfcVerify},
     parser::optional::OptionalParameter,
     prelude::*,
     units::{comma::Comma, p_space_or_comment_surrounded},
