@@ -1,16 +1,16 @@
-pub mod building;
-pub mod materials;
-pub mod openings;
-pub mod prelude;
-pub mod project;
-pub mod roofs;
-pub mod site;
-pub mod slabs;
-pub mod spaces;
-pub mod storey;
-pub mod transforms;
-pub mod walls;
-pub mod windows;
+pub(crate) mod building;
+pub(crate) mod materials;
+pub(crate) mod openings;
+pub(crate) mod prelude;
+pub(crate) mod project;
+pub(crate) mod roofs;
+pub(crate) mod site;
+pub(crate) mod slabs;
+pub(crate) mod spaces;
+pub(crate) mod storey;
+pub(crate) mod transforms;
+pub(crate) mod walls;
+pub(crate) mod windows;
 
 use crate::prelude::*;
 

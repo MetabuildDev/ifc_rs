@@ -17,7 +17,7 @@ pub struct Header {
 impl IfcVerify for Header {}
 impl IfcType for Header {}
 
-pub mod description {
+pub(crate) mod description {
 
     use serde::{Deserialize, Serialize};
     use strum::{Display, EnumString, VariantNames};
@@ -43,7 +43,7 @@ pub mod description {
     }
 }
 
-pub mod details {
+pub(crate) mod details {
     use chrono::Utc;
     use serde::{Deserialize, Serialize};
 
@@ -81,7 +81,7 @@ pub mod details {
     pub struct Authorization(pub String);
 }
 
-pub mod schema {
+pub(crate) mod schema {
     use serde::{Deserialize, Serialize};
     use strum::{Display, EnumString, VariantNames};
 

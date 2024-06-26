@@ -1,5 +1,5 @@
-pub mod deserialize;
-pub mod serialize;
+mod deserialize;
+mod serialize;
 
 use std::fmt::Display;
 

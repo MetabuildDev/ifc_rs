@@ -5,16 +5,16 @@ use crate::{
     prelude::*,
 };
 
-pub mod mapped_item;
-pub mod prelude;
-pub mod rel_aggregates;
-pub mod rel_associates_material;
-pub mod rel_contained_in_spatial_structure;
-pub mod rel_declares;
-pub mod rel_defines_by_type;
-pub mod rel_fills_element;
-pub mod rel_voids_element;
-pub mod representation_map;
+pub(crate) mod mapped_item;
+pub(crate) mod prelude;
+pub(crate) mod rel_aggregates;
+pub(crate) mod rel_associates_material;
+pub(crate) mod rel_contained_in_spatial_structure;
+pub(crate) mod rel_declares;
+pub(crate) mod rel_defines_by_type;
+pub(crate) mod rel_fills_element;
+pub(crate) mod rel_voids_element;
+pub(crate) mod representation_map;
 
 pub struct Relation;
 

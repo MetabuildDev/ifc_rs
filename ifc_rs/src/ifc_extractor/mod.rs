@@ -1,4 +1,4 @@
-pub mod prelude;
+pub(crate) mod prelude;
 
 use std::ops::Deref;
 

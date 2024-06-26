@@ -9,32 +9,32 @@ use crate::{
     prelude::*,
 };
 
-pub mod access_state;
-pub mod actor_role;
-pub mod address;
-pub mod application;
-pub mod building;
-pub mod change_action;
-pub mod opening_element;
-pub mod organization;
-pub mod owner_history;
-pub mod person;
-pub mod person_and_org;
-pub mod prelude;
-pub mod project;
-pub mod roof;
-pub mod rooftype;
-pub mod shared;
-pub mod site;
-pub mod slab;
-pub mod slabtype;
-pub mod space;
-pub mod spacetype;
-pub mod storey;
-pub mod wall;
-pub mod walltype;
-pub mod window;
-pub mod windowtype;
+pub(crate) mod access_state;
+pub(crate) mod actor_role;
+pub(crate) mod address;
+pub(crate) mod application;
+pub(crate) mod building;
+pub(crate) mod change_action;
+pub(crate) mod opening_element;
+pub(crate) mod organization;
+pub(crate) mod owner_history;
+pub(crate) mod person;
+pub(crate) mod person_and_org;
+pub(crate) mod prelude;
+pub(crate) mod project;
+pub(crate) mod roof;
+pub(crate) mod rooftype;
+pub(crate) mod shared;
+pub(crate) mod site;
+pub(crate) mod slab;
+pub(crate) mod slabtype;
+pub(crate) mod space;
+pub(crate) mod spacetype;
+pub(crate) mod storey;
+pub(crate) mod wall;
+pub(crate) mod walltype;
+pub(crate) mod window;
+pub(crate) mod windowtype;
 
 pub enum StructureType<'a> {
     Wall(&'a Wall),

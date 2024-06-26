@@ -1,14 +1,14 @@
-pub mod bool;
-pub mod comma;
-pub mod dummy;
-pub mod geometry;
-pub mod ifc_float;
-pub mod ifc_integer;
-pub mod label;
-pub mod list;
-pub mod optional;
-pub mod place_holder;
-pub mod timestamp;
+pub(crate) mod bool;
+pub(crate) mod comma;
+pub(crate) mod dummy;
+pub(crate) mod geometry;
+pub(crate) mod ifc_float;
+pub(crate) mod ifc_integer;
+pub(crate) mod label;
+pub(crate) mod list;
+pub(crate) mod optional;
+pub(crate) mod place_holder;
+pub(crate) mod timestamp;
 
 use std::fmt::Display;
 

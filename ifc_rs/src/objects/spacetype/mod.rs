@@ -14,7 +14,7 @@ use super::shared::{
 
 mod deserialize;
 mod serialize;
-pub mod type_enum;
+pub(crate) mod type_enum;
 
 /// A space represents an area or volume bounded actually or theoretically.
 /// Spaces are areas or volumes that provide for certain functions within a

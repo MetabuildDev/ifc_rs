@@ -28,6 +28,8 @@ pub struct SiUnit {
 }
 
 impl SiUnit {
+    /// create a new SI unit from the type (category) of unit, the prefix (kilo, milli, etc.) and
+    /// the unit name
     pub fn new(
         unit_type: impl Into<Option<IfcUnitEnum>>,
         prefix: impl Into<Option<IfcPrefix>>,

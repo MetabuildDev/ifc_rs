@@ -17,28 +17,55 @@ use meta::{
     version::Version,
 };
 
+/// module containing all the IFC objects related to the general geometry of the model
 pub mod geometry;
+/// module that defines IDs as they're used within the STEP IFC format. This also includes some
+/// utilities such as typed IDs or objects which can both be specified by ID or in-place values
 pub mod id;
+/// module that defines builders to easily create valid IFC files without much knowledge about how
+/// the IFC types are structured
 pub mod ifc_builder;
+/// module that defines utilities to query properties of an in-memory IFC file in the format of
+/// this crate
 pub mod ifc_extractor;
+/// module containing definitions of materials which are used to define the look and other
+/// properties of IFC elements like walls, slabs, windows, etc.
 pub mod materials;
+/// module containing definitions of the structure of the meta information that comes with IFC
+/// files in STEP format
 pub mod meta;
+/// module containing definitions of the actual IFC Objects
 pub mod objects;
+/// module containing parsing trait and utilities used to deserialize the IFC STEP format into rust
+/// types
 pub mod parser;
+/// common prelude module for the whole crate
 pub mod prelude;
+/// module containing definitions of so called IFC relation objects which link one-or-more IFC
+/// objects to one-or-more other IFC objects or properties
 pub mod relations;
+/// general module containing definitions of traits used throughout the crate
 pub mod traits;
+/// module containing definitions of units for measurements and property definitions
 pub mod units;
 
+/// Central IFC Object which holds the information about the whole model together with meta
+/// information about the model
 pub struct IFC {
+    /// the header holds most meta information
     pub header: Header,
 
+    /// the data map contains all IFC object associated to a model internal ID
     pub data: DataMap,
 
+    /// the footer with meta information
     pub footer: Footer,
 }
 
 impl IFC {
+    /// loads an IFC file from the given path
+    ///
+    /// This may fail if the file doesn't exist or if the parsing fails
     pub fn from_file(path: impl AsRef<Path>) -> Result<Self> {
         let contents = fs::read_to_string(path)?;
         let s = contents.as_str();
@@ -50,13 +77,13 @@ impl IFC {
 impl FromStr for IFC {
     type Err = anyhow::Error;
 
-    fn from_str(mut s: &str) -> Result<Self> {
+    fn from_str(s: &str) -> Result<Self> {
         let me = seq!(Self {
             header: Header::parse(),
             data: DataMap::parse(),
             footer: Footer::parse(),
         })
-        .parse_next(&mut s)
+        .parse(s)
         .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
 
         for (id, ifc_type) in me.data.0.iter() {

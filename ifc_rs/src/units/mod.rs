@@ -1,31 +1,27 @@
-pub mod assignment;
-pub mod conversion_based_unit;
-pub mod derived_unit;
-pub mod derived_unit_element;
-pub mod derived_unit_enum;
-pub mod dimensional_exponents;
-pub mod measure;
-pub mod measure_with_unit;
-pub mod monetary_unit;
-pub mod name;
-pub mod prefix;
-pub mod prelude;
-pub mod shared;
-pub mod si_unit;
-pub mod unit_enum;
+pub(crate) mod assignment;
+pub(crate) mod conversion_based_unit;
+pub(crate) mod derived_unit;
+pub(crate) mod derived_unit_element;
+pub(crate) mod derived_unit_enum;
+pub(crate) mod dimensional_exponents;
+pub(crate) mod measure;
+pub(crate) mod measure_with_unit;
+pub(crate) mod monetary_unit;
+pub(crate) mod name;
+pub(crate) mod prefix;
+pub(crate) mod prelude;
+pub(crate) mod shared;
+pub(crate) mod si_unit;
+pub(crate) mod unit_enum;
 
-use std::str::FromStr;
+use crate::{parser::*, traits::prelude::IfcType};
+use winnow::combinator::alt;
 
-use strum::{Display, EnumString, VariantNames};
-use winnow::combinator::{alt, delimited};
-use winnow::Parser;
-
-use crate::parser::*;
-use crate::prelude::*;
-
+/// accumulator parser for all unit types into an opaque `dyn IfcType`
 pub struct Units;
 
 impl Units {
+    /// parser for any unit type into an opaque `dyn IfcType`
     pub fn parse<'a>() -> impl IFCParser<'a, Box<dyn IfcType>> {
         alt((
             assignment::UnitAssigment::parse_any(),
@@ -38,39 +34,5 @@ impl Units {
             derived_unit_element::DerivedUnitElement::parse_any(),
             monetary_unit::MonetaryUnit::parse_any(),
         ))
-    }
-}
-
-// TODO: there are a lot more (mostly imperial units)
-#[derive(EnumString, VariantNames, Display, Clone, Copy)]
-pub enum ConversionUnit {
-    #[strum(to_string = "'DEGREE'")]
-    Degree,
-
-    #[strum(to_string = "'LITRE'")]
-    Litre,
-
-    #[strum(to_string = "'MINUTE'")]
-    Minute,
-
-    #[strum(to_string = "'HOUR'")]
-    Hour,
-
-    #[strum(to_string = "'DAY'")]
-    Day,
-}
-
-impl IFCParse for ConversionUnit {
-    fn parse<'a>() -> impl IFCParser<'a, Self> {
-        let variants: [&str; Self::VARIANTS.len()] =
-            Self::VARIANTS.try_into().expect("statically known");
-
-        delimited(
-            p_space_or_comment(),
-            alt(variants
-                .map(|v| (v, Self::from_str(v).expect("valid ConversionUnit")))
-                .map(|(k, v)| k.map(move |_| v))),
-            p_space_or_comment(),
-        )
     }
 }

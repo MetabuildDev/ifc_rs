@@ -1,4 +1,4 @@
-pub mod deserialize;
+mod deserialize;
 mod serialize;
 
 use std::{any::TypeId, collections::BTreeMap};

@@ -1,6 +1,6 @@
-pub mod id_or;
-pub mod plain;
-pub mod typed;
+pub(crate) mod id_or;
+pub(crate) mod plain;
+pub(crate) mod typed;
 
 pub use id_or::IdOr;
 pub use plain::Id;

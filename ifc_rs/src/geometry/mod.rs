@@ -5,27 +5,27 @@ use crate::{
     prelude::*,
 };
 
-pub mod arbitrary_closed_profile_def;
-pub mod axis;
-pub mod dimension_count;
-pub mod direction;
-pub mod extruded_area_solid;
-pub mod geometric_projection;
-pub mod indexed_poly_curve;
-pub mod local_placement;
-pub mod non_uniform_transformations;
-pub mod point;
-pub mod point_list;
-pub mod polyline;
-pub mod prelude;
-pub mod product_definition_shape;
-pub mod profile_type;
-pub mod rectangle_profile_def;
-pub mod representation_context;
-pub mod representation_subcontext;
-pub mod shape_representation;
-pub mod transform_base;
-pub mod uniform_transformations;
+pub(crate) mod arbitrary_closed_profile_def;
+pub(crate) mod axis;
+pub(crate) mod dimension_count;
+pub(crate) mod direction;
+pub(crate) mod extruded_area_solid;
+pub(crate) mod geometric_projection;
+pub(crate) mod indexed_poly_curve;
+pub(crate) mod local_placement;
+pub(crate) mod non_uniform_transformations;
+pub(crate) mod point;
+pub(crate) mod point_list;
+pub(crate) mod polyline;
+pub(crate) mod prelude;
+pub(crate) mod product_definition_shape;
+pub(crate) mod profile_type;
+pub(crate) mod rectangle_profile_def;
+pub(crate) mod representation_context;
+pub(crate) mod representation_subcontext;
+pub(crate) mod shape_representation;
+pub(crate) mod transform_base;
+pub(crate) mod uniform_transformations;
 
 pub struct Geometry;
 

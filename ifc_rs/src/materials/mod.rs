@@ -5,15 +5,15 @@ use crate::{
     prelude::*,
 };
 
-pub mod direction_sense_enum;
-pub mod layer_set_direction_enum;
-pub mod material;
-pub mod material_constituent;
-pub mod material_constituent_set;
-pub mod material_layer;
-pub mod material_layer_set;
-pub mod material_layer_set_usage;
-pub mod prelude;
+pub(crate) mod direction_sense_enum;
+pub(crate) mod layer_set_direction_enum;
+pub(crate) mod material;
+pub(crate) mod material_constituent;
+pub(crate) mod material_constituent_set;
+pub(crate) mod material_layer;
+pub(crate) mod material_layer_set;
+pub(crate) mod material_layer_set_usage;
+pub(crate) mod prelude;
 
 pub struct Materials;
 

@@ -16,8 +16,8 @@ use super::shared::{
 
 mod deserialize;
 mod serialize;
-pub mod window_partitioning_type_enum;
-pub mod window_type_enum;
+pub(crate) mod window_partitioning_type_enum;
+pub(crate) mod window_type_enum;
 
 /// The element type IfcWindowType defines commonly shared information for
 /// occurrences of windows. The set of shared information may include:

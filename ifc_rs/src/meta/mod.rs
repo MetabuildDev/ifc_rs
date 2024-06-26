@@ -1,4 +1,4 @@
-pub mod datamap;
-pub mod footer;
-pub mod header;
-pub mod version;
+pub(crate) mod datamap;
+pub(crate) mod footer;
+pub(crate) mod header;
+pub(crate) mod version;

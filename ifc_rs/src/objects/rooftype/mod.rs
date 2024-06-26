@@ -13,7 +13,7 @@ use super::shared::{
 
 mod deserialize;
 mod serialize;
-pub mod type_enum;
+pub(crate) mod type_enum;
 
 /// The building element type IfcRoofType defines commonly shared information
 /// for occurrences of roofs.

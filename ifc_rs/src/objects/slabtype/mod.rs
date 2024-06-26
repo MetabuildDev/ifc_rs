@@ -13,7 +13,7 @@ use super::shared::{
 
 mod deserialize;
 mod serialize;
-pub mod type_enum;
+pub(crate) mod type_enum;
 
 /// The element type IfcSlabType defines commonly shared information for
 /// occurrences of slabs. The set of shared information may include:
