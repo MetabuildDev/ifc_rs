@@ -116,8 +116,6 @@ pub mod test {
     use crate::geometry::point::Point3D;
     use crate::geometry::product_definition_shape::test::new_product_definition_shape;
     use crate::geometry::product_definition_shape::ProductDefinitionShape;
-    use crate::geometry::representation_context::GeometricRepresentationContext;
-    use crate::geometry::representation_subcontext::GeometricRepresentationSubContext;
     use crate::geometry::shape_representation::ShapeRepresentation;
     use crate::id::IdOr;
     use crate::objects::application::Application;
@@ -176,15 +174,7 @@ pub mod test {
                     let shape = ifc.data.get::<ShapeRepresentation>(*repr);
                     println!("\t\tshape_representation: {shape}");
 
-                    let sub_context = ifc
-                        .data
-                        .get::<GeometricRepresentationSubContext>(shape.context_of_items);
-
-                    println!("\t\t\tsub context: {sub_context}");
-
-                    let parent_context = ifc
-                        .data
-                        .get::<GeometricRepresentationContext>(sub_context.parent_context);
+                    let parent_context = shape.parent_context(ifc);
 
                     println!("\t\t\t\tcontext: {parent_context}");
                     println!(

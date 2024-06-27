@@ -177,11 +177,7 @@ pub mod test {
                     let shape = ifc.data.get(*repr);
                     println!("\t\tshape_representation: {shape}");
 
-                    let sub_context = ifc.data.get(shape.context_of_items);
-
-                    println!("\t\t\tsub context: {sub_context}");
-
-                    let parent_context = ifc.data.get(sub_context.parent_context);
+                    let parent_context = shape.parent_context(ifc);
 
                     println!("\t\t\t\tcontext: {parent_context}");
                     println!(

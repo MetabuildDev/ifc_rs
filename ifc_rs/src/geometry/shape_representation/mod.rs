@@ -6,7 +6,7 @@ use std::fmt::Display;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    id::{Id, IdOr, TypedId},
+    id::{Id, IdOr},
     parser::{label::Label, list::IfcList, optional::OptionalParameter},
     prelude::*,
 };
@@ -46,7 +46,8 @@ pub struct ShapeRepresentation {
     // All fields from IfcRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcrepresentation.htm
     //
     /// Definition of the representation context for which the different subtypes of representation are valid.
-    pub context_of_items: TypedId<GeometricRepresentationSubContext>,
+    #[ifc_types(GeometricRepresentationSubContext, GeometricRepresentationContext)]
+    pub context_of_items: Id,
     /// The optional identifier of the representation as used within a project.
     pub representation_identifier: OptionalParameter<Label>,
     /// The description of the type of a representation context. The representation type defines
@@ -62,7 +63,7 @@ pub struct ShapeRepresentation {
 impl ShapeRepresentation {
     pub fn new(context: impl Into<IdOr<GeometricRepresentationSubContext>>, ifc: &mut IFC) -> Self {
         Self {
-            context_of_items: context.into().or_insert(ifc),
+            context_of_items: context.into().or_insert(ifc).id(),
             representation_identifier: OptionalParameter::omitted(),
             representation_type: OptionalParameter::omitted(),
             items: IfcList::empty(),
@@ -106,6 +107,18 @@ impl ShapeRepresentation {
         self.items
             .iter()
             .filter_map(|item_id| ifc.data.get_untyped(*item_id).downcast_ref())
+    }
+
+    pub fn parent_context<'a>(&'a self, ifc: &'a IFC) -> &'a GeometricRepresentationContext {
+        let context = ifc.data.get_untyped(self.context_of_items);
+
+        if let Some(sub_context) = context.downcast_ref::<GeometricRepresentationSubContext>() {
+            ifc.data.get(sub_context.parent_context)
+        } else if let Some(context) = context.downcast_ref::<GeometricRepresentationContext>() {
+            context
+        } else {
+            unreachable!("checked by type checker");
+        }
     }
 }
 

@@ -16,7 +16,7 @@ impl IFCParse for ShapeRepresentation {
         winnow::seq! {
             Self {
                 _: p_space_or_comment_surrounded("IFCSHAPEREPRESENTATION("),
-                context_of_items: Id::parse().map(TypedId::new),
+                context_of_items: Id::parse(),
                 _: Comma::parse(),
                 representation_identifier: OptionalParameter::parse(),
                 _: Comma::parse(),
