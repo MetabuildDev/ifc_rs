@@ -13,14 +13,14 @@ pub struct IfcExtractor {
 }
 
 impl IfcExtractor {
-    pub fn projects(&self) -> Vec<(TypedId<Project>, &Project)> {
-        self.ifc.data.find_all_of_type::<Project>().collect()
+    pub fn projects(&self) -> impl Iterator<Item = (TypedId<Project>, &Project)> {
+        self.ifc.data.find_all_of_type::<Project>()
     }
 
     pub fn relations_of<RELATING, RELATED>(
         &self,
         id: TypedId<RELATING>,
-    ) -> Vec<(TypedId<RELATED>, &RELATED)>
+    ) -> impl Iterator<Item = (TypedId<RELATED>, &RELATED)>
     where
         RELATING: IfcType,
         RELATED: IfcType,
@@ -28,7 +28,7 @@ impl IfcExtractor {
         self.ifc
             .data
             .find_all_of_type::<RelAggregates>()
-            .filter(|&(_, rel_aggregate)| (rel_aggregate.relating_object == id.id()))
+            .filter(move |&(_, rel_aggregate)| rel_aggregate.relating_object == id.id())
             .flat_map(|(_, rel_aggregate)| {
                 rel_aggregate.related_objects.0.iter().filter_map(|id| {
                     self.ifc
@@ -38,19 +38,17 @@ impl IfcExtractor {
                         .map(|s| (TypedId::<RELATED>::new(*id), s))
                 })
             })
-            .collect()
     }
 
-    pub fn contained_structures<S>(&self, id: TypedId<S>) -> Vec<Id>
+    pub fn contained_structures<S>(&self, id: TypedId<S>) -> impl Iterator<Item = Id> + '_
     where
         S: Structure,
     {
         self.ifc
             .data
             .find_all_of_type::<RelContainedInSpatialStructure>()
-            .filter(|&(_, rel_structure)| (rel_structure.relating_structure == id.id()))
+            .filter(move |&(_, rel_structure)| rel_structure.relating_structure == id.id())
             .flat_map(|(_, rel_structure)| rel_structure.related_elements.0.clone())
-            .collect()
     }
 
     fn related_type<S>(&self, id: TypedId<S>) -> &dyn IfcType
@@ -71,28 +69,30 @@ impl IfcExtractor {
             .unwrap()
     }
 
-    pub fn related_voids<'a, S>(&'a self, id: TypedId<S>) -> Vec<&'a OpeningElement>
+    pub fn related_voids<'a, S>(
+        &'a self,
+        id: TypedId<S>,
+    ) -> impl Iterator<Item = &'a OpeningElement>
     where
         S: Structure,
     {
         self.ifc
             .data
             .find_all_of_type::<RelVoidsElement>()
-            .filter_map(|(_id, rel_voids)| {
+            .filter_map(move |(_, rel_voids)| {
                 (rel_voids.relating_building_element == id.id())
                     .then(|| self.ifc.data.get(rel_voids.related_opening_element))
             })
-            .collect()
     }
 
-    pub fn related_materials<S>(&self, id: TypedId<S>) -> Vec<&MaterialLayer>
+    pub fn related_materials<S>(&self, id: TypedId<S>) -> impl Iterator<Item = &MaterialLayer>
     where
         S: Structure,
     {
         self.ifc
             .data
             .find_all_of_type::<RelAssociatesMaterial>()
-            .filter(|(_, rel_material)| {
+            .filter(move |(_, rel_material)| {
                 rel_material
                     .related_objects
                     .0
@@ -114,17 +114,19 @@ impl IfcExtractor {
                     .iter()
             })
             .map(|material_layer_id| self.ifc.data.get(*material_layer_id))
-            .collect()
     }
 
-    pub fn related_constiuents<S>(&self, id: TypedId<S>) -> Vec<&MaterialConstituent>
+    pub fn related_constiuents<S>(
+        &self,
+        id: TypedId<S>,
+    ) -> impl Iterator<Item = &MaterialConstituent>
     where
         S: Structure,
     {
         self.ifc
             .data
             .find_all_of_type::<RelAssociatesMaterial>()
-            .filter(|(_, rel_material)| {
+            .filter(move |(_, rel_material)| {
                 rel_material
                     .related_objects
                     .0
@@ -139,7 +141,6 @@ impl IfcExtractor {
             })
             .flat_map(|constituent_set| constituent_set.material_constituents.0.iter())
             .map(|constituent_id| self.ifc.data.get(*constituent_id))
-            .collect()
     }
 }
 

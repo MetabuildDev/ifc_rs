@@ -12,7 +12,7 @@ fn main() -> Result<()> {
 fn print_project_hierarchy(ifc: IFC) {
     let ifc = IfcExtractor::from(ifc);
 
-    let projects = ifc.projects();
+    let projects = ifc.projects().collect::<Vec<_>>();
 
     println!("project count: {}", projects.len());
 
@@ -53,8 +53,10 @@ fn print_storeys(ifc: &IfcExtractor, storeys: Vec<(TypedId<Storey>, &Storey)>) {
     println!("storey count: {}", storeys.len());
 
     for (storey_index, (storey_id, _storey)) in storeys.into_iter().enumerate() {
-        let spaces = ifc.relations_of::<Storey, Space>(storey_id);
-        let storey_structures = ifc.contained_structures(storey_id);
+        let spaces = ifc
+            .relations_of::<Storey, Space>(storey_id)
+            .collect::<Vec<_>>();
+        let storey_structures = ifc.contained_structures(storey_id).collect::<Vec<_>>();
 
         println!(
             "\tstorey {} has {} space(s) and {} related structures",
@@ -80,7 +82,7 @@ fn print_storeys(ifc: &IfcExtractor, storeys: Vec<(TypedId<Storey>, &Storey)>) {
         });
 
         for (space_index, (space_id, _space)) in spaces.into_iter().enumerate() {
-            let space_structures = ifc.contained_structures(space_id);
+            let space_structures = ifc.contained_structures(space_id).collect::<Vec<_>>();
 
             println!(
                 "\t\tspace {} of storey {} has {} related structures",
@@ -100,7 +102,8 @@ fn print_structure(ifc: &IfcExtractor, structure: &dyn Structure, id: Id) {
                 let wall_id = TypedId::<Wall>::new(id);
 
                 let wall_type = ifc.related_type(wall_id);
-                let materials = ifc.related_materials(wall_id);
+                let materials = ifc.related_materials(wall_id).collect::<Vec<_>>();
+
                 let shapes = wall.shapes(ifc);
                 let items = shapes.iter().flat_map(|shape| shape.items(ifc));
 
