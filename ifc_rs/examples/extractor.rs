@@ -99,10 +99,7 @@ fn print_structure(ifc: &IfcExtractor, structure: &dyn Structure, id: Id) {
             StructureType::Wall(wall) => {
                 let wall_id = TypedId::<Wall>::new(id);
 
-                let wall_type = ifc
-                    .related_type(wall_id)
-                    .downcast_ref::<WallType>()
-                    .unwrap();
+                let wall_type = ifc.related_type(wall_id);
                 let materials = ifc.related_materials(wall_id);
                 let shapes = wall.shapes(ifc);
                 let items = shapes.iter().flat_map(|shape| shape.items(ifc));

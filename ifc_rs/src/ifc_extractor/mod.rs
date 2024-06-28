@@ -4,6 +4,10 @@ use std::ops::Deref;
 
 use crate::prelude::*;
 
+pub trait TypeRelation<T: Structure, R: IfcType> {
+    fn related_type(&self, typed_id: TypedId<T>) -> &R;
+}
+
 pub struct IfcExtractor {
     ifc: IFC,
 }
@@ -49,7 +53,7 @@ impl IfcExtractor {
             .collect()
     }
 
-    pub fn related_type<S>(&self, id: TypedId<S>) -> &dyn IfcType
+    fn related_type<S>(&self, id: TypedId<S>) -> &dyn IfcType
     where
         S: Structure,
     {
@@ -136,6 +140,46 @@ impl IfcExtractor {
             .flat_map(|constituent_set| constituent_set.material_constituents.0.iter())
             .map(|constituent_id| self.ifc.data.get(*constituent_id))
             .collect()
+    }
+}
+
+impl TypeRelation<Wall, WallType> for IfcExtractor {
+    fn related_type(&self, typed_id: TypedId<Wall>) -> &WallType {
+        self.related_type(typed_id)
+            .downcast_ref::<WallType>()
+            .unwrap()
+    }
+}
+
+impl TypeRelation<Slab, SlabType> for IfcExtractor {
+    fn related_type(&self, typed_id: TypedId<Slab>) -> &SlabType {
+        self.related_type(typed_id)
+            .downcast_ref::<SlabType>()
+            .unwrap()
+    }
+}
+
+impl TypeRelation<Roof, RoofType> for IfcExtractor {
+    fn related_type(&self, typed_id: TypedId<Roof>) -> &RoofType {
+        self.related_type(typed_id)
+            .downcast_ref::<RoofType>()
+            .unwrap()
+    }
+}
+
+impl TypeRelation<Window, WindowType> for IfcExtractor {
+    fn related_type(&self, typed_id: TypedId<Window>) -> &WindowType {
+        self.related_type(typed_id)
+            .downcast_ref::<WindowType>()
+            .unwrap()
+    }
+}
+
+impl TypeRelation<Door, DoorType> for IfcExtractor {
+    fn related_type(&self, typed_id: TypedId<Door>) -> &DoorType {
+        self.related_type(typed_id)
+            .downcast_ref::<DoorType>()
+            .unwrap()
     }
 }
 

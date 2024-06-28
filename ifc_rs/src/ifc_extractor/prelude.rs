@@ -1,1 +1,1 @@
-pub use super::IfcExtractor;
+pub use super::{IfcExtractor, TypeRelation};
