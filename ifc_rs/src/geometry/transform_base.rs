@@ -8,6 +8,7 @@ use crate::{
     prelude::*,
 };
 
+#[derive(Debug, Clone, Copy)]
 pub struct TransformBaseMapping<'a> {
     pub translation: Option<&'a Point3D>,
 

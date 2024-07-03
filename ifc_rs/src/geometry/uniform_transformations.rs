@@ -10,6 +10,7 @@ use crate::{
 
 use super::transform_base::{Transform3DBase, TransformBaseMapping};
 
+#[derive(Debug, Clone, Copy)]
 pub struct TransformMapping<'a> {
     base: TransformBaseMapping<'a>,
 }

@@ -163,98 +163,86 @@ fn print_items<'a>(shapes: impl Iterator<Item = ShapeItemEnum<'a>>, ifc: &IFC, l
             ShapeItemEnum::MappedItem(mapped_item) => {
                 println!("{}item {} is {}", indentation(level), index, mapped_item);
 
-                let ((origin, shape), transform) = mapped_item.mappings(ifc);
+                let ((axis_mapping, shape), transform) = mapped_item.mappings(ifc);
 
-                let axis_mapping = origin.mappings(ifc);
-
-                println!("{}origin {origin}", indentation(level + 1));
                 println!(
                     "{}location {}",
-                    indentation(level + 2),
+                    indentation(level + 1),
                     axis_mapping.location
                 );
                 println!(
                     "{}local_z {:?}",
-                    indentation(level + 2),
+                    indentation(level + 1),
                     axis_mapping.local_z
                 );
                 println!(
                     "{}local_x {:?}",
-                    indentation(level + 2),
+                    indentation(level + 1),
                     axis_mapping.local_x
                 );
 
                 match &transform {
-                    MappedTransform::Uniform(uniform) => {
-                        let transform_mapping = uniform.mappings(ifc);
-
-                        println!("{}uniform transform {transform}", indentation(level + 1));
+                    MappedTransform::Uniform(transform_mapping) => {
                         println!(
                             "{}translation {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             transform_mapping.translation
                         );
                         println!(
                             "{}x_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             transform_mapping.axis_x
                         );
                         println!(
                             "{}y_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             transform_mapping.axis_y
                         );
                         println!(
                             "{}z_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             transform_mapping.axis_z
                         );
                         println!(
                             "{}scale {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             transform_mapping.scale
                         );
                     }
-                    MappedTransform::NonUniform(non_uniform) => {
-                        let non_uniform_transform_mapping = non_uniform.mappings(ifc);
-
-                        println!(
-                            "{}non uniform transform {transform}",
-                            indentation(level + 1)
-                        );
+                    MappedTransform::NonUniform(non_uniform_transform_mapping) => {
                         println!(
                             "{}translation {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.translation
                         );
                         println!(
                             "{}x_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.axis_x
                         );
                         println!(
                             "{}y_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.axis_y
                         );
                         println!(
                             "{}z_axis {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.axis_z
                         );
                         println!(
                             "{}scale {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.scale
                         );
                         println!(
                             "{}scale_y {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.scale_y
                         );
                         println!(
                             "{}scale_z {:?}",
-                            indentation(level + 2),
+                            indentation(level + 1),
                             non_uniform_transform_mapping.scale_z
                         );
                     }

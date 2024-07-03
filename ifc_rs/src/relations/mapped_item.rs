@@ -10,17 +10,8 @@ use crate::{
 
 #[derive(Debug, Clone, Copy)]
 pub enum MappedTransform<'a> {
-    Uniform(&'a CartesianTransformationOperator3D),
-    NonUniform(&'a CartesianTransformationOperator3DnonUniform),
-}
-
-impl Display for MappedTransform<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MappedTransform::Uniform(uniform) => write!(f, "{uniform}"),
-            MappedTransform::NonUniform(non_uniform) => write!(f, "{non_uniform}"),
-        }
-    }
+    Uniform(TransformMapping<'a>),
+    NonUniform(NonUniformTransformMapping<'a>),
 }
 
 /// The IfcMappedItem is the inserted instance of a source definition (to be compared with a block
@@ -79,7 +70,10 @@ impl MappedItem {
 }
 
 impl<'a> IfcMappedType<'a> for MappedItem {
-    type Target = ((&'a Axis3D, &'a ShapeRepresentation), MappedTransform<'a>);
+    type Target = (
+        (MappedAxis3D<'a>, &'a ShapeRepresentation),
+        MappedTransform<'a>,
+    );
 
     fn mappings(&'a self, ifc: &'a IFC) -> Self::Target {
         let repr_map = match &self.source {
@@ -102,16 +96,16 @@ impl<'a> IfcMappedType<'a> for MappedItem {
         let mapped_transform = if let Some(uniform) =
             transform_untyped.downcast_ref::<CartesianTransformationOperator3D>()
         {
-            MappedTransform::Uniform(uniform)
+            MappedTransform::Uniform(uniform.mappings(ifc))
         } else if let Some(non_uniform) =
             transform_untyped.downcast_ref::<CartesianTransformationOperator3DnonUniform>()
         {
-            MappedTransform::NonUniform(non_uniform)
+            MappedTransform::NonUniform(non_uniform.mappings(ifc))
         } else {
             unreachable!("type check already resolved these 2 valid types");
         };
 
-        ((origin, shape), mapped_transform)
+        ((origin.mappings(ifc), shape), mapped_transform)
     }
 }
 
