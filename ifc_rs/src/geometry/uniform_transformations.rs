@@ -25,7 +25,7 @@ impl<'a> Deref for TransformMapping<'a> {
 /// An IfcCartesianTransformationOperator defines a geometric transformation in three-dimensional space.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifccartesiantransformationoperator3d.htm
-#[derive(IfcVerify)]
+#[derive(IfcVerify, Debug)]
 pub struct CartesianTransformationOperator3D {
     #[inherited]
     base: Transform3DBase,

@@ -20,6 +20,7 @@ impl<'a> AxisMappings<'a> {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct MappedAxis2D<'a> {
     pub location: &'a Point2D,
     pub local_x: Option<&'a Direction2D>,
@@ -67,7 +68,7 @@ impl<'a> IfcMappedType<'a> for Axis2D {
 impl IfcType for Axis2D {}
 impl AxisPlacement for Axis2D {}
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct MappedAxis3D<'a> {
     pub location: &'a Point3D,
     pub local_z: Option<&'a Direction3D>,

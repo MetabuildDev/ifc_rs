@@ -18,7 +18,7 @@ pub struct TransformBaseMapping<'a> {
     pub scale: Option<f64>,
 }
 
-#[derive(IfcVerify)]
+#[derive(IfcVerify, Debug)]
 pub struct Transform3DBase {
     /// The direction used to determine U[1], the derived X axis direction.
     pub axis_x: OptionalParameter<IdOr<Direction3D>>,

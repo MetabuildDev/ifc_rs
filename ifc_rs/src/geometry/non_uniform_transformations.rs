@@ -38,7 +38,7 @@ impl<'a> Deref for NonUniformTransformMapping<'a> {
 /// If the Scale factor (at supertype IfcCartesianTransformationOperator) is omitted, it defaults
 /// to 1.0. If the Scale2 or the Scale3 factor is omitted, it defaults to the value of Scale (the x
 /// axis scale factor).
-#[derive(IfcVerify)]
+#[derive(IfcVerify, Debug)]
 pub struct CartesianTransformationOperator3DnonUniform {
     #[inherited]
     base: Transform3DBase,

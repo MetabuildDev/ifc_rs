@@ -8,6 +8,7 @@ use crate::{
     prelude::*,
 };
 
+#[derive(Debug, Clone, Copy)]
 pub enum MappedTransform<'a> {
     Uniform(&'a CartesianTransformationOperator3D),
     NonUniform(&'a CartesianTransformationOperator3DnonUniform),
