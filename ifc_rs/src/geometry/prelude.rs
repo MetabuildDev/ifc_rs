@@ -4,7 +4,9 @@ pub use super::arbitrary_closed_profile_def::{
 pub use super::axis::{Axis2D, Axis3D, AxisMappings, MappedAxis2D, MappedAxis3D};
 pub use super::dimension_count::DimensionCount;
 pub use super::direction::{Direction2D, Direction3D};
-pub use super::extruded_area_solid::{ExtrudedAreaSolid, MappedProfileDef};
+pub use super::extruded_area_solid::{
+    ExtrudedAreaSolid, MappedExtrudedAreaSolid, MappedProfileDef,
+};
 pub use super::geometric_projection::GeometricProjection;
 pub use super::indexed_poly_curve::IndexedPolyCurve;
 pub use super::local_placement::LocalPlacement;
