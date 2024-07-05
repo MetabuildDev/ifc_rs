@@ -18,6 +18,9 @@ pub use super::person_and_org::PersonAndOrganization;
 pub use super::project::Project;
 pub use super::roof::Roof;
 pub use super::rooftype::{type_enum::RoofTypeEnum, RoofType};
+pub use super::shading_device::ShadingDevice;
+pub use super::shading_device_type::ShadingDeviceType;
+pub use super::shading_device_type_enum::ShadingDeviceTypeEnum;
 pub use super::shared::{
     composition_type_enum::CompositionTypeEnum,
     context::{Context, ContextBuilder},

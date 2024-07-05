@@ -153,6 +153,12 @@ fn print_structure(ifc: &IfcExtractor, structure: &dyn Structure, id: Id) {
 
                 print_items(items, ifc, 5);
             }
+            StructureType::ShadingDevice(shading_device) => {
+                let shapes = shading_device.shapes(ifc);
+                let items = shapes.iter().flat_map(|shape| shape.items(ifc));
+
+                print_items(items, ifc, 5);
+            }
         }
     }
 }

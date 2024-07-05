@@ -1,5 +1,6 @@
 use door::Door;
 use roof::Roof;
+use shading_device::ShadingDevice;
 use slab::Slab;
 use wall::Wall;
 use window::Window;
@@ -27,6 +28,9 @@ pub(crate) mod prelude;
 pub(crate) mod project;
 pub(crate) mod roof;
 pub(crate) mod rooftype;
+pub(crate) mod shading_device;
+pub mod shading_device_type;
+pub mod shading_device_type_enum;
 pub(crate) mod shared;
 pub(crate) mod site;
 pub(crate) mod slab;
@@ -45,6 +49,7 @@ pub enum StructureType<'a> {
     Roof(&'a Roof),
     Window(&'a Window),
     Door(&'a Door),
+    ShadingDevice(&'a ShadingDevice),
 }
 
 pub struct Objects;
@@ -78,6 +83,8 @@ impl Objects {
                 spacetype::SpaceType::parse_any(),
                 door::Door::parse_any(),
                 doortype::DoorType::parse_any(),
+                shading_device::ShadingDevice::parse_any(),
+                shading_device_type::ShadingDeviceType::parse_any(),
             )),
         ))
     }
