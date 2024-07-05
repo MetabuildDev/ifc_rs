@@ -16,6 +16,7 @@ pub struct IfcStoreyBuilder<'a> {
     pub(crate) roofs: HashSet<TypedId<Roof>>,
     pub(crate) opening_elements: HashSet<TypedId<OpeningElement>>,
     pub(crate) windows: HashSet<TypedId<Window>>,
+    pub(crate) shading_devices: HashSet<TypedId<ShadingDevice>>,
 
     // Wall relations
     pub(crate) wall_type_to_wall: HashMap<TypedId<WallType>, HashSet<TypedId<Wall>>>,
@@ -35,6 +36,10 @@ pub struct IfcStoreyBuilder<'a> {
 
     // Space relations
     pub(crate) space_type_to_space: HashMap<TypedId<SpaceType>, HashSet<TypedId<Space>>>,
+
+    // Shading device relations
+    pub(crate) shading_device_type_to_shading_device:
+        HashMap<TypedId<ShadingDeviceType>, HashSet<TypedId<ShadingDevice>>>,
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
@@ -62,6 +67,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             roofs: HashSet::new(),
             opening_elements: HashSet::new(),
             windows: HashSet::new(),
+            shading_devices: HashSet::new(),
 
             wall_type_to_wall: HashMap::new(),
 
@@ -75,6 +81,8 @@ impl<'a> IfcStoreyBuilder<'a> {
             window_type_to_window: HashMap::new(),
 
             space_type_to_space: HashMap::new(),
+
+            shading_device_type_to_shading_device: HashMap::new(),
         }
     }
 }
@@ -225,9 +233,41 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
             spatial_relation = spatial_relation.relate_structure(*window, &mut self.project.ifc);
         }
 
+        // shading devices ----------------------
+        for (index, (shading_device_type, shading_devices)) in self
+            .shading_device_type_to_shading_device
+            .iter()
+            .enumerate()
+        {
+            let mut shading_device_shading_device_type_relation = RelDefinesByType::new(
+                format!("ShadingDeviceTypeToShadingDevice{index}"),
+                *shading_device_type,
+                &mut self.project.ifc,
+            )
+            .owner_history(self.owner_history, &mut self.project.ifc);
+
+            for shading_device in shading_devices {
+                shading_device_shading_device_type_relation =
+                    shading_device_shading_device_type_relation
+                        .relate_obj(*shading_device, &mut self.project.ifc)
+            }
+
+            self.project
+                .ifc
+                .data
+                .insert_new(shading_device_shading_device_type_relation);
+        }
+
+        // relate storey to shading devices
+        for shading_device in self.shading_devices.iter() {
+            spatial_relation =
+                spatial_relation.relate_structure(*shading_device, &mut self.project.ifc);
+        }
+
+        // insert all spatial relations of this story
         self.project.ifc.data.insert_new(spatial_relation);
 
-        // rel aggregates
+        // rel aggregates ----------------------
         let rel_agg = RelAggregates::new(
             "StoreySpacesLink",
             self.storey.id(),

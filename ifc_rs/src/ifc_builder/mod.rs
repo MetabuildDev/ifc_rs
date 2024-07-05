@@ -4,6 +4,7 @@ pub(crate) mod openings;
 pub(crate) mod prelude;
 pub(crate) mod project;
 pub(crate) mod roofs;
+pub(crate) mod shading_devices;
 pub(crate) mod site;
 pub(crate) mod slabs;
 pub(crate) mod spaces;

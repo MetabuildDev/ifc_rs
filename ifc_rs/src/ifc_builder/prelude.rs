@@ -2,6 +2,7 @@ pub use super::building::IfcBuildingBuilder;
 pub use super::openings::VerticalOpeningParameter;
 pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
+pub use super::shading_devices::VerticalShadingDeviceParameter;
 pub use super::site::IfcSiteBuilder;
 pub use super::slabs::HorizontalArbitrarySlabParameter;
 pub use super::spaces::SpaceParameter;

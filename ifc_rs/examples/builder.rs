@@ -1,4 +1,4 @@
-use glam::{DVec2, DVec3};
+use glam::{DQuat, DVec2, DVec3};
 use ifc_rs::prelude::*;
 
 fn main() {
@@ -126,6 +126,28 @@ fn main() {
                     coords: story_footprint,
                     placement: DVec3::new(0.0, 0.0, wall_height),
                 },
+            );
+
+            let shading_device_type = storey_builder.shading_device_type(
+                material_layer_set,
+                "ExampleShadingDeviceType",
+                ShadingDeviceTypeEnum::NotDefined,
+            );
+
+            let shading_device = storey_builder.vertical_shading_device(
+                material_layer_set_usage,
+                shading_device_type,
+                "ExampleShadingDevice",
+                VerticalShadingDeviceParameter {
+                    height: 3.0,
+                    length: 5.0,
+                    placement: DVec3::new(0.0, 0.0, 0.0),
+                },
+            );
+
+            storey_builder.transform(
+                shading_device,
+                &TransformParameter::default().rotation(DQuat::from_rotation_x(90.0)),
             );
         };
 
