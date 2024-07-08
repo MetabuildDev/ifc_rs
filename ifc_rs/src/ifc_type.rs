@@ -15,7 +15,7 @@ pub trait IfcVerify: Any {
     }
 }
 
-pub trait IfcType: Downcast + Any + Display + IfcVerify {
+pub trait IfcType: Downcast + Any + Display + IfcVerify + Send + Sync + 'static {
     fn to_structure(&self) -> Option<&dyn Structure> {
         None
     }
