@@ -21,7 +21,13 @@ rust --> |std::fmt::Display| ifc
 
 # Docs
 
-- [IFC4 Standard Docs](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
+## Standard Docs 
+
+- [IFC4.3 (most recent)](https://ifc43-docs.standards.buildingsmart.org/)
+- [IFC4.2](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
+
+## Other
+
 - [Minimal File with a Wall for Starters](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/annex/annex-e/wall-standard-case.ifc)
 - [Autodesk Viewer (Main Target for importing IFC files for now)](https://viewer.autodesk.com/)
 - [Other detailed example files](https://www.ifcwiki.org/index.php?title=KIT_IFC_Examples)
