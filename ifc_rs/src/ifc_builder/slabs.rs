@@ -9,7 +9,59 @@ pub struct HorizontalArbitrarySlabParameter {
     pub placement: DVec3,
 }
 
+pub struct VerticalArbitrarySlabParameter {
+    /// check that coords are on the same plane
+    pub coords: Vec<DVec3>,
+    pub direction: DVec3,
+    pub placement: DVec3,
+}
+
 impl<'a> IfcStoreyBuilder<'a> {
+    pub fn vertical_arbitrary_slab(
+        &mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        slab_type: TypedId<SlabType>,
+        name: &str,
+        slab_information: VerticalArbitrarySlabParameter,
+    ) {
+        let position = Axis3D::new(
+            Point3D::from(slab_information.placement),
+            &mut self.project.ifc,
+        );
+        let slab_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
+            .add_item(
+                ExtrudedAreaSolid::new(
+                    ArbitraryClosedProfileDef::new(
+                        ProfileType::Area,
+                        IndexedPolyCurve::new(
+                            PointList3D::new(slab_information.coords.into_iter()),
+                            &mut self.project.ifc,
+                        ),
+                        &mut self.project.ifc,
+                    ),
+                    // horizontal slab (z-up)
+                    Direction3D::from(slab_information.direction),
+                    slab_thickness,
+                    &mut self.project.ifc,
+                ),
+                &mut self.project.ifc,
+            );
+
+        let product_shape =
+            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
+
+        let slab = Slab::new(name)
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
+
+        self.slab(material, slab_type, slab);
+    }
+
     pub fn horizontal_arbitrary_slab(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
