@@ -29,6 +29,11 @@ impl RelativePlacement for Wall {
         self.object_placement.custom().copied()
     }
 }
+impl RelativePlacement for Slab {
+    fn placement_id(&self) -> Option<Id> {
+        self.object_placement.custom().copied()
+    }
+}
 
 impl IFC {
     pub fn get_placement_id<T: RelativePlacement>(&self, id: TypedId<T>) -> Option<Id> {

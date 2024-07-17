@@ -17,11 +17,11 @@ use crate::{
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcdirection.htm
 #[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
-pub struct Direction2D(IfcDVec2);
+pub struct Direction2D(pub(crate) IfcDVec2);
 
 impl From<DVec2> for Direction2D {
     fn from(value: DVec2) -> Self {
-        Self(IfcDVec2(value))
+        Self(IfcDVec2(value.normalize()))
     }
 }
 
@@ -36,11 +36,11 @@ impl IfcType for Direction2D {}
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcdirection.htm
 #[derive(Debug, Clone, Copy, PartialEq, IfcVerify)]
-pub struct Direction3D(IfcDVec3);
+pub struct Direction3D(pub(crate) IfcDVec3);
 
 impl From<DVec3> for Direction3D {
     fn from(value: DVec3) -> Self {
-        Self(IfcDVec3(value))
+        Self(IfcDVec3(value.normalize()))
     }
 }
 

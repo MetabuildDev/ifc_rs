@@ -72,6 +72,50 @@ impl Product {
             })
             .unwrap_or_default()
     }
+
+    /// Tries to get the extrusion direction
+    pub(crate) fn direction(&self, ifc: &IFC) -> Option<Direction3D> {
+        self.shapes(ifc).iter().find_map(|shape| {
+            shape.items(ifc).find_map(|item| match item {
+                ShapeItemEnum::ExtrudedAreaSolid(area) => {
+                    let area_mappings = area.mappings(ifc);
+
+                    Some(*area_mappings.extruded_direction)
+                }
+                ShapeItemEnum::MappedItem(mapped) => {
+                    let ((_, shape), _) = mapped.mappings(ifc);
+
+                    shape.items(ifc).find_map(|item| {
+                        if let ShapeItemEnum::ExtrudedAreaSolid(area) = item {
+                            let area_mappings = area.mappings(ifc);
+
+                            Some(*area_mappings.extruded_direction)
+                        } else {
+                            None
+                        }
+                    })
+                }
+
+                _ => None,
+            })
+        })
+    }
+
+    pub(crate) fn local_placement<'a>(&self, ifc: &'a IFC) -> Option<&'a Point3D> {
+        self.object_placement
+            .custom()
+            .map(|object_placement_id| {
+                let local_placement = ifc
+                    .data
+                    .get(TypedId::<LocalPlacement>::new(*object_placement_id));
+
+                ifc.data
+                    .get_untyped(local_placement.relative_placement)
+                    .downcast_ref::<Axis3D>()
+                    .map(|axis| ifc.data.get(axis.location))
+            })
+            .flatten()
+    }
 }
 
 pub trait ProductBuilder: Sized {

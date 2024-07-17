@@ -3,11 +3,12 @@ use glam::{DQuat, DVec3};
 use crate::prelude::*;
 
 // omit scale for now
+#[derive(Debug, Clone)]
 pub struct TransformParameter {
-    translation: DVec3,
-    x_rotation: DVec3,
-    y_rotation: DVec3,
-    z_rotation: DVec3,
+    pub(crate) translation: DVec3,
+    pub(crate) x_rotation: DVec3,
+    pub(crate) y_rotation: DVec3,
+    pub(crate) z_rotation: DVec3,
 }
 
 impl TransformParameter {
@@ -58,6 +59,64 @@ impl Default for TransformParameter {
             x_rotation: DVec3::X,
             y_rotation: DVec3::Y,
             z_rotation: DVec3::Z,
+        }
+    }
+}
+
+// only needed internally for builder types (Walls, Slabs, ...)
+pub(crate) trait IfcBuilderTransform {
+    fn ifc(&mut self) -> &mut IFC;
+    fn sub_context(&self) -> TypedId<GeometricRepresentationSubContext>;
+
+    fn builder_transform<T: TransformableType>(
+        &mut self,
+        t: TypedId<T>,
+        transform_parameter: &TransformParameter,
+        origin: impl Into<DVec3> + Copy,
+    ) {
+        let transformable = self.ifc().data.get(t);
+
+        if let Some(shape_id) = transformable.shape() {
+            let transform = CartesianTransformationOperator3DnonUniform::new(
+                Point3D::from(transform_parameter.translation),
+                (
+                    Direction3D::from(transform_parameter.x_rotation),
+                    Direction3D::from(transform_parameter.y_rotation),
+                    Direction3D::from(transform_parameter.z_rotation),
+                ),
+                (1.0, 1.0, 1.0),
+                self.ifc(),
+            );
+            let transform_id = self.ifc().data.insert_new(transform);
+
+            // access to shape is still unique since we don't change it anywhere
+            // else inside the following loop just afterwards
+            let product_shape = self.ifc().data.get(shape_id);
+
+            let transforms: Vec<_> = product_shape
+                .representations
+                .0
+                .clone()
+                .into_iter()
+                .map(|shape_repr| {
+                    let representation_map = RepresentationMap::new(
+                        Axis3D::new(Point3D::from(origin.into()), self.ifc()),
+                        shape_repr,
+                        self.ifc(),
+                    );
+
+                    let r = ShapeRepresentation::new(self.sub_context(), self.ifc())
+                        .repr_type("MappedRepresentation")
+                        .add_item(
+                            MappedItem::new(representation_map, transform_id, self.ifc()),
+                            self.ifc(),
+                        );
+
+                    self.ifc().data.insert_new(r)
+                })
+                .collect();
+
+            self.ifc().data.get_mut(shape_id).representations.0 = transforms;
         }
     }
 }
@@ -154,21 +213,22 @@ mod test {
                 WallTypeEnum::NotDefined,
             );
 
-            let wall = storey_builder.vertical_wall(
-                material_layer_set_usage,
-                wall_type,
-                "ExampleWallDefault",
-                VerticalWallParameter {
-                    height: 2.0,
-                    length: 4.0,
-                    placement: DVec3::new(0.0, 0.0, 0.0),
-                },
-            );
+            {
+                let mut wall = storey_builder.vertical_wall(
+                    material_layer_set_usage,
+                    wall_type,
+                    "ExampleWallDefault",
+                    VerticalWallParameter {
+                        height: 2.0,
+                        length: 4.0,
+                        placement: DVec3::new(0.0, 0.0, 0.0),
+                    },
+                );
 
-            storey_builder.transform(
-                wall,
-                &TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
-            );
+                wall.transform(
+                    TransformParameter::default().translation(DVec3::new(1.0, 1.0, 0.0)),
+                );
+            }
         }
 
         let s = builder.build();

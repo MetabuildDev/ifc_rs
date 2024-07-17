@@ -29,6 +29,7 @@ pub struct IfcStoreyBuilder<'a> {
 
     // Opening element relations
     pub(crate) opening_elements_to_wall: HashMap<TypedId<OpeningElement>, TypedId<Wall>>,
+    pub(crate) opening_elements_to_slab: HashMap<TypedId<OpeningElement>, TypedId<Slab>>,
     pub(crate) opening_elements_to_window: HashMap<TypedId<OpeningElement>, TypedId<Window>>,
 
     // Window relations
@@ -76,6 +77,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             roof_type_to_roof: HashMap::new(),
 
             opening_elements_to_wall: HashMap::new(),
+            opening_elements_to_slab: HashMap::new(),
             opening_elements_to_window: HashMap::new(),
 
             window_type_to_window: HashMap::new(),
@@ -187,6 +189,22 @@ impl<'a> Drop for IfcStoreyBuilder<'a> {
                 .ifc
                 .data
                 .insert_new(opening_element_wall_relation);
+        }
+
+        // relate opening elements to slab
+        for (index, (opening_element, slab)) in self.opening_elements_to_slab.iter().enumerate() {
+            let opening_element_slab_relation = RelVoidsElement::new(
+                format!("OpeningElementToSlab{index}"),
+                *slab,
+                *opening_element,
+                &mut self.project.ifc,
+            )
+            .owner_history(self.owner_history, &mut self.project.ifc);
+
+            self.project
+                .ifc
+                .data
+                .insert_new(opening_element_slab_relation);
         }
 
         // windows ----------------------

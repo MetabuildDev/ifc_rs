@@ -2,6 +2,87 @@ use glam::{DVec2, DVec3};
 
 use crate::prelude::*;
 
+use super::transforms::IfcBuilderTransform;
+
+pub struct IfcWallBuilder<'a, 'b> {
+    pub(crate) storey: &'b mut IfcStoreyBuilder<'a>,
+
+    pub(crate) wall_id: TypedId<Wall>,
+    transform: Option<TransformParameter>,
+}
+
+impl<'a, 'b> IfcWallBuilder<'a, 'b> {
+    pub fn transform(&mut self, transform: TransformParameter) {
+        self.transform = Some(transform);
+    }
+}
+
+impl<'a, 'b> IfcBuilderTransform for IfcWallBuilder<'a, 'b> {
+    fn ifc(&mut self) -> &mut IFC {
+        &mut self.storey.project.ifc
+    }
+
+    fn sub_context(&self) -> TypedId<GeometricRepresentationSubContext> {
+        self.storey.sub_context
+    }
+}
+
+impl<'a, 'b> Drop for IfcWallBuilder<'a, 'b> {
+    fn drop(&mut self) {
+        // clone for borrowing reasons
+        if let Some(transform) = self.transform.take() {
+            // apply transform to wall
+            self.builder_transform(self.wall_id, &transform, (0.0, 0.0, 0.0));
+
+            // apply transform to attached elements
+            // openings
+            let opening_ids = self
+                .storey
+                .opening_elements_to_wall
+                .iter()
+                .filter_map(|(opening_id, wall)| {
+                    (*wall == self.wall_id)
+                        .then_some(
+                            self.storey
+                                .project
+                                .ifc
+                                .data
+                                .get(*opening_id)
+                                .local_placement(&self.storey.project.ifc)
+                                .map(|local_placement| (*opening_id, local_placement.0 .0)),
+                        )
+                        .flatten()
+                })
+                .collect::<Vec<_>>();
+
+            for (wall_opening_id, local_placement) in opening_ids.iter() {
+                let mut transform_copy = transform.clone();
+                transform_copy.translation -= *local_placement;
+
+                self.builder_transform(*wall_opening_id, &transform_copy, *local_placement);
+            }
+
+            // windows
+            let window_ids = opening_ids
+                .iter()
+                .filter_map(|(opening_id, local_placement)| {
+                    self.storey
+                        .opening_elements_to_window
+                        .get(opening_id)
+                        .map(|window_id| (*window_id, local_placement))
+                })
+                .collect::<Vec<_>>();
+
+            for (window_id, local_placement) in window_ids {
+                let mut transform_copy = transform.clone();
+                transform_copy.translation -= *local_placement;
+
+                self.builder_transform(window_id, &transform_copy, *local_placement);
+            }
+        }
+    }
+}
+
 pub struct VerticalWallParameter {
     pub height: f64,
     pub length: f64,
@@ -9,13 +90,13 @@ pub struct VerticalWallParameter {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
-    pub fn vertical_wall(
-        &mut self,
+    pub fn vertical_wall<'b>(
+        &'b mut self,
         material: TypedId<MaterialLayerSetUsage>,
         wall_type: TypedId<WallType>,
         name: &str,
         wall_information: VerticalWallParameter,
-    ) -> TypedId<Wall> {
+    ) -> IfcWallBuilder<'a, 'b> {
         let position = Axis3D::new(
             Point3D::from(wall_information.placement),
             &mut self.project.ifc,
@@ -91,12 +172,12 @@ impl<'a> IfcStoreyBuilder<'a> {
         wall_type_id
     }
 
-    fn wall(
-        &mut self,
+    fn wall<'b>(
+        &'b mut self,
         material: TypedId<MaterialLayerSetUsage>,
         wall_type: TypedId<WallType>,
         wall: Wall,
-    ) -> TypedId<Wall> {
+    ) -> IfcWallBuilder<'a, 'b> {
         let wall_id = self.project.ifc.data.insert_new(wall);
 
         self.walls.insert(wall_id);
@@ -117,7 +198,21 @@ impl<'a> IfcStoreyBuilder<'a> {
             })
             .relate_push(wall_id, &mut self.project.ifc);
 
-        wall_id
+        IfcWallBuilder {
+            storey: self,
+
+            wall_id,
+            transform: None,
+        }
+    }
+
+    /// Tries to get the extrusion direction of this slab (not the normal)
+    pub(crate) fn wall_direction(&self, wall_id: TypedId<Wall>) -> Option<Direction3D> {
+        self.project
+            .ifc
+            .data
+            .get(wall_id)
+            .direction(&self.project.ifc)
     }
 }
 

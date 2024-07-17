@@ -1,13 +1,13 @@
 pub use super::building::IfcBuildingBuilder;
-pub use super::openings::VerticalOpeningParameter;
+pub use super::openings::{CustomDirectionOpeningParameter, OpeningParameter};
 pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
 pub use super::shading_devices::VerticalShadingDeviceParameter;
 pub use super::site::IfcSiteBuilder;
-pub use super::slabs::{HorizontalArbitrarySlabParameter, VerticalArbitrarySlabParameter};
+pub use super::slabs::{HorizontalArbitrarySlabParameter, IfcSlabBuilder};
 pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;
-pub use super::walls::VerticalWallParameter;
+pub use super::walls::{IfcWallBuilder, VerticalWallParameter};
 pub use super::windows::WindowParameter;
 pub use super::{ApplicationInfo, OwnerInfo};

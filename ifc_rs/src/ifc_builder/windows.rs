@@ -11,6 +11,154 @@ pub struct WindowParameter {
     pub placement: DVec3,
 }
 
+impl<'a, 'b> IfcWallBuilder<'a, 'b> {
+    /// Creates a wall window. Also handle creation of the opening element.
+    pub fn window_with_opening(
+        &mut self,
+        window_material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        name: &str,
+        window_parameter: WindowParameter,
+    ) -> TypedId<Window> {
+        let opening_element = self.vertical_opening(
+            &format!("OpeningElementOfWindow{name}"),
+            OpeningParameter {
+                height: window_parameter.height,
+                length: window_parameter.width,
+                placement: window_parameter.placement,
+            },
+        );
+
+        self.wall_window(
+            window_material,
+            window_type,
+            opening_element,
+            name,
+            WindowParameter {
+                height: window_parameter.height,
+                width: window_parameter.width,
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        )
+    }
+
+    /// Assumes the given `opening_element` is attached to a wall
+    fn wall_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: WindowParameter,
+    ) -> TypedId<Window> {
+        let wall_material_set_usage = self
+            .storey
+            .project
+            .material_to_wall
+            .iter()
+            .find_map(|(mat, associates)| associates.is_related_to(self.wall_id).then_some(mat))
+            .copied()
+            .unwrap();
+
+        // NOTE: we may want to pass this as an extra param, but for now we just center the window
+        // in the opening element gap
+        let window_thickness = self
+            .storey
+            .calculate_material_layer_set_thickness(wall_material_set_usage);
+
+        let wall_direction = self
+            .storey
+            .wall_direction(self.wall_id)
+            .expect("could not find wall extrude direction");
+
+        self.storey.window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            window_parameter,
+            window_thickness,
+            wall_direction,
+        )
+    }
+}
+
+impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
+    /// Creates a slab window (e.g. for roofs). Also handle creation of the opening element.
+    pub fn window_with_opening(
+        &mut self,
+        window_material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        name: &str,
+        window_parameter: WindowParameter,
+    ) -> TypedId<Window> {
+        let opening_element = self.opening(
+            &format!("OpeningElementOfWindow{name}"),
+            OpeningParameter {
+                height: window_parameter.height,
+                length: window_parameter.width,
+                placement: window_parameter.placement,
+            },
+        );
+
+        self.slab_window(
+            window_material,
+            window_type,
+            opening_element,
+            name,
+            WindowParameter {
+                height: window_parameter.height,
+                width: window_parameter.width,
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        )
+    }
+
+    /// Assumes the given `opening_element` is attached to a slab
+    fn slab_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: WindowParameter,
+    ) -> TypedId<Window> {
+        let slab_material_set_usage = self
+            .storey
+            .project
+            .material_to_slab
+            .iter()
+            .find_map(|(mat, associates)| associates.is_related_to(self.slab_id).then_some(mat))
+            .copied()
+            .unwrap();
+
+        // NOTE: we may want to pass this as an extra param, but for now we just center the window
+        // in the opening element gap
+        let window_thickness = self
+            .storey
+            .calculate_material_layer_set_thickness(slab_material_set_usage);
+
+        let slab_direction = self
+            .storey
+            .slab_direction(self.slab_id)
+            .expect("could not find slab extrude direction");
+
+        self.storey.window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            WindowParameter {
+                height: window_thickness,
+                width: window_parameter.width,
+                placement: window_parameter.placement,
+            },
+            window_parameter.height,
+            slab_direction,
+        )
+    }
+}
+
 impl<'a> IfcStoreyBuilder<'a> {
     pub fn window_type(
         &mut self,
@@ -30,28 +178,16 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_type_id
     }
 
-    /// Assumes the given `opening_element` is attached to a wall
-    pub fn wall_window(
+    fn window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
         window_type: TypedId<WindowType>,
         opening_element: TypedId<OpeningElement>,
         name: &str,
         window_parameter: WindowParameter,
+        window_thickness: f64,
+        direction: Direction3D,
     ) -> TypedId<Window> {
-        let wall = self.opening_elements_to_wall.get(&opening_element).unwrap();
-        let wall_material_set_usage = self
-            .project
-            .material_to_wall
-            .iter()
-            .find_map(|(mat, associates)| associates.is_related_to(*wall).then_some(mat))
-            .copied()
-            .unwrap();
-        // NOTE: we may want to pass this as an extra param, but for now we just center the window
-        // in the opening element gap
-        let window_thickness =
-            self.calculate_material_layer_set_thickness(wall_material_set_usage) / 3.0;
-
         let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
             .add_item(
                 ExtrudedAreaSolid::new(
@@ -71,7 +207,7 @@ impl<'a> IfcStoreyBuilder<'a> {
                         ),
                         &mut self.project.ifc,
                     ),
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+                    direction,
                     window_parameter.height,
                     &mut self.project.ifc,
                 ),
@@ -82,7 +218,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
 
         let position = Axis3D::new(
-            Point3D::from(window_parameter.placement + DVec3::new(0., window_thickness, 0.)),
+            Point3D::from(window_parameter.placement + DVec3::new(0., 0., 0.)),
             &mut self.project.ifc,
         );
         let local_placement =
@@ -116,38 +252,6 @@ impl<'a> IfcStoreyBuilder<'a> {
             .relate_push(window_id, &mut self.project.ifc);
 
         window_id
-    }
-
-    /// Creates a wall window. Also handle creation of the opening element.
-    pub fn wall_window_with_opening(
-        &mut self,
-        window_material: TypedId<MaterialConstituentSet>,
-        window_type: TypedId<WindowType>,
-        wall: TypedId<Wall>,
-        name: &str,
-        window_parameter: WindowParameter,
-    ) -> TypedId<Window> {
-        let opening_element = self.vertical_wall_opening(
-            wall,
-            &format!("OpeningElementOfWindow{name}"),
-            VerticalOpeningParameter {
-                height: window_parameter.height,
-                length: window_parameter.width,
-                placement: window_parameter.placement,
-            },
-        );
-
-        self.wall_window(
-            window_material,
-            window_type,
-            opening_element,
-            name,
-            WindowParameter {
-                height: 0.5,
-                width: 0.5,
-                placement: DVec3::new(0.0, 0.0, 0.0),
-            },
-        )
     }
 }
 
@@ -185,27 +289,6 @@ mod test {
                 WallTypeEnum::NotDefined,
             );
 
-            let wall = storey_builder.vertical_wall(
-                material_layer_set_usage,
-                wall_type,
-                "ExampleWallDefault",
-                VerticalWallParameter {
-                    height: 2.0,
-                    length: 4.0,
-                    placement: DVec3::new(0.0, 0.0, 0.0),
-                },
-            );
-
-            let opening_element = storey_builder.vertical_wall_opening(
-                wall,
-                "ExampleOpeningElement",
-                VerticalOpeningParameter {
-                    height: 0.5,
-                    length: 0.5,
-                    placement: DVec3::new(2.0, 0.0, 0.5),
-                },
-            );
-
             let window_type = storey_builder.window_type(
                 "ExampleWindowType",
                 WindowTypeEnum::Window,
@@ -216,17 +299,30 @@ mod test {
             let material_constituent_set =
                 storey_builder.material_constituent_set([material_constituent]);
 
-            storey_builder.wall_window(
-                material_constituent_set,
-                window_type,
-                opening_element,
-                "ExampleWindow",
-                WindowParameter {
-                    height: 0.5,
-                    width: 0.5,
-                    placement: DVec3::new(0.0, 0.0, 0.0),
-                },
-            );
+            {
+                let mut wall = storey_builder.vertical_wall(
+                    material_layer_set_usage,
+                    wall_type,
+                    "ExampleWallDefault",
+                    VerticalWallParameter {
+                        height: 2.0,
+                        length: 4.0,
+                        placement: DVec3::new(0.0, 0.0, 0.0),
+                    },
+                );
+
+                wall.window_with_opening(
+                    material_constituent_set,
+                    window_type,
+                    "ExampleWindow",
+                    WindowParameter {
+                        height: 0.5,
+                        width: 0.5,
+                        placement: DVec3::new(0.0, 0.0, 0.0),
+                    },
+                );
+            }
+
             drop(storey_builder);
         }
 
