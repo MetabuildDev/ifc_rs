@@ -1,11 +1,12 @@
 mod deserialize;
 mod serialize;
 
+use glam::DVec2;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{IdOr, TypedId},
-    parser::{label::Label, list::IfcList, optional::OptionalParameter},
+    parser::{ifc_float::IfcDVec2, label::Label, list::IfcList, optional::OptionalParameter},
     prelude::*,
 };
 
@@ -48,6 +49,59 @@ impl ProductDefinitionShape {
             description: OptionalParameter::omitted(),
             representations: IfcList::empty(),
         }
+    }
+
+    pub fn new_rectangular_shape(
+        length: f64,
+        height: f64,
+        thickness: f64,
+        direction: Direction3D,
+        sub_context: TypedId<GeometricRepresentationSubContext>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+            ExtrudedAreaSolid::new(
+                RectangleProfileDef::new(ProfileType::Area, length, thickness)
+                    // center of the rectangle
+                    .position(
+                        Axis2D::new(
+                            Point2D::from(DVec2::new(length * 0.5, thickness * 0.5)),
+                            ifc,
+                        ),
+                        ifc,
+                    ),
+                direction,
+                height,
+                ifc,
+            ),
+            ifc,
+        );
+
+        ProductDefinitionShape::new().add_representation(shape_repr, ifc)
+    }
+
+    pub fn new_arbitrary_shape(
+        coords: impl Iterator<Item = impl Into<IfcDVec2>>,
+        thickness: f64,
+        direction: Direction3D,
+        sub_context: TypedId<GeometricRepresentationSubContext>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+            ExtrudedAreaSolid::new(
+                ArbitraryClosedProfileDef::new(
+                    ProfileType::Area,
+                    IndexedPolyCurve::new(PointList2D::new(coords), ifc),
+                    ifc,
+                ),
+                direction,
+                thickness,
+                ifc,
+            ),
+            ifc,
+        );
+
+        ProductDefinitionShape::new().add_representation(shape_repr, ifc)
     }
 
     pub fn name(mut self, name: impl Into<Label>) -> Self {

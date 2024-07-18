@@ -150,14 +150,16 @@ fn main() {
             },
         );
 
-        slab.window_with_opening(
+        slab.arbitrary_window_with_opening(
             material_constituent_set,
             window_type,
             "SlabRoofWindow2",
-            WindowParameter {
-                height: 1.0,
-                width: 1.0,
-                placement: DVec3::new(2.0, 1.0, 0.0),
+            ArbitraryWindowParameter {
+                coords: vec![
+                    DVec2::new(1.0, 1.0),
+                    DVec2::new(2.0, 1.0),
+                    DVec2::new(1.5, 2.0),
+                ],
             },
         );
 

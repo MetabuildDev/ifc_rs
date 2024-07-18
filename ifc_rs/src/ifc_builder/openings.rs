@@ -17,6 +17,10 @@ pub struct OpeningParameter {
     pub placement: DVec3,
 }
 
+pub struct ArbitraryOpeningParameter {
+    pub coords: Vec<DVec2>,
+}
+
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
     pub fn vertical_opening(
         &mut self,
@@ -43,19 +47,10 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
             Point3D::from(opening_information.placement),
             &mut self.storey.project.ifc,
         );
-        let wall_material_set_usage = self
-            .storey
-            .project
-            .material_to_wall
-            .iter()
-            .find_map(|(mat, associates)| associates.is_related_to(self.wall_id).then_some(mat))
-            .copied()
-            .unwrap();
-        let opening_thickness = self
-            .storey
-            .calculate_material_layer_set_thickness(wall_material_set_usage);
 
-        let product_shape = rectangular_opening_shape_repr(
+        let opening_thickness = self.opening_thickness();
+
+        let product_shape = ProductDefinitionShape::new_rectangular_shape(
             opening_information.length,
             opening_information.height,
             opening_thickness,
@@ -80,36 +75,36 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
 
         opening_element_id
     }
+
+    fn opening_thickness(&self) -> f64 {
+        let wall_material_set_usage = self
+            .storey
+            .project
+            .material_to_wall
+            .iter()
+            .find_map(|(mat, associates)| associates.is_related_to(self.wall_id).then_some(mat))
+            .copied()
+            .unwrap();
+
+        self.storey
+            .calculate_material_layer_set_thickness(wall_material_set_usage)
+    }
 }
 
 impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
-    pub fn opening(
+    pub fn rect_opening(
         &mut self,
         name: &str,
         opening_information: OpeningParameter,
     ) -> TypedId<OpeningElement> {
-        let position = Axis3D::new(
-            Point3D::from(opening_information.placement),
-            &mut self.storey.project.ifc,
-        );
-        let slab_material_set_usage = self
-            .storey
-            .project
-            .material_to_slab
-            .iter()
-            .find_map(|(mat, associates)| associates.is_related_to(self.slab_id).then_some(mat))
-            .copied()
-            .unwrap();
-        let opening_thickness = self
-            .storey
-            .calculate_material_layer_set_thickness(slab_material_set_usage);
+        let opening_thickness = self.opening_thickness();
 
         let slab_direction = self
             .storey
             .slab_direction(self.slab_id)
             .expect("could not find slab extrude direction");
 
-        let product_shape = rectangular_opening_shape_repr(
+        let product_shape = ProductDefinitionShape::new_rectangular_shape(
             opening_information.length,
             opening_thickness,
             opening_information.height,
@@ -117,6 +112,40 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
             self.storey.sub_context,
             &mut self.storey.project.ifc,
         );
+
+        self.opening(name, product_shape, opening_information.placement)
+    }
+
+    pub fn arbitrary_opening(
+        &mut self,
+        name: &str,
+        opening_information: ArbitraryOpeningParameter,
+    ) -> TypedId<OpeningElement> {
+        let opening_thickness = self.opening_thickness();
+
+        let slab_direction = self
+            .storey
+            .slab_direction(self.slab_id)
+            .expect("could not find slab extrude direction");
+
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+            opening_information.coords.into_iter(),
+            opening_thickness,
+            slab_direction,
+            self.storey.sub_context,
+            &mut self.storey.project.ifc,
+        );
+
+        self.opening(name, product_shape, DVec3::new(0.0, 0.0, 0.0))
+    }
+
+    fn opening(
+        &mut self,
+        name: &str,
+        product_shape: ProductDefinitionShape,
+        placement: DVec3,
+    ) -> TypedId<OpeningElement> {
+        let position = Axis3D::new(Point3D::from(placement), &mut self.storey.project.ifc);
 
         let local_placement =
             LocalPlacement::new_relative(position, self.slab_id, &mut self.storey.project.ifc);
@@ -134,37 +163,20 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
 
         opening_element_id
     }
-}
 
-fn rectangular_opening_shape_repr(
-    length: f64,
-    height: f64,
-    thickness: f64,
-    direction: Direction3D,
-    sub_context: TypedId<GeometricRepresentationSubContext>,
-    ifc: &mut IFC,
-) -> ProductDefinitionShape {
-    let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
-        ExtrudedAreaSolid::new(
-            RectangleProfileDef::new(ProfileType::Area, length, thickness)
-                // center of the rectangle
-                .position(
-                    Axis2D::new(
-                        Point2D::from(DVec2::new(length * 0.5, thickness * 0.5)),
-                        ifc,
-                    ),
-                    ifc,
-                ),
-            direction,
-            height,
-            ifc,
-        ),
-        ifc,
-    );
+    fn opening_thickness(&self) -> f64 {
+        let slab_material_set_usage = self
+            .storey
+            .project
+            .material_to_slab
+            .iter()
+            .find_map(|(mat, associates)| associates.is_related_to(self.slab_id).then_some(mat))
+            .copied()
+            .unwrap();
 
-    let product_shape = ProductDefinitionShape::new().add_representation(shape_repr, ifc);
-
-    product_shape
+        self.storey
+            .calculate_material_layer_set_thickness(slab_material_set_usage)
+    }
 }
 
 #[cfg(test)]

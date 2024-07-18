@@ -11,6 +11,10 @@ pub struct WindowParameter {
     pub placement: DVec3,
 }
 
+pub struct ArbitraryWindowParameter {
+    pub coords: Vec<DVec2>,
+}
+
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
     /// Creates a wall window. Also handle creation of the opening element.
     pub fn window_with_opening(
@@ -71,7 +75,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
             .wall_direction(self.wall_id)
             .expect("could not find wall extrude direction");
 
-        self.storey.window(
+        self.storey.rect_window(
             material,
             window_type,
             opening_element,
@@ -92,7 +96,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         name: &str,
         window_parameter: WindowParameter,
     ) -> TypedId<Window> {
-        let opening_element = self.opening(
+        let opening_element = self.rect_opening(
             &format!("OpeningElementOfWindow{name}"),
             OpeningParameter {
                 height: window_parameter.height,
@@ -114,15 +118,31 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         )
     }
 
-    /// Assumes the given `opening_element` is attached to a slab
-    fn slab_window(
+    /// Creates a slab window (e.g. for roofs). Also handle creation of the opening element.
+    pub fn arbitrary_window_with_opening(
         &mut self,
-        material: TypedId<MaterialConstituentSet>,
+        window_material: TypedId<MaterialConstituentSet>,
         window_type: TypedId<WindowType>,
-        opening_element: TypedId<OpeningElement>,
         name: &str,
-        window_parameter: WindowParameter,
+        window_parameter: ArbitraryWindowParameter,
     ) -> TypedId<Window> {
+        let opening_element = self.arbitrary_opening(
+            &format!("OpeningElementOfWindow{name}"),
+            ArbitraryOpeningParameter {
+                coords: window_parameter.coords.clone(),
+            },
+        );
+
+        self.arbitrary_slab_window(
+            window_material,
+            window_type,
+            opening_element,
+            name,
+            window_parameter,
+        )
+    }
+
+    fn window_thickness(&self) -> f64 {
         let slab_material_set_usage = self
             .storey
             .project
@@ -132,18 +152,27 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
             .copied()
             .unwrap();
 
-        // NOTE: we may want to pass this as an extra param, but for now we just center the window
-        // in the opening element gap
-        let window_thickness = self
-            .storey
-            .calculate_material_layer_set_thickness(slab_material_set_usage);
+        self.storey
+            .calculate_material_layer_set_thickness(slab_material_set_usage)
+    }
+
+    /// Assumes the given `opening_element` is attached to a slab
+    fn slab_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: WindowParameter,
+    ) -> TypedId<Window> {
+        let window_thickness = self.window_thickness();
 
         let slab_direction = self
             .storey
             .slab_direction(self.slab_id)
             .expect("could not find slab extrude direction");
 
-        self.storey.window(
+        self.storey.rect_window(
             material,
             window_type,
             opening_element,
@@ -154,6 +183,33 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
                 placement: window_parameter.placement,
             },
             window_parameter.height,
+            slab_direction,
+        )
+    }
+
+    /// Assumes the given `opening_element` is attached to a slab
+    fn arbitrary_slab_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: ArbitraryWindowParameter,
+    ) -> TypedId<Window> {
+        let window_thickness = self.window_thickness();
+
+        let slab_direction = self
+            .storey
+            .slab_direction(self.slab_id)
+            .expect("could not find slab extrude direction");
+
+        self.storey.arbitrary_window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            window_parameter,
+            window_thickness,
             slab_direction,
         )
     }
@@ -178,7 +234,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_type_id
     }
 
-    fn window(
+    fn rect_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
         window_type: TypedId<WindowType>,
@@ -188,37 +244,65 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_thickness: f64,
         direction: Direction3D,
     ) -> TypedId<Window> {
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    RectangleProfileDef::new(
-                        ProfileType::Area,
-                        window_parameter.width,
-                        window_thickness,
-                    )
-                    // center of the rectangle
-                    .position(
-                        Axis2D::new(
-                            Point2D::from(DVec2::new(
-                                window_parameter.width * 0.5,
-                                window_thickness * 0.5,
-                            )),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    direction,
-                    window_parameter.height,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
+        let product_shape = ProductDefinitionShape::new_rectangular_shape(
+            window_parameter.width,
+            window_parameter.height,
+            window_thickness,
+            direction,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
 
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        self.window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            product_shape,
+            window_parameter.placement,
+        )
+    }
 
+    fn arbitrary_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: ArbitraryWindowParameter,
+        window_thickness: f64,
+        direction: Direction3D,
+    ) -> TypedId<Window> {
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+            window_parameter.coords.into_iter(),
+            window_thickness,
+            direction,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
+        self.window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            product_shape,
+            // arbitrary object have no placement offset
+            DVec3::new(0.0, 0.0, 0.0),
+        )
+    }
+
+    fn window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        product_shape: ProductDefinitionShape,
+        placement: DVec3,
+    ) -> TypedId<Window> {
         let position = Axis3D::new(
-            Point3D::from(window_parameter.placement + DVec3::new(0., 0., 0.)),
+            Point3D::from(placement + DVec3::new(0., 0., 0.)),
             &mut self.project.ifc,
         );
         let local_placement =
