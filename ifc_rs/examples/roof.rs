@@ -173,6 +173,23 @@ fn main() {
         );
     }
 
+    // gable wall
+    storey_builder
+        .vertical_arbitrary_wall(
+            material_layer_set_usage,
+            wall_type,
+            "ExampleGableWall",
+            VerticalArbitraryWallParameter {
+                coords: vec![
+                    DVec2::new(0.0, 0.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::new(2.0, 2.0),
+                ],
+                placement: DVec3::ZERO,
+            },
+        )
+        .transform(TransformParameter::default().translation(DVec3::new(0.0, 0.0, 2.0)));
+
     drop(storey_builder);
     drop(building_builder);
     drop(site_builder);

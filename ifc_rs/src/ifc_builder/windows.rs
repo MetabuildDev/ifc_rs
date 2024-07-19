@@ -198,11 +198,6 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     ) -> TypedId<Window> {
         let window_thickness = self.window_thickness();
 
-        let slab_direction = self
-            .storey
-            .slab_direction(self.slab_id)
-            .expect("could not find slab extrude direction");
-
         self.storey.arbitrary_window(
             material,
             window_type,
@@ -210,7 +205,6 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
             name,
             window_parameter,
             window_thickness,
-            slab_direction,
         )
     }
 }
@@ -271,12 +265,10 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         window_parameter: ArbitraryWindowParameter,
         window_thickness: f64,
-        direction: Direction3D,
     ) -> TypedId<Window> {
-        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
             window_parameter.coords.into_iter(),
             window_thickness,
-            direction,
             self.sub_context,
             &mut self.project.ifc,
         );

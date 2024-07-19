@@ -123,15 +123,9 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     ) -> TypedId<OpeningElement> {
         let opening_thickness = self.opening_thickness();
 
-        let slab_direction = self
-            .storey
-            .slab_direction(self.slab_id)
-            .expect("could not find slab extrude direction");
-
-        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
             opening_information.coords.into_iter(),
             opening_thickness,
-            slab_direction,
             self.storey.sub_context,
             &mut self.storey.project.ifc,
         );

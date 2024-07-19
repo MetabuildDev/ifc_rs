@@ -10,6 +10,6 @@ pub use super::slabs::{HorizontalArbitrarySlabParameter, IfcSlabBuilder, Vertica
 pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;
-pub use super::walls::{IfcWallBuilder, VerticalWallParameter};
+pub use super::walls::{IfcWallBuilder, VerticalArbitraryWallParameter, VerticalWallParameter};
 pub use super::windows::{ArbitraryWindowParameter, WindowParameter};
 pub use super::{ApplicationInfo, OwnerInfo};

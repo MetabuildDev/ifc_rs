@@ -89,6 +89,12 @@ pub struct VerticalWallParameter {
     pub placement: DVec3,
 }
 
+pub struct VerticalArbitraryWallParameter {
+    /// the y component is reinterpreted as z component
+    pub coords: Vec<DVec2>,
+    pub placement: DVec3,
+}
+
 impl<'a> IfcStoreyBuilder<'a> {
     pub fn vertical_wall<'b>(
         &'b mut self,
@@ -97,41 +103,54 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         wall_information: VerticalWallParameter,
     ) -> IfcWallBuilder<'a, 'b> {
+        let wall_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let product_shape = ProductDefinitionShape::new_rectangular_shape(
+            wall_information.length,
+            wall_information.height,
+            wall_thickness,
+            Direction3D::from(DVec3::Z),
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
         let position = Axis3D::new(
             Point3D::from(wall_information.placement),
             &mut self.project.ifc,
         );
+
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
+
+        let wall = Wall::new(name)
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
+
+        self.wall(material, wall_type, wall)
+    }
+
+    pub fn vertical_arbitrary_wall<'b>(
+        &'b mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        wall_type: TypedId<WallType>,
+        name: &str,
+        wall_information: VerticalArbitraryWallParameter,
+    ) -> IfcWallBuilder<'a, 'b> {
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    RectangleProfileDef::new(
-                        ProfileType::Area,
-                        wall_information.length,
-                        wall_thickness,
-                    )
-                    // center of the rectangle
-                    .position(
-                        Axis2D::new(
-                            Point2D::from(DVec2::new(
-                                wall_information.length * 0.5,
-                                wall_thickness * 0.5,
-                            )),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    // vertical wall (z-up)
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                    wall_information.height,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
+        let product_shape = ProductDefinitionShape::new_vertical_arbitrary_shape(
+            wall_information.coords.into_iter(),
+            wall_thickness,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
 
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
+        let position = Axis3D::new(
+            Point3D::from(wall_information.placement),
+            &mut self.project.ifc,
+        );
+
         let local_placement =
             LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 

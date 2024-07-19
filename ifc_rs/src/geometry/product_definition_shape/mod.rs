@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use glam::DVec2;
+use glam::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
@@ -80,10 +80,9 @@ impl ProductDefinitionShape {
         ProductDefinitionShape::new().add_representation(shape_repr, ifc)
     }
 
-    pub fn new_arbitrary_shape(
+    pub fn new_horizontal_arbitrary_shape(
         coords: impl Iterator<Item = impl Into<IfcDVec2>>,
         thickness: f64,
-        direction: Direction3D,
         sub_context: TypedId<GeometricRepresentationSubContext>,
         ifc: &mut IFC,
     ) -> Self {
@@ -94,7 +93,36 @@ impl ProductDefinitionShape {
                     IndexedPolyCurve::new(PointList2D::new(coords), ifc),
                     ifc,
                 ),
-                direction,
+                Direction3D::from(DVec3::Z),
+                thickness,
+                ifc,
+            ),
+            ifc,
+        );
+
+        ProductDefinitionShape::new().add_representation(shape_repr, ifc)
+    }
+
+    pub fn new_vertical_arbitrary_shape(
+        coords: impl Iterator<Item = impl Into<IfcDVec2>>,
+        thickness: f64,
+        sub_context: TypedId<GeometricRepresentationSubContext>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+            ExtrudedAreaSolid::new(
+                ArbitraryClosedProfileDef::new(
+                    ProfileType::Area,
+                    IndexedPolyCurve::new(
+                        PointList3D::new(coords.map(|coord| {
+                            let dvec = coord.into();
+                            DVec3::new(dvec.x, 0.0, dvec.y)
+                        })),
+                        ifc,
+                    ),
+                    ifc,
+                ),
+                Direction3D::from(DVec3::Y),
                 thickness,
                 ifc,
             ),
