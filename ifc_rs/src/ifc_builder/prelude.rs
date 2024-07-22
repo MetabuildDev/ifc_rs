@@ -1,6 +1,7 @@
 pub use super::building::IfcBuildingBuilder;
 pub use super::openings::{
-    ArbitraryOpeningParameter, CustomDirectionOpeningParameter, OpeningParameter,
+    ArbitraryOpeningParameter, CustomDirectionOpeningParameter,
+    HorizontalArbitraryOpeningParameter, OpeningParameter,
 };
 pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
@@ -13,5 +14,7 @@ pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;
 pub use super::walls::{IfcWallBuilder, VerticalArbitraryWallParameter, VerticalWallParameter};
-pub use super::windows::{ArbitraryWindowParameter, WindowParameter};
+pub use super::windows::{
+    ArbitraryWindowParameter, HorizontalArbitraryWindowParameter, WindowParameter,
+};
 pub use super::{ApplicationInfo, OwnerInfo};

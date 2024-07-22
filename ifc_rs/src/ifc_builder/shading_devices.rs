@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use glam::{DVec2, DVec3};
+use glam::DVec3;
 
 use crate::prelude::*;
 
@@ -48,41 +48,22 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         shading_device_information: VerticalShadingDeviceParameter,
     ) -> TypedId<ShadingDevice> {
+        let wall_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let product_shape = ProductDefinitionShape::new_rectangular_shape(
+            shading_device_information.length,
+            wall_thickness,
+            shading_device_information.height,
+            Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
         let position = Axis3D::new(
             Point3D::from(shading_device_information.placement),
             &mut self.project.ifc,
         );
-        let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    RectangleProfileDef::new(
-                        ProfileType::Area,
-                        shading_device_information.length,
-                        wall_thickness,
-                    )
-                    // center of the rectangle
-                    .position(
-                        Axis2D::new(
-                            Point2D::from(DVec2::new(
-                                shading_device_information.length * 0.5,
-                                wall_thickness * 0.5,
-                            )),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    // vertical wall (z-up)
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                    shading_device_information.height,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
-
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
         let local_placement =
             LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
@@ -94,7 +75,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.shading_device(material, shading_device_type, shading_device)
     }
 
-     fn shading_device(
+    fn shading_device(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
         shading_device_type: TypedId<ShadingDeviceType>,

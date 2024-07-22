@@ -11,8 +11,12 @@ pub struct WindowParameter {
     pub placement: DVec3,
 }
 
-pub struct ArbitraryWindowParameter {
+pub struct HorizontalArbitraryWindowParameter {
     pub coords: Vec<DVec2>,
+}
+
+pub struct ArbitraryWindowParameter {
+    pub coords: Vec<DVec3>,
 }
 
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
@@ -119,6 +123,29 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     }
 
     /// Creates a slab window (e.g. for roofs). Also handle creation of the opening element.
+    pub fn horizontal_arbitrary_window_with_opening(
+        &mut self,
+        window_material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        name: &str,
+        window_parameter: HorizontalArbitraryWindowParameter,
+    ) -> TypedId<Window> {
+        let opening_element = self.horizontal_arbitrary_opening(
+            &format!("OpeningElementOfWindow{name}"),
+            HorizontalArbitraryOpeningParameter {
+                coords: window_parameter.coords.clone(),
+            },
+        );
+
+        self.horizontal_arbitrary_slab_window(
+            window_material,
+            window_type,
+            opening_element,
+            name,
+            window_parameter,
+        )
+    }
+    /// Creates a slab window (e.g. for roofs). Also handle creation of the opening element.
     pub fn arbitrary_window_with_opening(
         &mut self,
         window_material: TypedId<MaterialConstituentSet>,
@@ -188,6 +215,27 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     }
 
     /// Assumes the given `opening_element` is attached to a slab
+    fn horizontal_arbitrary_slab_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: HorizontalArbitraryWindowParameter,
+    ) -> TypedId<Window> {
+        let window_thickness = self.window_thickness();
+
+        self.storey.horizontal_arbitrary_window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            window_parameter,
+            window_thickness,
+        )
+    }
+
+    /// Assumes the given `opening_element` is attached to a slab
     fn arbitrary_slab_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
@@ -198,12 +246,18 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     ) -> TypedId<Window> {
         let window_thickness = self.window_thickness();
 
+        let slab_direction = self
+            .storey
+            .slab_direction(self.slab_id)
+            .expect("could not find slab extrude direction");
+
         self.storey.arbitrary_window(
             material,
             window_type,
             opening_element,
             name,
             window_parameter,
+            slab_direction.0 .0,
             window_thickness,
         )
     }
@@ -257,6 +311,33 @@ impl<'a> IfcStoreyBuilder<'a> {
         )
     }
 
+    fn horizontal_arbitrary_window(
+        &mut self,
+        material: TypedId<MaterialConstituentSet>,
+        window_type: TypedId<WindowType>,
+        opening_element: TypedId<OpeningElement>,
+        name: &str,
+        window_parameter: HorizontalArbitraryWindowParameter,
+        window_thickness: f64,
+    ) -> TypedId<Window> {
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+            window_parameter.coords.into_iter(),
+            window_thickness,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
+        self.window(
+            material,
+            window_type,
+            opening_element,
+            name,
+            product_shape,
+            // arbitrary object have no placement offset
+            DVec3::new(0.0, 0.0, 0.0),
+        )
+    }
+
     fn arbitrary_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
@@ -264,11 +345,13 @@ impl<'a> IfcStoreyBuilder<'a> {
         opening_element: TypedId<OpeningElement>,
         name: &str,
         window_parameter: ArbitraryWindowParameter,
+        direction: DVec3,
         window_thickness: f64,
     ) -> TypedId<Window> {
-        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
             window_parameter.coords.into_iter(),
             window_thickness,
+            direction,
             self.sub_context,
             &mut self.project.ifc,
         );

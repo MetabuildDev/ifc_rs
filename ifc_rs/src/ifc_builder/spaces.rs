@@ -17,28 +17,14 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         space_information: SpaceParameter,
     ) {
-        let shape_repr_3d = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    ArbitraryClosedProfileDef::new(
-                        ProfileType::Area,
-                        IndexedPolyCurve::new(
-                            PointList2D::new(space_information.coords.into_iter()),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                    space_information.height,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
-
         // TODO: add the footprint curve as an additional shaperepresentation to the space's
         // `ProductDefinitionShape.representations` vec
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr_3d, &mut self.project.ifc);
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+            space_information.coords.into_iter(),
+            space_information.height,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
 
         let position = Axis3D::new(
             Point3D::from(space_information.placement),

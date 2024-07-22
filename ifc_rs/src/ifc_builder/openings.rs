@@ -17,8 +17,12 @@ pub struct OpeningParameter {
     pub placement: DVec3,
 }
 
-pub struct ArbitraryOpeningParameter {
+pub struct HorizontalArbitraryOpeningParameter {
     pub coords: Vec<DVec2>,
+}
+
+pub struct ArbitraryOpeningParameter {
+    pub coords: Vec<DVec3>,
 }
 
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
@@ -116,6 +120,23 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         self.opening(name, product_shape, opening_information.placement)
     }
 
+    pub fn horizontal_arbitrary_opening(
+        &mut self,
+        name: &str,
+        opening_information: HorizontalArbitraryOpeningParameter,
+    ) -> TypedId<OpeningElement> {
+        let opening_thickness = self.opening_thickness();
+
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+            opening_information.coords.into_iter(),
+            opening_thickness,
+            self.storey.sub_context,
+            &mut self.storey.project.ifc,
+        );
+
+        self.opening(name, product_shape, DVec3::new(0.0, 0.0, 0.0))
+    }
+
     pub fn arbitrary_opening(
         &mut self,
         name: &str,
@@ -123,9 +144,15 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     ) -> TypedId<OpeningElement> {
         let opening_thickness = self.opening_thickness();
 
-        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+        let slab_direction = self
+            .storey
+            .slab_direction(self.slab_id)
+            .expect("could not find slab extrude direction");
+
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
             opening_information.coords.into_iter(),
             opening_thickness,
+            slab_direction.0 .0,
             self.storey.sub_context,
             &mut self.storey.project.ifc,
         );

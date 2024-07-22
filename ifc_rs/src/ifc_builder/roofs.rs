@@ -17,33 +17,20 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         roof_information: HorizontalArbitraryRoofParameter,
     ) {
+        let roof_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+            roof_information.coords.into_iter(),
+            roof_thickness,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
         let position = Axis3D::new(
             Point3D::from(roof_information.placement),
             &mut self.project.ifc,
         );
-        let roof_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    ArbitraryClosedProfileDef::new(
-                        ProfileType::Area,
-                        IndexedPolyCurve::new(
-                            PointList2D::new(roof_information.coords.into_iter()),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    // horizontal roof (z-up)
-                    Direction3D::from(DVec3::new(0.0, 0.0, 1.0)),
-                    roof_thickness,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
-
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
         let local_placement =
             LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
 
