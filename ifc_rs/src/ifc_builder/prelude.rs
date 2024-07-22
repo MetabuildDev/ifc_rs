@@ -6,7 +6,9 @@ pub use super::project::IfcProjectBuilder;
 pub use super::roofs::HorizontalArbitraryRoofParameter;
 pub use super::shading_devices::VerticalShadingDeviceParameter;
 pub use super::site::IfcSiteBuilder;
-pub use super::slabs::{HorizontalArbitrarySlabParameter, IfcSlabBuilder, VerticalSlabParameter};
+pub use super::slabs::{
+    ArbitrarySlabParameter, HorizontalArbitrarySlabParameter, IfcSlabBuilder, VerticalSlabParameter,
+};
 pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;

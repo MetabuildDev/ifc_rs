@@ -6,7 +6,12 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{IdOr, TypedId},
-    parser::{ifc_float::IfcDVec2, label::Label, list::IfcList, optional::OptionalParameter},
+    parser::{
+        ifc_float::{IfcDVec2, IfcDVec3},
+        label::Label,
+        list::IfcList,
+        optional::OptionalParameter,
+    },
     prelude::*,
 };
 
@@ -123,6 +128,30 @@ impl ProductDefinitionShape {
                     ifc,
                 ),
                 Direction3D::from(DVec3::Y),
+                thickness,
+                ifc,
+            ),
+            ifc,
+        );
+
+        ProductDefinitionShape::new().add_representation(shape_repr, ifc)
+    }
+
+    pub fn new_arbitrary_shape(
+        coords: impl Iterator<Item = impl Into<IfcDVec3>>,
+        thickness: f64,
+        direction: DVec3,
+        sub_context: TypedId<GeometricRepresentationSubContext>,
+        ifc: &mut IFC,
+    ) -> Self {
+        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+            ExtrudedAreaSolid::new(
+                ArbitraryClosedProfileDef::new(
+                    ProfileType::Area,
+                    IndexedPolyCurve::new(PointList3D::new(coords), ifc),
+                    ifc,
+                ),
+                Direction3D::from(direction),
                 thickness,
                 ifc,
             ),

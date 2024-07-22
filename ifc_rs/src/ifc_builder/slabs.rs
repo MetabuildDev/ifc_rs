@@ -97,6 +97,12 @@ pub struct VerticalSlabParameter {
     pub placement: DVec3,
 }
 
+pub struct ArbitrarySlabParameter {
+    pub coords: Vec<DVec3>,
+    pub direction: DVec3,
+    pub placement: DVec3,
+}
+
 impl<'a> IfcStoreyBuilder<'a> {
     pub fn horizontal_arbitrary_slab<'b>(
         &'b mut self,
@@ -105,42 +111,22 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         slab_information: HorizontalArbitrarySlabParameter,
     ) -> IfcSlabBuilder<'a, 'b> {
-        let position = Axis3D::new(
-            Point3D::from(slab_information.placement),
-            &mut self.project.ifc,
-        );
         let slab_thickness = self.calculate_material_layer_set_thickness(material);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    ArbitraryClosedProfileDef::new(
-                        ProfileType::Area,
-                        IndexedPolyCurve::new(
-                            PointList2D::new(slab_information.coords.into_iter()),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    // horizontal slab (z-up)
-                    Direction3D::from(DVec3::Z),
-                    slab_thickness,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
+        let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
+            slab_information.coords.into_iter(),
+            slab_thickness,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
 
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
-        let local_placement =
-            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
-
-        let slab = Slab::new(name)
-            .owner_history(self.owner_history, &mut self.project.ifc)
-            .object_placement(local_placement, &mut self.project.ifc)
-            .representation(product_shape, &mut self.project.ifc);
-
-        self.slab(material, slab_type, slab)
+        self.slab(
+            slab_information.placement,
+            name,
+            product_shape,
+            material,
+            slab_type,
+        )
     }
 
     pub fn vertical_slab<'b>(
@@ -150,53 +136,58 @@ impl<'a> IfcStoreyBuilder<'a> {
         name: &str,
         slab_information: VerticalSlabParameter,
     ) -> IfcSlabBuilder<'a, 'b> {
-        let position = Axis3D::new(
-            Point3D::from(slab_information.placement),
-            &mut self.project.ifc,
-        );
         let slab_thickness = self.calculate_material_layer_set_thickness(material);
 
         let direction: DVec3 =
             (slab_information.start.extend(0.0) - slab_information.end.extend(0.0)).cross(DVec3::Z);
 
-        let shape_repr = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-            .add_item(
-                ExtrudedAreaSolid::new(
-                    ArbitraryClosedProfileDef::new(
-                        ProfileType::Area,
-                        IndexedPolyCurve::new(
-                            PointList3D::new(
-                                [
-                                    slab_information.start.extend(slab_information.height),
-                                    slab_information.start.extend(0.0),
-                                    slab_information.end.extend(0.0),
-                                    slab_information.end.extend(slab_information.height),
-                                ]
-                                .into_iter(),
-                            ),
-                            &mut self.project.ifc,
-                        ),
-                        &mut self.project.ifc,
-                    ),
-                    // horizontal slab (z-up)
-                    Direction3D::from(direction),
-                    slab_thickness,
-                    &mut self.project.ifc,
-                ),
-                &mut self.project.ifc,
-            );
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+            [
+                slab_information.start.extend(slab_information.height),
+                slab_information.start.extend(0.0),
+                slab_information.end.extend(0.0),
+                slab_information.end.extend(slab_information.height),
+            ]
+            .into_iter(),
+            slab_thickness,
+            direction,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
 
-        let product_shape =
-            ProductDefinitionShape::new().add_representation(shape_repr, &mut self.project.ifc);
-        let local_placement =
-            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
+        self.slab(
+            slab_information.placement,
+            name,
+            product_shape,
+            material,
+            slab_type,
+        )
+    }
 
-        let slab = Slab::new(name)
-            .owner_history(self.owner_history, &mut self.project.ifc)
-            .object_placement(local_placement, &mut self.project.ifc)
-            .representation(product_shape, &mut self.project.ifc);
+    pub fn arbitrary_slab<'b>(
+        &'b mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        slab_type: TypedId<SlabType>,
+        name: &str,
+        slab_information: ArbitrarySlabParameter,
+    ) -> IfcSlabBuilder<'a, 'b> {
+        let slab_thickness = self.calculate_material_layer_set_thickness(material);
 
-        self.slab(material, slab_type, slab)
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+            slab_information.coords.into_iter(),
+            slab_thickness,
+            slab_information.direction,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
+        self.slab(
+            slab_information.placement,
+            name,
+            product_shape,
+            material,
+            slab_type,
+        )
     }
 
     pub fn slab_type(
@@ -230,10 +221,22 @@ impl<'a> IfcStoreyBuilder<'a> {
 
     fn slab<'b>(
         &'b mut self,
+        placement: DVec3,
+        name: &str,
+        product_shape: ProductDefinitionShape,
         material: TypedId<MaterialLayerSetUsage>,
         slab_type: TypedId<SlabType>,
-        slab: Slab,
     ) -> IfcSlabBuilder<'a, 'b> {
+        let position = Axis3D::new(Point3D::from(placement), &mut self.project.ifc);
+
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
+
+        let slab = Slab::new(name)
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
+
         let slab_id = self.project.ifc.data.insert_new(slab);
 
         self.slabs.insert(slab_id);

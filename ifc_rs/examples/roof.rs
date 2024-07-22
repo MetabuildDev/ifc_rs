@@ -190,6 +190,23 @@ fn main() {
         )
         .transform(TransformParameter::default().translation(DVec3::new(0.0, 0.0, 2.0)));
 
+    // arbitrary roof
+    storey_builder.arbitrary_slab(
+        material_layer_set_usage,
+        roof_type,
+        "ExampleArbitraryRoof",
+        ArbitrarySlabParameter {
+            coords: vec![
+                DVec3::new(0.0, 0.0, 0.0),
+                DVec3::new(2.0, 0.0, 2.0),
+                DVec3::new(2.0, 4.0, 2.0),
+                DVec3::new(0.0, 4.0, 0.0),
+            ],
+            direction: DVec3::new(-1.0, 0.0, 1.0),
+            placement: DVec3::new(0.0, 0.0, 2.0),
+        },
+    );
+
     drop(storey_builder);
     drop(building_builder);
     drop(site_builder);
