@@ -95,6 +95,12 @@ pub struct VerticalArbitraryWallParameter {
     pub placement: DVec3,
 }
 
+pub struct ArbitraryWallParameter {
+    pub coords: Vec<DVec3>,
+    pub direction: DVec3,
+    pub placement: DVec3,
+}
+
 impl<'a> IfcStoreyBuilder<'a> {
     pub fn vertical_wall<'b>(
         &'b mut self,
@@ -142,6 +148,39 @@ impl<'a> IfcStoreyBuilder<'a> {
         let product_shape = ProductDefinitionShape::new_vertical_arbitrary_shape(
             wall_information.coords.into_iter(),
             wall_thickness,
+            self.sub_context,
+            &mut self.project.ifc,
+        );
+
+        let position = Axis3D::new(
+            Point3D::from(wall_information.placement),
+            &mut self.project.ifc,
+        );
+
+        let local_placement =
+            LocalPlacement::new_relative(position, self.storey, &mut self.project.ifc);
+
+        let wall = Wall::new(name)
+            .owner_history(self.owner_history, &mut self.project.ifc)
+            .object_placement(local_placement, &mut self.project.ifc)
+            .representation(product_shape, &mut self.project.ifc);
+
+        self.wall(material, wall_type, wall)
+    }
+
+    pub fn arbitrary_wall<'b>(
+        &'b mut self,
+        material: TypedId<MaterialLayerSetUsage>,
+        wall_type: TypedId<WallType>,
+        name: &str,
+        wall_information: ArbitraryWallParameter,
+    ) -> IfcWallBuilder<'a, 'b> {
+        let wall_thickness = self.calculate_material_layer_set_thickness(material);
+
+        let product_shape = ProductDefinitionShape::new_arbitrary_shape(
+            wall_information.coords.into_iter(),
+            wall_thickness,
+            wall_information.direction,
             self.sub_context,
             &mut self.project.ifc,
         );

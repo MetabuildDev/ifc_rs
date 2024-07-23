@@ -13,7 +13,9 @@ pub use super::slabs::{
 pub use super::spaces::SpaceParameter;
 pub use super::storey::IfcStoreyBuilder;
 pub use super::transforms::TransformParameter;
-pub use super::walls::{IfcWallBuilder, VerticalArbitraryWallParameter, VerticalWallParameter};
+pub use super::walls::{
+    ArbitraryWallParameter, IfcWallBuilder, VerticalArbitraryWallParameter, VerticalWallParameter,
+};
 pub use super::windows::{
     ArbitraryWindowParameter, HorizontalArbitraryWindowParameter, WindowParameter,
 };

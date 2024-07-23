@@ -69,29 +69,29 @@ fn main() {
     let material_constituent = storey_builder.material_constituent("Wood", "Framing");
     let material_constituent_set = storey_builder.material_constituent_set([material_constituent]);
 
-    // {
-    //     let mut wall = storey_builder.vertical_wall(
-    //         material_layer_set_usage,
-    //         wall_type,
-    //         "ExampleWallDefault",
-    //         VerticalWallParameter {
-    //             height: wall_height,
-    //             length: 4.0,
-    //             placement: DVec3::new(0.0, 0.0, 0.0),
-    //         },
-    //     );
+    {
+        let mut wall = storey_builder.vertical_wall(
+            material_layer_set_usage,
+            wall_type,
+            "ExampleWallDefault",
+            VerticalWallParameter {
+                height: wall_height,
+                length: 4.0,
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
 
-    //     wall.window_with_opening(
-    //         material_constituent_set,
-    //         window_type,
-    //         "ExampleWindow",
-    //         WindowParameter {
-    //             height: 0.5,
-    //             width: 0.5,
-    //             placement: DVec3::new(2.0, 0.0, 0.5),
-    //         },
-    //     );
-    // }
+        wall.window_with_opening(
+            material_constituent_set,
+            window_type,
+            "ExampleWindow",
+            WindowParameter {
+                height: 0.5,
+                width: 0.5,
+                placement: DVec3::new(2.0, 0.0, 0.5),
+            },
+        );
+    }
 
     // roof with window
     let roof_type = storey_builder.slab_type(
@@ -100,95 +100,95 @@ fn main() {
         SlabTypeEnum::Roof,
     );
 
-    // {
-    //     let mut slab = storey_builder.horizontal_arbitrary_slab(
-    //         material_layer_set_usage,
-    //         roof_type,
-    //         "SlabRoof1",
-    //         HorizontalArbitrarySlabParameter {
-    //             coords: vec![
-    //                 DVec2::new(0.0, 0.0),
-    //                 DVec2::new(4.0, 0.0),
-    //                 DVec2::new(4.0, 4.0),
-    //                 DVec2::new(0.0, 4.0),
-    //             ],
-    //             placement: DVec3::new(0.0, 0.0, 0.0),
-    //         },
-    //     );
+    {
+        let mut slab = storey_builder.horizontal_arbitrary_slab(
+            material_layer_set_usage,
+            roof_type,
+            "SlabRoof1",
+            HorizontalArbitrarySlabParameter {
+                coords: vec![
+                    DVec2::new(0.0, 0.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::new(4.0, 4.0),
+                    DVec2::new(0.0, 4.0),
+                ],
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
 
-    //     slab.window_with_opening(
-    //         material_constituent_set,
-    //         window_type,
-    //         "SlabRoofWindow1",
-    //         WindowParameter {
-    //             height: 1.0,
-    //             width: 1.0,
-    //             placement: DVec3::new(2.0, 1.0, 0.0),
-    //         },
-    //     );
+        slab.window_with_opening(
+            material_constituent_set,
+            window_type,
+            "SlabRoofWindow1",
+            WindowParameter {
+                height: 1.0,
+                width: 1.0,
+                placement: DVec3::new(2.0, 1.0, 0.0),
+            },
+        );
 
-    //     slab.transform(
-    //         TransformParameter::default()
-    //             .translation(DVec3::new(0.0, 0.0, 2.0))
-    //             .rotation(DQuat::from_rotation_x(std::f64::consts::PI * 0.25)),
-    //     );
-    // }
+        slab.transform(
+            TransformParameter::default()
+                .translation(DVec3::new(0.0, 0.0, 2.0))
+                .rotation(DQuat::from_rotation_x(std::f64::consts::PI * 0.25)),
+        );
+    }
 
-    // {
-    //     let mut slab = storey_builder.horizontal_arbitrary_slab(
-    //         material_layer_set_usage,
-    //         roof_type,
-    //         "SlabRoof2",
-    //         HorizontalArbitrarySlabParameter {
-    //             coords: vec![
-    //                 DVec2::new(0.0, 0.0),
-    //                 DVec2::new(4.0, 0.0),
-    //                 DVec2::new(4.0, 4.0),
-    //                 DVec2::new(0.0, 4.0),
-    //             ],
-    //             placement: DVec3::new(0.0, 0.0, 0.0),
-    //         },
-    //     );
+    {
+        let mut slab = storey_builder.horizontal_arbitrary_slab(
+            material_layer_set_usage,
+            roof_type,
+            "SlabRoof2",
+            HorizontalArbitrarySlabParameter {
+                coords: vec![
+                    DVec2::new(0.0, 0.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::new(4.0, 4.0),
+                    DVec2::new(0.0, 4.0),
+                ],
+                placement: DVec3::new(0.0, 0.0, 0.0),
+            },
+        );
 
-    //     slab.horizontal_arbitrary_window_with_opening(
-    //         material_constituent_set,
-    //         window_type,
-    //         "SlabRoofWindow2",
-    //         HorizontalArbitraryWindowParameter {
-    //             coords: vec![
-    //                 DVec2::new(1.0, 1.0),
-    //                 DVec2::new(2.0, 1.0),
-    //                 DVec2::new(1.5, 2.0),
-    //             ],
-    //         },
-    //     );
+        slab.horizontal_arbitrary_window_with_opening(
+            material_constituent_set,
+            window_type,
+            "SlabRoofWindow2",
+            HorizontalArbitraryWindowParameter {
+                coords: vec![
+                    DVec2::new(1.0, 1.0),
+                    DVec2::new(2.0, 1.0),
+                    DVec2::new(1.5, 2.0),
+                ],
+            },
+        );
 
-    //     slab.transform(
-    //         TransformParameter::default()
-    //             .translation(DVec3::new(4.0, 4.0, 2.0))
-    //             .rotation(
-    //                 DQuat::from_rotation_z(std::f64::consts::PI * 0.5)
-    //                     * DQuat::from_rotation_x(std::f64::consts::PI * 0.25),
-    //             ),
-    //     );
-    // }
+        slab.transform(
+            TransformParameter::default()
+                .translation(DVec3::new(4.0, 4.0, 2.0))
+                .rotation(
+                    DQuat::from_rotation_z(std::f64::consts::PI * 0.5)
+                        * DQuat::from_rotation_x(std::f64::consts::PI * 0.25),
+                ),
+        );
+    }
 
-    // // gable wall
-    // storey_builder
-    //     .vertical_arbitrary_wall(
-    //         material_layer_set_usage,
-    //         wall_type,
-    //         "ExampleGableWall",
-    //         VerticalArbitraryWallParameter {
-    //             coords: vec![
-    //                 DVec2::new(0.0, 0.0),
-    //                 DVec2::new(4.0, 0.0),
-    //                 DVec2::new(2.0, 2.0),
-    //             ],
-    //             placement: DVec3::ZERO,
-    //         },
-    //     )
-    //     .transform(TransformParameter::default().translation(DVec3::new(0.0, 0.0, 2.0)));
+    // gable wall
+    storey_builder
+        .vertical_arbitrary_wall(
+            material_layer_set_usage,
+            wall_type,
+            "ExampleGableWall",
+            VerticalArbitraryWallParameter {
+                coords: vec![
+                    DVec2::new(0.0, 0.0),
+                    DVec2::new(4.0, 0.0),
+                    DVec2::new(2.0, 2.0),
+                ],
+                placement: DVec3::ZERO,
+            },
+        )
+        .transform(TransformParameter::default().translation(DVec3::new(0.0, 0.0, 2.0)));
 
     // arbitrary roof
     {
