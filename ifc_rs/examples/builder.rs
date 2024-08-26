@@ -95,6 +95,7 @@ fn main() {
                         width: 0.5,
                         placement: DVec3::new(2.0, 0.0, 0.5),
                     },
+                    Direction3D::from(DVec3::Z),
                 );
             }
 

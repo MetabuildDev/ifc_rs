@@ -27,6 +27,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
         window_type: TypedId<WindowType>,
         name: &str,
         window_parameter: WindowParameter,
+        direction: Direction3D,
     ) -> TypedId<Window> {
         let opening_element = self.vertical_opening(
             &format!("OpeningElementOfWindow{name}"),
@@ -47,6 +48,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
                 width: window_parameter.width,
                 placement: DVec3::new(0.0, 0.0, 0.0),
             },
+            direction,
         )
     }
 
@@ -58,6 +60,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
         opening_element: TypedId<OpeningElement>,
         name: &str,
         window_parameter: WindowParameter,
+        direction: Direction3D,
     ) -> TypedId<Window> {
         let wall_material_set_usage = self
             .storey
@@ -74,11 +77,6 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
             .storey
             .calculate_material_layer_set_thickness(wall_material_set_usage);
 
-        let wall_direction = self
-            .storey
-            .wall_direction(self.wall_id)
-            .expect("could not find wall extrude direction");
-
         self.storey.rect_window(
             material,
             window_type,
@@ -86,7 +84,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
             name,
             window_parameter,
             window_thickness,
-            wall_direction,
+            direction,
         )
     }
 }
@@ -479,6 +477,7 @@ mod test {
                         width: 0.5,
                         placement: DVec3::new(0.0, 0.0, 0.0),
                     },
+                    Direction3D::from(DVec3::Z),
                 );
             }
 
