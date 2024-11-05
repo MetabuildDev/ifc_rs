@@ -4,12 +4,10 @@ impl<'a> IfcStoreyBuilder<'a> {
     pub fn material_layer(
         &mut self,
         material_name: &str,
-        thickness: f64,
-        is_ventilated: bool,
+        layer: MaterialLayer,
     ) -> TypedId<MaterialLayer> {
         let material = self.material(material_name);
-        let material_layer =
-            MaterialLayer::new(thickness, is_ventilated).material(material, &mut self.project.ifc);
+        let material_layer = layer.material(material, &mut self.project.ifc);
         self.project.ifc.data.insert_new(material_layer)
     }
 
@@ -116,7 +114,10 @@ mod test {
             let mut building_builder = site_builder.new_building("test", DVec3::ZERO);
             let mut storey_builder = building_builder.new_storey("test", 0.0);
 
-            let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+            let material_layer = storey_builder.material_layer(
+                "ExampleMaterial",
+                MaterialLayer::new(0.02, false).name("ExampleMaterialLayer"),
+            );
             let material_layer_set = storey_builder.material_layer_set([material_layer]);
             storey_builder.material_layer_set_usage(
                 material_layer_set,

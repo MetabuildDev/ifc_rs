@@ -25,7 +25,10 @@ fn main() {
 
     let mut storey_builder = building_builder.new_storey("ExampleStorey", 0.0);
 
-    let material_layer = storey_builder.material_layer("ExampleMaterial", 0.02, false);
+    let material_layer = storey_builder.material_layer(
+        "ExampleMaterial",
+        MaterialLayer::new(0.02, false).name("ExampleMaterialLayer"),
+    );
     let material_layer_set = storey_builder.material_layer_set([material_layer]);
     let material_layer_set_usage = storey_builder.material_layer_set_usage(
         material_layer_set,
