@@ -94,6 +94,7 @@ pub(crate) mod schema {
     pub enum FileSchema {
         IFC2X3,
         IFC4X2,
+        IFC4X3,
         IFC4,
     }
 }

@@ -187,6 +187,7 @@ impl Header {
         let p_version_any_case = alt((
             alt(("2x3", "2X3")).value(FileSchema::IFC2X3),
             alt(("4x2", "4X2")).value(FileSchema::IFC4X2),
+            alt(("4x3", "4X3")).value(FileSchema::IFC4X3),
             "4".value(FileSchema::IFC4),
         ));
         preceded(p_prefix_any_case, p_version_any_case)
@@ -270,7 +271,7 @@ fn sketchup_header() {
     HEADER;
     FILE_DESCRIPTION (('ViewDefinition [CoordinationView]'), '2;1');
     FILE_NAME ('', '2018-10-30T17:42:13', (''), (''), '', 'SketchUp Pro 2015, manually edited by KHH at KIT/IAI', '');
-    FILE_SCHEMA (('IFC4X2'));
+    FILE_SCHEMA (('IFC4X3'));
     ENDSEC;"#;
 
     Header::parse().parse(data).unwrap();
