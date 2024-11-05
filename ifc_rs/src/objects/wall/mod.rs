@@ -108,7 +108,7 @@ impl TransformableType for Wall {
 
 #[cfg(test)]
 pub mod test {
-    use glam::DVec3;
+    use bevy_math::DVec3;
     use winnow::Parser;
 
     use crate::geometry::axis::Axis3D;

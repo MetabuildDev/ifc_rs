@@ -1,4 +1,4 @@
-use glam::{DVec2, DVec3};
+use bevy_math::{DVec2, DVec3};
 
 use crate::prelude::*;
 
@@ -278,7 +278,7 @@ impl<'a> IfcStoreyBuilder<'a> {
 mod test {
     use std::str::FromStr;
 
-    use glam::DVec3;
+    use bevy_math::DVec3;
 
     use crate::prelude::*;
 

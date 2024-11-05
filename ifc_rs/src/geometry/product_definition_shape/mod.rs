@@ -1,7 +1,7 @@
 mod deserialize;
 mod serialize;
 
-use glam::{DVec2, DVec3};
+use bevy_math::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
@@ -188,7 +188,7 @@ impl IfcType for ProductDefinitionShape {}
 
 #[cfg(test)]
 pub mod test {
-    use glam::DVec3;
+    use bevy_math::DVec3;
 
     use crate::{
         geometry::{

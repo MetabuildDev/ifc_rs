@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::ops::Deref;
 
-use glam::{DVec2, DVec3};
+use bevy_math::{DVec2, DVec3};
 use winnow::ascii::float;
 use winnow::Parser;
 

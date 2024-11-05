@@ -1,4 +1,4 @@
-use glam::{DQuat, DVec2, DVec3};
+use bevy_math::{DQuat, DVec2, DVec3};
 use ifc_rs::prelude::*;
 
 fn main() {

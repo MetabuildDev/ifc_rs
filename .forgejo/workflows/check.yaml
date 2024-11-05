@@ -13,7 +13,10 @@ jobs:
           nix flake check
       - name: Run Cargo Machete
         run: |
-          nix run .#exec-deps-check
+          nix run .#exec-cargo-machete
+      - name: Run Cargo Deny
+        run: |
+          nix run .#exec-cargo-deny
       - name: Run Cargo Nextest
         run: |
-          nix run .#exec-tests
+          nix run .#exec-cargo-nextest

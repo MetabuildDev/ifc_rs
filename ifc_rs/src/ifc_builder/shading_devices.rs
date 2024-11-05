@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use glam::DVec3;
+use bevy_math::DVec3;
 
 use crate::prelude::*;
 

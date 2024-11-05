@@ -1,4 +1,4 @@
-use glam::{DVec2, DVec3};
+use bevy_math::{DVec2, DVec3};
 use ifc_rs::prelude::*;
 use std::fs::write;
 

@@ -1,16 +1,13 @@
-{ inputs, ... }:
 {
   perSystem =
     {
       self',
       pkgs,
-      lib,
-      system,
       ...
     }:
     {
       packages = {
-        exec-tests = pkgs.writeShellApplication {
+        exec-cargo-nextest = pkgs.writeShellApplication {
           name = "run-tests";
           runtimeInputs = [
             self'.packages.rust
@@ -23,17 +20,27 @@
             echo SUCCESS
           '';
         };
-        exec-deps-check = pkgs.writeShellApplication {
+        exec-cargo-machete = pkgs.writeShellApplication {
           name = "check-deps";
           runtimeInputs = [
             self'.packages.rust
             pkgs.cargo-machete
-            pkgs.cargo-deny
             pkgs.clang
           ];
           text = ''
             cargo machete --version
             cargo machete
+            echo SUCCESS
+          '';
+        };
+        exec-cargo-deny = pkgs.writeShellApplication {
+          name = "check-deps";
+          runtimeInputs = [
+            self'.packages.rust
+            pkgs.cargo-deny
+            pkgs.clang
+          ];
+          text = ''
             cargo deny check advisories
             echo SUCCESS
           '';

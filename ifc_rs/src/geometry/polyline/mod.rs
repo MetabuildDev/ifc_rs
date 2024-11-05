@@ -58,7 +58,7 @@ impl ShapeItem for PolyLine {}
 
 #[cfg(test)]
 mod test {
-    use glam::DVec2;
+    use bevy_math::DVec2;
     use winnow::Parser;
 
     use super::PolyLine;
