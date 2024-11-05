@@ -5,10 +5,10 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     parser::{
-        ifc_float::{IfcDVec2, IfcDVec3},
-        label::Label,
         list::IfcList,
         optional::OptionalParameter,
+        real::{IfcDVec2, IfcDVec3},
+        string::StringPrimitive,
     },
     prelude::*,
 };
@@ -26,7 +26,7 @@ use crate::{
 #[derive(Debug, Clone, IfcVerify)]
 pub struct PointList2D {
     pub coord_list: IfcList<IfcDVec2>,
-    pub tag_list: OptionalParameter<IfcList<Label>>,
+    pub tag_list: OptionalParameter<IfcList<StringPrimitive>>,
 }
 
 impl PointList2D {
@@ -54,7 +54,7 @@ impl PointList for PointList2D {}
 #[derive(Debug, Clone, IfcVerify)]
 pub struct PointList3D {
     pub coord_list: IfcList<IfcDVec3>,
-    pub tag_list: OptionalParameter<IfcList<Label>>,
+    pub tag_list: OptionalParameter<IfcList<StringPrimitive>>,
 }
 
 impl PointList3D {

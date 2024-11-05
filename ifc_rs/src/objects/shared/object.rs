@@ -4,7 +4,9 @@ use std::{fmt::Display, ops::Deref};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -23,7 +25,7 @@ pub struct Object {
     /// The use has to be established at the level of instantiable subtypes.
     /// In particular it holds the user defined type, if the enumeration
     /// of the attribute PredefinedType is set to USERDEFINED.
-    pub object_type: OptionalParameter<Label>,
+    pub object_type: OptionalParameter<StringPrimitive>,
 }
 
 impl Object {
@@ -38,7 +40,7 @@ impl Object {
 pub trait ObjectBuilder: Sized {
     fn object_mut(&mut self) -> &mut Object;
 
-    fn object_type(mut self, object_type: impl Into<Label>) -> Self {
+    fn object_type(mut self, object_type: impl Into<StringPrimitive>) -> Self {
         self.object_mut().object_type = object_type.into().into();
         self
     }

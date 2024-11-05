@@ -4,8 +4,8 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     parser::{
-        comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
-        IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -17,19 +17,19 @@ use crate::{
 #[derive(IfcVerify)]
 pub struct Material {
     /// Name of the material.
-    pub material: OptionalParameter<Label>,
+    pub material: OptionalParameter<StringPrimitive>,
 
     /// Definition of the material in more descriptive terms than given by
     /// attributes Name or Category.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
 
     /// Definition of the category (group or type) of material,
     /// in more general terms than given by attribute Name.
-    pub category: OptionalParameter<Label>,
+    pub category: OptionalParameter<StringPrimitive>,
 }
 
 impl Material {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             material: name.into().into(),
             description: OptionalParameter::omitted(),
@@ -37,12 +37,12 @@ impl Material {
         }
     }
 
-    pub fn description(mut self, description: impl Into<Label>) -> Self {
+    pub fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.description = description.into().into();
         self
     }
 
-    pub fn category(mut self, category: impl Into<Label>) -> Self {
+    pub fn category(mut self, category: impl Into<StringPrimitive>) -> Self {
         self.category = category.into().into();
         self
     }

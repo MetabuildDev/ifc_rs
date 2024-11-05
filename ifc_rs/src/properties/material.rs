@@ -2,7 +2,7 @@ use std::{fmt::Display, ops::Deref};
 
 use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
+use string::StringPrimitive;
 
 use crate::{parser::*, prelude::*};
 
@@ -24,7 +24,7 @@ pub struct MaterialProperties {
 
 impl MaterialProperties {
     pub fn new(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         id: impl Into<Id>,
         children: impl IntoIterator<Item = Id>,
     ) -> Self {

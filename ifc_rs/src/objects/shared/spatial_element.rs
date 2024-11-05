@@ -6,7 +6,9 @@ use std::{
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -24,7 +26,7 @@ pub struct SpatialElement {
     /// Long name for a spatial structure element, used for informal purposes.
     /// It should be used, if available, in conjunction with the inherited
     /// Name attribute.
-    pub long_name: OptionalParameter<Label>,
+    pub long_name: OptionalParameter<StringPrimitive>,
 }
 
 impl SpatialElement {
@@ -39,7 +41,7 @@ impl SpatialElement {
 pub trait SpatialElementBuilder: Sized {
     fn spatial_element_mut(&mut self) -> &mut SpatialElement;
 
-    fn long_name(mut self, long_name: impl Into<Label>) -> Self {
+    fn long_name(mut self, long_name: impl Into<StringPrimitive>) -> Self {
         self.spatial_element_mut().long_name = long_name.into().into();
         self
     }

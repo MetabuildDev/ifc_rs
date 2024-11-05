@@ -16,7 +16,7 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, real::RealPrimitive, string::StringPrimitive},
     prelude::*,
 };
 
@@ -104,13 +104,13 @@ pub struct Door {
     /// box, enclosing the body of the door opening. If omitted, the
     /// OverallHeight should be taken from the geometric representation of the  
     /// IfcOpening in which the door is inserted.
-    pub overall_height: OptionalParameter<IfcFloat>,
+    pub overall_height: OptionalParameter<RealPrimitive>,
 
     /// Overall measure of the width, it reflects the X Dimension of a bounding
     /// box, enclosing the door opening. If omitted, the OverallWidth should
     /// be taken from the geometric representation of the IfcOpening in which
     /// the door is inserted.
-    pub overall_width: OptionalParameter<IfcFloat>,
+    pub overall_width: OptionalParameter<RealPrimitive>,
 
     /// Predefined generic type for a door that is specified in an
     /// enumeration. There may be a property set given specificly for the
@@ -123,11 +123,11 @@ pub struct Door {
 
     /// Designator for the user defined operation type, shall only be
     /// provided, if the value of operation_type is set to USERDEFINED.
-    pub user_defining_operation_type: OptionalParameter<Label>,
+    pub user_defining_operation_type: OptionalParameter<StringPrimitive>,
 }
 
 impl Door {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             overall_height: OptionalParameter::omitted(),
@@ -138,12 +138,12 @@ impl Door {
         }
     }
 
-    pub fn overall_height(mut self, overall_height: impl Into<IfcFloat>) -> Self {
+    pub fn overall_height(mut self, overall_height: impl Into<RealPrimitive>) -> Self {
         self.overall_height = overall_height.into().into();
         self
     }
 
-    pub fn overall_width(mut self, overall_width: impl Into<IfcFloat>) -> Self {
+    pub fn overall_width(mut self, overall_width: impl Into<RealPrimitive>) -> Self {
         self.overall_width = overall_width.into().into();
         self
     }

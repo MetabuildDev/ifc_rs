@@ -1,11 +1,10 @@
 use std::fmt::Display;
 
-use winnow::combinator::{alt, delimited};
+use winnow::combinator::alt;
 use winnow::Parser;
 
+use super::prelude::*;
 use crate::parser::{IFCParse, IFCParser};
-
-use super::{bool::IfcBool, label::Label};
 
 /// IfcValue is a select type for selecting between more specialised select types IfcSimpleValue,
 /// IfcMeasureValue and IfcDerivedMeasureValue.
@@ -16,9 +15,9 @@ use super::{bool::IfcBool, label::Label};
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcmeasureresource/lexical/ifcvalue.htm
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum IfcValue {
-    Bool(IfcBool),
-    Label(Label),
-    Identifier(Label),
+    Bool(BoolValue),
+    Label(LabelValue),
+    Identifier(IdentifierValue),
 }
 
 impl IFCParse for IfcValue {
@@ -27,9 +26,9 @@ impl IFCParse for IfcValue {
         Self: Sized,
     {
         alt((
-            delimited("IfcBoolean(", IfcBool::parse().map(Self::Bool), ")"),
-            delimited("IfcLabel(", Label::parse().map(Self::Label), ")"),
-            delimited("IfcIdentifier(", Label::parse().map(Self::Identifier), ")"),
+            BoolValue::parse().map(Self::Bool),
+            LabelValue::parse().map(Self::Label),
+            IdentifierValue::parse().map(Self::Identifier),
         ))
     }
 }
@@ -37,9 +36,9 @@ impl IFCParse for IfcValue {
 impl Display for IfcValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            IfcValue::Bool(v) => write!(f, "IfcBoolean({v})"),
-            IfcValue::Label(v) => write!(f, "IfcLabel({v})"),
-            IfcValue::Identifier(v) => write!(f, "IfcIdentifier({v})"),
+            IfcValue::Bool(v) => write!(f, "{v}"),
+            IfcValue::Label(v) => write!(f, "{v}"),
+            IfcValue::Identifier(v) => write!(f, "{v}"),
         }
     }
 }

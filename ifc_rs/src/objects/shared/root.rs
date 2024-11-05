@@ -2,8 +2,8 @@ use std::fmt::Display;
 
 use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
 use optional::OptionalParameter;
+use string::StringPrimitive;
 use uuid::Uuid;
 
 use crate::{
@@ -23,7 +23,7 @@ use crate::{
 #[derive(IfcVerify)]
 pub struct Root {
     /// Assignment of a globally unique identifier within the entire software world.
-    pub global_id: Label,
+    pub global_id: StringPrimitive,
 
     /// Assignment of the information about the current ownership of that object,
     /// including owning actor, application, local identification and information
@@ -33,14 +33,14 @@ pub struct Root {
     /// Optional name for use by the participating software systems or users.
     /// For some subtypes of IfcRoot the insertion of the Name attribute may
     /// be required. This would be enforced by a where rule.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
 
     /// Optional description, provided for exchanging informative comments.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
 }
 
 impl Root {
-    pub fn new(name: Label) -> Self {
+    pub fn new(name: StringPrimitive) -> Self {
         Self {
             global_id: Uuid::new_v4().to_string().into(),
             owner_history: OptionalParameter::omitted(),
@@ -62,12 +62,12 @@ pub trait RootBuilder: Sized {
         self
     }
 
-    fn name(mut self, name: impl Into<Label>) -> Self {
+    fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.root_mut().name = name.into().into();
         self
     }
 
-    fn description(mut self, description: impl Into<Label>) -> Self {
+    fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.root_mut().description = description.into().into();
         self
     }
@@ -77,7 +77,7 @@ impl IFCParse for Root {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
-                global_id: Label::parse(),
+                global_id: StringPrimitive::parse(),
                 _: Comma::parse(),
                 owner_history: OptionalParameter::parse(),
                 _: Comma::parse(),

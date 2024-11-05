@@ -3,7 +3,9 @@ use std::{fmt::Display, ops::Deref};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, p_space_or_comment_surrounded, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -31,7 +33,7 @@ pub struct ShadingDeviceType {
 }
 
 impl ShadingDeviceType {
-    pub fn new(name: impl Into<Label>, predefined_type: ShadingDeviceTypeEnum) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, predefined_type: ShadingDeviceTypeEnum) -> Self {
         Self {
             element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
                 name.into(),

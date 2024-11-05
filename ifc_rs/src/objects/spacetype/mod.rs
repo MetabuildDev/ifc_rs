@@ -4,7 +4,7 @@ use ifc_rs_verify_derive::IfcVerify;
 pub use type_enum::SpaceTypeEnum;
 
 use crate::{
-    parser::{label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -49,11 +49,11 @@ pub struct SpaceType {
 
     /// Long name for a space type, used for informal purposes. It should be
     /// used, if available, in conjunction with the inherited Name attribute.
-    pub long_name: OptionalParameter<Label>,
+    pub long_name: OptionalParameter<StringPrimitive>,
 }
 
 impl SpaceType {
-    pub fn new(name: impl Into<Label>, predefined_type: SpaceTypeEnum) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, predefined_type: SpaceTypeEnum) -> Self {
         Self {
             element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
                 name.into(),

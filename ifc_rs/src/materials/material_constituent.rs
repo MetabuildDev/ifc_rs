@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        real::RealPrimitive, string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -24,10 +24,10 @@ use crate::{
 #[derive(IfcVerify)]
 pub struct MaterialConstituent {
     /// The name by which the material constituent is known.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
 
     /// Definition of the material constituent in descriptive terms.
-    pub description: OptionalParameter<Label>, // TODO: text
+    pub description: OptionalParameter<StringPrimitive>, // TODO: text
 
     /// Reference to the material from which the constituent is constructed.
     pub material: TypedId<Material>,
@@ -35,11 +35,11 @@ pub struct MaterialConstituent {
     /// Optional provision of a fraction of the total amount (volume or weight)
     /// that applies to the IfcMaterialConstituentSet that is contributed by
     /// this IfcMaterialConstituent.
-    pub fraction: OptionalParameter<IfcFloat>, // TODO: Normalized ratio measure
+    pub fraction: OptionalParameter<RealPrimitive>, // TODO: Normalized ratio measure
 
     /// Category of the material constituent, e.g. the role it has in the
     /// constituent set it belongs to.
-    pub category: OptionalParameter<Label>,
+    pub category: OptionalParameter<StringPrimitive>,
 }
 
 impl MaterialConstituent {
@@ -58,23 +58,23 @@ impl MaterialConstituent {
         self
     }
 
-    pub fn name(mut self, name: impl Into<Label>) -> Self {
+    pub fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.name = name.into().into();
         self
     }
 
-    pub fn description(mut self, description: impl Into<Label>) -> Self {
+    pub fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.description = description.into().into();
         self
     }
 
-    pub fn category(mut self, category: impl Into<Label>) -> Self {
+    pub fn category(mut self, category: impl Into<StringPrimitive>) -> Self {
         self.category = category.into().into();
         self
     }
 
     pub fn fraction(mut self, fraction: f64) -> Self {
-        self.fraction = IfcFloat(fraction).into();
+        self.fraction = RealPrimitive(fraction).into();
         self
     }
 }

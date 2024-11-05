@@ -4,7 +4,9 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr},
-    parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, p_space_or_comment_surrounded, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -30,7 +32,7 @@ pub struct RelAssociatesMaterial {
 
 impl RelAssociatesMaterial {
     pub fn new<R: RelatableMaterial>(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         material_layer_set: impl Into<IdOr<R>>,
         ifc: &mut IFC,
     ) -> Self {

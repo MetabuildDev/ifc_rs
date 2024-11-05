@@ -6,7 +6,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    parser::{label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -36,7 +36,7 @@ pub struct ArbitraryClosedProfileDef {
     /// Human-readable name of the profile, for example according to a standard profile table. As
     /// noted above, machine-readable standardized profile designations should be provided in
     /// IfcExternalReference.ItemReference.
-    pub profile_name: OptionalParameter<Label>,
+    pub profile_name: OptionalParameter<StringPrimitive>,
     /// `IfcCurve` Bounded curve, defining the outer boundaries of the arbitrary profile.
     #[ifc_types(IndexedPolyCurve, PolyLine)]
     pub outer_curve: Id,
@@ -55,7 +55,7 @@ impl ArbitraryClosedProfileDef {
         }
     }
 
-    pub fn profile_name(mut self, name: impl Into<Label>) -> Self {
+    pub fn profile_name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.profile_name = name.into().into();
         self
     }

@@ -5,8 +5,9 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        bool::IfcBool, comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label,
-        optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
+        bool::BoolPrimitive, comma::Comma, integer::IntegerPrimitive, optional::OptionalParameter,
+        p_space_or_comment_surrounded, real::RealPrimitive, string::StringPrimitive, IFCParse,
+        IFCParser,
     },
     prelude::*,
 };
@@ -29,7 +30,7 @@ pub struct MaterialLayer {
     /// depends on its usage. In case of building elements elements
     /// utilizing IfcMaterialLayerSetUsage, the dimension is measured
     /// along the positive LayerSetDirection as specified in IfcMaterialLayerSetUsage.
-    pub layer_thickness: IfcFloat,
+    pub layer_thickness: RealPrimitive,
 
     /// Indication of whether the material layer represents an air layer (or cavity).
     ///   * set to TRUE if the material layer is an air gap and provides air
@@ -38,14 +39,14 @@ pub struct MaterialLayer {
     ///     provide air exchange (or when this information about air exchange of
     ///     the air gap is not available).
     ///   * set to FALSE if the material layer is a solid material layer (the default).
-    pub is_ventilated: IfcBool,
+    pub is_ventilated: BoolPrimitive,
 
     /// The name by which the material layer is known.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
 
     /// Definition of the material layer in more descriptive terms than
     /// given by attributes Name or Category.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
 
     /// Category of the material layer, e.g. the role it has in the layer set
     /// it belongs to (such as 'load bearing', 'thermal insulation' etc.).
@@ -55,7 +56,7 @@ pub struct MaterialLayer {
     ///   * 'Insulation' — for all material layers having an insolating function.
     ///   * 'Inner finish' — for the material layer being the inner finish.
     ///   * 'Outer finish' — for the material layer being the outer finish.
-    pub category: OptionalParameter<Label>,
+    pub category: OptionalParameter<StringPrimitive>,
 
     /// The relative priority of the layer, expressed as normalised integer
     /// range [0..100]. Controls how layers intersect in connections and
@@ -65,14 +66,14 @@ pub struct MaterialLayer {
     /// than the latter. The priority value for a material layer in an
     /// element has to be set and maintained by software applications
     /// in relation to the material layers in connected elements.
-    pub priority: OptionalParameter<IfcInteger>,
+    pub priority: OptionalParameter<IntegerPrimitive>,
 }
 
 impl MaterialLayer {
     pub fn new(layer_thickness: f64, is_ventilated: bool) -> Self {
         Self {
             material: OptionalParameter::omitted(),
-            layer_thickness: IfcFloat(layer_thickness),
+            layer_thickness: RealPrimitive(layer_thickness),
             is_ventilated: is_ventilated.into(),
             name: OptionalParameter::omitted(),
             description: OptionalParameter::omitted(),
@@ -86,23 +87,23 @@ impl MaterialLayer {
         self
     }
 
-    pub fn name(mut self, name: impl Into<Label>) -> Self {
+    pub fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.name = name.into().into();
         self
     }
 
-    pub fn description(mut self, description: impl Into<Label>) -> Self {
+    pub fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.description = description.into().into();
         self
     }
 
-    pub fn category(mut self, category: impl Into<Label>) -> Self {
+    pub fn category(mut self, category: impl Into<StringPrimitive>) -> Self {
         self.category = category.into().into();
         self
     }
 
     pub fn priority(mut self, priority: i64) -> Self {
-        self.priority = IfcInteger(priority).into();
+        self.priority = IntegerPrimitive(priority).into();
         self
     }
 }
@@ -115,9 +116,9 @@ impl IFCParse for MaterialLayer {
 
                 material: OptionalParameter::parse(),
                 _: Comma::parse(),
-                layer_thickness: IfcFloat::parse(),
+                layer_thickness: RealPrimitive::parse(),
                 _: Comma::parse(),
-                is_ventilated: IfcBool::parse(),
+                is_ventilated: BoolPrimitive::parse(),
                 _: Comma::parse(),
                 name: OptionalParameter::parse(),
                 _: Comma::parse(),

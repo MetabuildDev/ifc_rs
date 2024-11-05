@@ -3,7 +3,7 @@ use std::{fmt::Display, ops::Deref};
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::parser::label::Label;
+use crate::parser::string::StringPrimitive;
 use crate::parser::{p_space_or_comment_surrounded, IFCParse, IFCParser};
 use crate::prelude::*;
 
@@ -26,7 +26,7 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             context: Context::new(Root::new(name.into())),
         }

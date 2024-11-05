@@ -2,14 +2,13 @@ pub(crate) mod bool;
 pub(crate) mod comma;
 pub(crate) mod dummy;
 pub(crate) mod geometry;
-pub(crate) mod ifc_float;
-pub(crate) mod ifc_integer;
-pub(crate) mod label;
+pub(crate) mod integer;
 pub(crate) mod list;
 pub(crate) mod optional;
 pub(crate) mod place_holder;
+pub(crate) mod real;
+pub(crate) mod string;
 pub(crate) mod timestamp;
-pub(crate) mod value;
 
 use std::fmt::Display;
 

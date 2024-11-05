@@ -10,9 +10,9 @@ use crate::parser::{IFCParse, IFCParser};
 use crate::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
-pub struct IfcFloat(pub f64);
+pub struct RealPrimitive(pub f64);
 
-impl IFCParse for IfcFloat {
+impl IFCParse for RealPrimitive {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized,
@@ -21,22 +21,22 @@ impl IFCParse for IfcFloat {
     }
 }
 
-impl IfcVerify for IfcFloat {}
-impl IfcType for IfcFloat {}
+impl IfcVerify for RealPrimitive {}
+impl IfcType for RealPrimitive {}
 
-impl From<f64> for IfcFloat {
+impl From<f64> for RealPrimitive {
     fn from(value: f64) -> Self {
         Self(value)
     }
 }
 
-impl From<IfcFloat> for f64 {
-    fn from(val: IfcFloat) -> Self {
+impl From<RealPrimitive> for f64 {
+    fn from(val: RealPrimitive) -> Self {
         val.0
     }
 }
 
-impl Display for IfcFloat {
+impl Display for RealPrimitive {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format_double(self.0))
     }

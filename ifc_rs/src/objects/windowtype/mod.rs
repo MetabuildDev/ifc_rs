@@ -5,7 +5,7 @@ use window_partitioning_type_enum::WindowPartitioningTypeEnum;
 use window_type_enum::WindowTypeEnum;
 
 use crate::{
-    parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
+    parser::{bool::BoolPrimitive, optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -58,16 +58,16 @@ pub struct WindowType {
     /// whether the attached style shape take precedence (FALSE). In the last
     /// case the parameter have only informative value. If not provided, no
     /// such information can be infered.
-    pub parameter_takes_precedence: OptionalParameter<IfcBool>,
+    pub parameter_takes_precedence: OptionalParameter<BoolPrimitive>,
 
     /// Designator for the user defined partitioning type, shall only be
     /// provided, if the value of PartitioningType is set to USERDEFINED.
-    pub user_defined_partitioning_type: OptionalParameter<Label>,
+    pub user_defined_partitioning_type: OptionalParameter<StringPrimitive>,
 }
 
 impl WindowType {
     pub fn new(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         predefined_type: WindowTypeEnum,
         partitioning_type: WindowPartitioningTypeEnum,
     ) -> Self {

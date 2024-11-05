@@ -51,6 +51,8 @@ pub mod relations;
 pub mod traits;
 /// module containing definitions of units for measurements and property definitions
 pub mod units;
+/// module containing definitions of primitive values which are used in properties
+pub mod values;
 
 /// Central IFC Object which holds the information about the whole model together with meta
 /// information about the model

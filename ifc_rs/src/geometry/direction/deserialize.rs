@@ -2,7 +2,7 @@ use winnow::{combinator::delimited, Parser};
 
 use super::{Direction2D, Direction3D};
 use crate::parser::{
-    ifc_float::{IfcDVec2, IfcDVec3},
+    real::{IfcDVec2, IfcDVec3},
     IFCParse, IFCParser,
 };
 

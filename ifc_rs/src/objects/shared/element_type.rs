@@ -4,7 +4,9 @@ use std::{fmt::Display, ops::Deref};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -27,7 +29,7 @@ pub struct ElementType {
     /// of instantiable subtypes. In particular it holds the user
     /// defined type, if the enumeration of the attribute
     /// 'PredefinedType' is set to USERDEFINED.
-    pub element_type: OptionalParameter<Label>,
+    pub element_type: OptionalParameter<StringPrimitive>,
 }
 
 impl ElementType {
@@ -42,7 +44,7 @@ impl ElementType {
 pub trait ElementTypeBuilder: Sized {
     fn element_type_mut(&mut self) -> &mut ElementType;
 
-    fn element_type(mut self, element_type: impl Into<Label>) -> Self {
+    fn element_type(mut self, element_type: impl Into<StringPrimitive>) -> Self {
         self.element_type_mut().element_type = element_type.into().into();
         self
     }

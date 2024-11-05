@@ -2,9 +2,9 @@ use std::fmt::Display;
 
 use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
 use list::IfcList;
 use optional::OptionalParameter;
+use string::StringPrimitive;
 
 use crate::{parser::*, prelude::*};
 
@@ -16,15 +16,15 @@ use crate::{parser::*, prelude::*};
 #[derive(IfcVerify)]
 pub struct ExtendedPropertyBase {
     /// The name given to the set of properties.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
     /// Description for the set of properties.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
     /// The set of properties provided for this extended property collection.
     pub properties: IfcList<Id>,
 }
 
 impl ExtendedPropertyBase {
-    pub fn new(name: Label, children: impl IntoIterator<Item = Id>) -> Self {
+    pub fn new(name: StringPrimitive, children: impl IntoIterator<Item = Id>) -> Self {
         Self {
             name: name.into(),
             description: OptionalParameter::omitted(),
@@ -36,12 +36,12 @@ impl ExtendedPropertyBase {
 pub trait ExtendedPropertyBuilder: Sized {
     fn property_mut(&mut self) -> &mut ExtendedPropertyBase;
 
-    fn name(mut self, name: impl Into<Label>) -> Self {
+    fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.property_mut().name = name.into().into();
         self
     }
 
-    fn description(mut self, description: impl Into<Label>) -> Self {
+    fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.property_mut().description = description.into().into();
         self
     }

@@ -16,7 +16,7 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    parser::{label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -51,7 +51,7 @@ pub struct Roof {
 }
 
 impl Roof {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             predefined_type: OptionalParameter::omitted(),

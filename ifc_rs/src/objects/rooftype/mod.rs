@@ -3,7 +3,7 @@ use std::ops::Deref;
 use ifc_rs_verify_derive::IfcVerify;
 use type_enum::RoofTypeEnum;
 
-use crate::{parser::label::Label, prelude::*};
+use crate::{parser::string::StringPrimitive, prelude::*};
 
 use super::shared::{
     element_type::ElementType, type_object::TypeObjectBuilder, type_product::TypeProductBuilder,
@@ -28,7 +28,7 @@ pub struct RoofType {
 }
 
 impl RoofType {
-    pub fn new(name: impl Into<Label>, predefined_type: RoofTypeEnum) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, predefined_type: RoofTypeEnum) -> Self {
         Self {
             element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
                 name.into(),

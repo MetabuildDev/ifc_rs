@@ -4,9 +4,9 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr, TypedId};
-use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 /// A named and structured grouping with a corporate identity.
@@ -15,11 +15,11 @@ use crate::prelude::*;
 #[derive(Debug, Clone, IfcVerify)]
 pub struct Organization {
     /// Identification of the organization.
-    pub id: OptionalParameter<Label>,
+    pub id: OptionalParameter<StringPrimitive>,
     /// The word, or group of words, by which the organization is referred to.
-    pub name: Label,
+    pub name: StringPrimitive,
     /// Text that relates the nature of the organization.
-    pub description: OptionalParameter<Label>, // TODO: Text
+    pub description: OptionalParameter<StringPrimitive>, // TODO: Text
     /// Roles played by the organization.
     pub roles: OptionalParameter<IfcList<TypedId<ActorRole>>>,
     /// Postal and telecommunication addresses of an organization.
@@ -30,7 +30,7 @@ pub struct Organization {
 impl Organization {
     pub fn new<'a>(
         id: impl Into<Option<&'a str>>,
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         description: impl Into<Option<&'a str>>,
     ) -> Self {
         Self {

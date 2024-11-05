@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use super::{label::Label, IFCParse, IFCParser};
+use super::{string::StringPrimitive, IFCParse, IFCParser};
 use crate::{prelude::*, units::p_space_or_comment_surrounded};
 
 /// IfcMonetaryUnit is a unit to define currency for money.
@@ -12,7 +12,7 @@ use crate::{prelude::*, units::p_space_or_comment_surrounded};
 pub struct MonetaryUnit {
     /// Code or name of the currency. Permissible values are the three-letter
     /// alphabetic currency codes as per ISO 4217, for example CNY, EUR, GBP, JPY, USD.
-    pub currency: Label,
+    pub currency: StringPrimitive,
 }
 
 impl IfcType for MonetaryUnit {}
@@ -23,7 +23,7 @@ impl IFCParse for MonetaryUnit {
             Self {
                 _: p_space_or_comment_surrounded("IFCMONETARYUNIT("),
 
-                currency: Label::parse(),
+                currency: StringPrimitive::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

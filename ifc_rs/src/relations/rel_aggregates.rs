@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::Id,
     parser::{
-        comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
-        IFCParser,
+        comma::Comma, list::IfcList, p_space_or_comment_surrounded, string::StringPrimitive,
+        IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -36,7 +36,11 @@ pub struct RelAggregates {
 }
 
 impl RelAggregates {
-    pub fn new(name: impl Into<Label>, parent: Id, children: impl IntoIterator<Item = Id>) -> Self {
+    pub fn new(
+        name: impl Into<StringPrimitive>,
+        parent: Id,
+        children: impl IntoIterator<Item = Id>,
+    ) -> Self {
         Self {
             root: Root::new(name.into()),
             relating_object: parent,

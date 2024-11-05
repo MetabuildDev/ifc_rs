@@ -3,7 +3,7 @@ use std::ops::Deref;
 use ifc_rs_verify_derive::IfcVerify;
 use type_enum::WallTypeEnum;
 
-use crate::{parser::label::Label, prelude::*};
+use crate::{parser::string::StringPrimitive, prelude::*};
 
 use super::shared::{
     element_type::ElementType, type_object::TypeObjectBuilder, type_product::TypeProductBuilder,
@@ -32,7 +32,7 @@ pub struct WallType {
 }
 
 impl WallType {
-    pub fn new(name: impl Into<Label>, predefined_type: WallTypeEnum) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, predefined_type: WallTypeEnum) -> Self {
         Self {
             element_type: ElementType::new(TypeProduct::new(TypeObject::new(Root::new(
                 name.into(),

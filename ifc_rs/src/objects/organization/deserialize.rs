@@ -2,7 +2,9 @@ use winnow::{combinator::delimited, Parser};
 
 use crate::{
     objects::organization::Organization,
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+    },
 };
 
 impl IFCParse for Organization {
@@ -12,7 +14,7 @@ impl IFCParse for Organization {
             (
                 OptionalParameter::parse(),
                 Comma::parse(),
-                Label::parse(),
+                StringPrimitive::parse(),
                 Comma::parse(),
                 OptionalParameter::parse(),
                 Comma::parse(),

@@ -3,9 +3,9 @@ mod serialize;
 
 use ifc_rs_verify_derive::IfcVerify;
 
-use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 ///  Address to which telephone, electronic mail and other forms of
@@ -17,26 +17,26 @@ pub struct TelecomAddress {
     // First three attributes from IfcAddress:
     //
     /// Identifies the logical location of the address.
-    pub purpose: OptionalParameter<Label>, // TODO: AddressTypeEnum
+    pub purpose: OptionalParameter<StringPrimitive>, // TODO: AddressTypeEnum
     /// Text that relates the nature of the address.
-    pub description: OptionalParameter<Label>, // TODO: IfcText
+    pub description: OptionalParameter<StringPrimitive>, // TODO: IfcText
     /// Allows for specification of user specific purpose of the address beyond the
     /// enumeration values provided by Purpose attribute of type IfcAddressTypeEnum.
     /// When a value is provided for attribute UserDefinedPurpose, in parallel the
     /// attribute Purpose shall have enumeration value USERDEFINED.
-    pub user_defined_purpose: OptionalParameter<Label>,
+    pub user_defined_purpose: OptionalParameter<StringPrimitive>,
 
     /// The list of telephone numbers at which telephone messages may be received.
-    pub telephone_numbers: OptionalParameter<IfcList<Label>>,
+    pub telephone_numbers: OptionalParameter<IfcList<StringPrimitive>>,
     /// The list of fax numbers at which fax messages may be received.
-    pub facsimile_numbers: OptionalParameter<IfcList<Label>>,
+    pub facsimile_numbers: OptionalParameter<IfcList<StringPrimitive>>,
     /// The pager number at which paging messages may be received.
-    pub pager_number: OptionalParameter<Label>,
+    pub pager_number: OptionalParameter<StringPrimitive>,
     /// The list of Email addresses at which Email messages may be received.
-    pub email_addresses: OptionalParameter<IfcList<Label>>,
+    pub email_addresses: OptionalParameter<IfcList<StringPrimitive>>,
     /// The world wide web address at which the preliminary page of information
     /// for the person or organization can be located.
-    pub homepage_url: OptionalParameter<Label>,
+    pub homepage_url: OptionalParameter<StringPrimitive>,
 }
 
 impl IfcType for TelecomAddress {}
@@ -50,29 +50,29 @@ pub struct PostalAddress {
     // First three attributes from IfcAddress:
     //
     /// Identifies the logical location of the address.
-    pub purpose: OptionalParameter<Label>, // TODO: AddressTypeEnum
+    pub purpose: OptionalParameter<StringPrimitive>, // TODO: AddressTypeEnum
     /// Text that relates the nature of the address.
-    pub description: OptionalParameter<Label>, // TODO: IfcText
+    pub description: OptionalParameter<StringPrimitive>, // TODO: IfcText
     /// Allows for specification of user specific purpose of the address beyond the
     /// enumeration values provided by Purpose attribute of type IfcAddressTypeEnum.
     /// When a value is provided for attribute UserDefinedPurpose, in parallel the
     /// attribute Purpose shall have enumeration value USERDEFINED.
-    pub user_defined_purpose: OptionalParameter<Label>,
+    pub user_defined_purpose: OptionalParameter<StringPrimitive>,
 
     /// An organization defined address for internal mail delivery.
-    pub internal_location: OptionalParameter<Label>,
+    pub internal_location: OptionalParameter<StringPrimitive>,
     /// The postal address.
-    pub address_lines: OptionalParameter<IfcList<Label>>,
+    pub address_lines: OptionalParameter<IfcList<StringPrimitive>>,
     /// An address that is implied by an identifiable mail drop.
-    pub postal_box: OptionalParameter<Label>,
+    pub postal_box: OptionalParameter<StringPrimitive>,
     /// The name of a town
-    pub town: OptionalParameter<IfcList<Label>>,
+    pub town: OptionalParameter<IfcList<StringPrimitive>>,
     /// The name of a region
-    pub region: OptionalParameter<Label>,
+    pub region: OptionalParameter<StringPrimitive>,
     /// The code that is used by the countr'ys postal service
-    pub postal_code: OptionalParameter<Label>,
+    pub postal_code: OptionalParameter<StringPrimitive>,
     /// The name of a country
-    pub country: OptionalParameter<Label>,
+    pub country: OptionalParameter<StringPrimitive>,
 }
 
 impl IfcType for PostalAddress {}

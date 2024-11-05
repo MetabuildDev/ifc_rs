@@ -16,7 +16,7 @@ use super::{
 };
 use crate::{
     id::TypedId,
-    parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, real::RealPrimitive, string::StringPrimitive},
     prelude::*,
 };
 
@@ -80,13 +80,13 @@ pub struct Window {
     /// box, enclosing the window opening. If omitted, the OverallHeight should
     /// be taken from the geometric representation of the IfcOpening in which
     /// the window is inserted.
-    pub overall_height: OptionalParameter<IfcFloat>,
+    pub overall_height: OptionalParameter<RealPrimitive>,
 
     /// Overall measure of the width, it reflects the X Dimension of a bounding
     /// box, enclosing the window opening. If omitted, the OverallWidth should
     /// be taken from the geometric representation of the IfcOpening in which
     /// the window is inserted.
-    pub overall_width: OptionalParameter<IfcFloat>,
+    pub overall_width: OptionalParameter<RealPrimitive>,
 
     /// Predefined generic type for an window that is specified in an
     /// enumeration. There may be a property set given specificly for the
@@ -99,11 +99,11 @@ pub struct Window {
 
     /// Designator for the user defined partitioning type, shall only be
     /// provided, if the value of PartitioningType is set to USERDEFINED.
-    pub user_defining_partitioning_type: OptionalParameter<Label>,
+    pub user_defining_partitioning_type: OptionalParameter<StringPrimitive>,
 }
 
 impl Window {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
             overall_height: OptionalParameter::omitted(),
@@ -114,12 +114,12 @@ impl Window {
         }
     }
 
-    pub fn overall_height(mut self, overall_height: impl Into<IfcFloat>) -> Self {
+    pub fn overall_height(mut self, overall_height: impl Into<RealPrimitive>) -> Self {
         self.overall_height = overall_height.into().into();
         self
     }
 
-    pub fn overall_width(mut self, overall_width: impl Into<IfcFloat>) -> Self {
+    pub fn overall_width(mut self, overall_width: impl Into<RealPrimitive>) -> Self {
         self.overall_width = overall_width.into().into();
         self
     }

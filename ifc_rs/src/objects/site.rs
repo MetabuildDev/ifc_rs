@@ -8,8 +8,9 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        comma::Comma, ifc_float::IfcFloat, ifc_integer::IfcInteger, label::Label, list::IfcList,
-        optional::OptionalParameter, p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, integer::IntegerPrimitive, list::IfcList, optional::OptionalParameter,
+        p_space_or_comment_surrounded, real::RealPrimitive, string::StringPrimitive, IFCParse,
+        IFCParser,
     },
     prelude::*,
 };
@@ -59,26 +60,26 @@ pub struct Site {
     /// description). Defined as integer values for degrees, minutes, seconds,
     /// and, optionally, millionths of seconds with respect to the world
     /// geodetic system WGS84.
-    pub ref_latitude: OptionalParameter<IfcList<IfcInteger>>, //TODO: CompoundPlaneAngleMeasure
+    pub ref_latitude: OptionalParameter<IfcList<IntegerPrimitive>>, //TODO: CompoundPlaneAngleMeasure
 
     /// World Longitude at reference point (most likely defined in legal
     /// description). Defined as integer values for degrees, minutes, seconds,
     /// and, optionally, millionths of seconds with respect to the world
     /// geodetic system WGS84.
-    pub ref_longitude: OptionalParameter<IfcList<IfcInteger>>, //TODO: CompoundPlaneAngleMeasure
+    pub ref_longitude: OptionalParameter<IfcList<IntegerPrimitive>>, //TODO: CompoundPlaneAngleMeasure
 
     /// Datum elevation relative to sea level.
-    pub ref_elevation: OptionalParameter<IfcFloat>,
+    pub ref_elevation: OptionalParameter<RealPrimitive>,
 
     /// The land title number (designation of the site within a regional system).
-    pub land_title_number: OptionalParameter<Label>,
+    pub land_title_number: OptionalParameter<StringPrimitive>,
 
     /// Address given to the site for postal purposes.
     pub site_address: OptionalParameter<TypedId<PostalAddress>>,
 }
 
 impl Site {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
                 Product::new(Object::new(Root::new(name.into()))),
@@ -102,11 +103,11 @@ impl Site {
     }
 
     pub fn ref_elevation(mut self, ref_elevation: f64) -> Self {
-        self.ref_elevation = IfcFloat(ref_elevation).into();
+        self.ref_elevation = RealPrimitive(ref_elevation).into();
         self
     }
 
-    pub fn land_title_number(mut self, land_title_number: impl Into<Label>) -> Self {
+    pub fn land_title_number(mut self, land_title_number: impl Into<StringPrimitive>) -> Self {
         self.land_title_number = land_title_number.into().into();
         self
     }

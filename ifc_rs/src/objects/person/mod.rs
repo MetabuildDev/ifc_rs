@@ -4,9 +4,9 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr, TypedId};
-use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 /// An individual human being.
@@ -15,21 +15,21 @@ use crate::prelude::*;
 #[derive(Debug, Clone, IfcVerify)]
 pub struct Person {
     /// Identification of the person.
-    pub id: OptionalParameter<Label>,
+    pub id: OptionalParameter<StringPrimitive>,
     /// The name by which the family identity of the person may be recognized.
-    pub family_name: OptionalParameter<Label>,
+    pub family_name: OptionalParameter<StringPrimitive>,
     /// The name by which a person is known within a family and by which he or
     /// she may be familiarly recognized.
-    pub given_name: OptionalParameter<Label>,
+    pub given_name: OptionalParameter<StringPrimitive>,
     /// Additional names given to a person that enable their identification
     /// apart from others who may have the same or similar family and given names.
-    pub middle_names: OptionalParameter<IfcList<Label>>,
+    pub middle_names: OptionalParameter<IfcList<StringPrimitive>>,
     /// The word, or group of words, which specify the person's social and/or
     /// professional standing and appear before his/her names.
-    pub prefix_titles: OptionalParameter<IfcList<Label>>,
+    pub prefix_titles: OptionalParameter<IfcList<StringPrimitive>>,
     /// The word, or group of words, which specify the person's social
     /// and/or professional standing and appear after his/her names.
-    pub suffix_titles: OptionalParameter<IfcList<Label>>,
+    pub suffix_titles: OptionalParameter<IfcList<StringPrimitive>>,
     /// Roles played by the person.
     pub roles: OptionalParameter<IfcList<TypedId<ActorRole>>>,
     /// Postal and telecommunication addresses of a person.
@@ -51,22 +51,22 @@ impl Person {
         }
     }
 
-    pub fn id(mut self, id: impl Into<Label>) -> Self {
+    pub fn id(mut self, id: impl Into<StringPrimitive>) -> Self {
         self.id = id.into().into();
         self
     }
 
-    pub fn family_name(mut self, family_name: impl Into<Label>) -> Self {
+    pub fn family_name(mut self, family_name: impl Into<StringPrimitive>) -> Self {
         self.family_name = family_name.into().into();
         self
     }
 
-    pub fn given_name(mut self, given_name: impl Into<Label>) -> Self {
+    pub fn given_name(mut self, given_name: impl Into<StringPrimitive>) -> Self {
         self.given_name = given_name.into().into();
         self
     }
 
-    pub fn add_middle_name(mut self, middle_name: impl Into<Label>) -> Self {
+    pub fn add_middle_name(mut self, middle_name: impl Into<StringPrimitive>) -> Self {
         if self.middle_names.is_omitted() {
             self.middle_names = OptionalParameter::Custom(IfcList::empty());
         }
@@ -80,7 +80,7 @@ impl Person {
         self
     }
 
-    pub fn add_suffix_title(mut self, suffix_title: impl Into<Label>) -> Self {
+    pub fn add_suffix_title(mut self, suffix_title: impl Into<StringPrimitive>) -> Self {
         if self.suffix_titles.is_omitted() {
             self.suffix_titles = OptionalParameter::Custom(IfcList::empty());
         }
@@ -94,7 +94,7 @@ impl Person {
         self
     }
 
-    pub fn add_prefix_title(mut self, prefix_title: impl Into<Label>) -> Self {
+    pub fn add_prefix_title(mut self, prefix_title: impl Into<StringPrimitive>) -> Self {
         if self.prefix_titles.is_omitted() {
             self.prefix_titles = OptionalParameter::Custom(IfcList::empty());
         }

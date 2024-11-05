@@ -17,8 +17,8 @@ use super::{
 };
 use crate::{
     parser::{
-        comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        real::RealPrimitive, string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -59,11 +59,11 @@ pub struct Storey {
     /// Elevation of the base of this storey, relative to the 0,00 internal reference height of the
     /// building. The 0.00 level is given by the absolute above sea level height by the
     /// ElevationOfRefHeight attribute given at IfcBuilding.
-    pub elevation: OptionalParameter<IfcFloat>,
+    pub elevation: OptionalParameter<RealPrimitive>,
 }
 
 impl Storey {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
                 Product::new(Object::new(Root::new(name.into()))),
@@ -73,7 +73,7 @@ impl Storey {
     }
 
     pub fn elevation(mut self, elevation: f64) -> Self {
-        self.elevation = IfcFloat(elevation).into();
+        self.elevation = RealPrimitive(elevation).into();
         self
     }
 }

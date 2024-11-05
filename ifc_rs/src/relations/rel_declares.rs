@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{Id, IdOr, TypedId},
     parser::{
-        comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse,
-        IFCParser,
+        comma::Comma, list::IfcList, p_space_or_comment_surrounded, string::StringPrimitive,
+        IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -30,7 +30,11 @@ pub struct RelDeclares {
 }
 
 impl RelDeclares {
-    pub fn new(name: impl Into<Label>, project: impl Into<IdOr<Project>>, ifc: &mut IFC) -> Self {
+    pub fn new(
+        name: impl Into<StringPrimitive>,
+        project: impl Into<IdOr<Project>>,
+        ifc: &mut IFC,
+    ) -> Self {
         Self {
             root: Root::new(name.into()),
             relating_context: project.into().or_insert(ifc),

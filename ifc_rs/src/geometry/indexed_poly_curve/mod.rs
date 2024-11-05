@@ -2,7 +2,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::Id,
-    parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
+    parser::{bool::BoolPrimitive, optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -31,10 +31,10 @@ pub struct IndexedPolyCurve {
     /// preserve consecutive connectivity between the segments, the start
     /// index of the next segment shall be identical with the end index
     /// of the previous segment.
-    pub segments: OptionalParameter<Label>, // TODO: this is either `LineIndex` or `ArcIndex`
+    pub segments: OptionalParameter<StringPrimitive>, // TODO: this is either `LineIndex` or `ArcIndex`
     /// Indication of whether the curve intersects itself or not; this is for
     /// information only.
-    pub self_intersect: OptionalParameter<IfcBool>,
+    pub self_intersect: OptionalParameter<BoolPrimitive>,
 }
 
 impl IndexedPolyCurve {

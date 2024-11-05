@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, list::IfcList, optional::OptionalParameter, p_space_or_comment_surrounded,
+        string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -23,10 +23,10 @@ pub struct MaterialLayerSet {
     pub material_layers: IfcList<TypedId<MaterialLayer>>,
 
     /// The name by which the IfcMaterialLayerSet is known.
-    pub layer_set_name: OptionalParameter<Label>,
+    pub layer_set_name: OptionalParameter<StringPrimitive>,
 
     /// Definition of the IfcMaterialLayerSet in descriptive terms.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
 }
 
 impl Default for MaterialLayerSet {
@@ -44,12 +44,12 @@ impl MaterialLayerSet {
         }
     }
 
-    pub fn name(mut self, name: impl Into<Label>) -> Self {
+    pub fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.layer_set_name = name.into().into();
         self
     }
 
-    pub fn description(mut self, description: impl Into<Label>) -> Self {
+    pub fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.description = description.into().into();
         self
     }

@@ -7,10 +7,10 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        ifc_float::{IfcDVec2, IfcDVec3},
-        label::Label,
         list::IfcList,
         optional::OptionalParameter,
+        real::{IfcDVec2, IfcDVec3},
+        string::StringPrimitive,
     },
     prelude::*,
 };
@@ -31,11 +31,11 @@ pub struct ProductDefinitionShape {
     // from IfcProductRepresentation https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcproductrepresentation.htm
     //
     /// The word or group of words by which the product representation is known.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
     // TODO: This should be TEXT instead
     /// The word or group of words that characterize the product representation. It can be used to
     /// add additional meaning to the name of the product representation.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
     /// Contained list of representations (including shape representations). Each member defines a
     /// valid representation of a particular type within a particular representation context.
     pub representations: IfcList<TypedId<ShapeRepresentation>>,
@@ -161,12 +161,12 @@ impl ProductDefinitionShape {
         ProductDefinitionShape::new().add_representation(shape_repr, ifc)
     }
 
-    pub fn name(mut self, name: impl Into<Label>) -> Self {
+    pub fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.name = name.into().into();
         self
     }
 
-    pub fn description(mut self, description: impl Into<Label>) -> Self {
+    pub fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.description = description.into().into();
         self
     }

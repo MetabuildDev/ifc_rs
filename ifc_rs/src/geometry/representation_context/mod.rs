@@ -5,9 +5,9 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::geometry::dimension_count::DimensionCount;
 use crate::id::{Id, IdOr};
-use crate::parser::ifc_float::IfcFloat;
-use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::real::RealPrimitive;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 /// The IfcGeometricRepresentationContext defines the context that applies to several shape
@@ -23,17 +23,17 @@ pub struct GeometricRepresentationContext {
     // NOTE: from IfcRepresentationContext
     //
     /// The optional identifier of the representation context as used within a project.
-    pub context_identifier: OptionalParameter<Label>,
+    pub context_identifier: OptionalParameter<StringPrimitive>,
     /// The description of the type of a representation context.
     /// The supported values for context type are to be specified by implementers agreements.
-    pub context_type: OptionalParameter<Label>,
+    pub context_type: OptionalParameter<StringPrimitive>,
 
     /// The integer dimension count of the coordinate space modeled in a geometric representation context.
     pub coord_space_dimension: DimensionCount,
     /// Value of the model precision for geometric models. It is a double value (REAL), typically in 1E-5 to 1E-8 range,
     /// that indicates the tolerance under which two given points are still assumed to be identical.
     /// The value can be used e.g. to sets the maximum distance from an edge curve to the underlying face surface in brep models.
-    pub precision: OptionalParameter<IfcFloat>,
+    pub precision: OptionalParameter<RealPrimitive>,
     /// Establishment of the engineering coordinate system (often referred to as the world coordinate
     /// system in CAD) for all representation contexts used by the project.
     #[ifc_types(Axis2D, Axis3D)]
@@ -65,18 +65,18 @@ impl GeometricRepresentationContext {
         }
     }
 
-    pub fn context_identifier(mut self, id: impl Into<Label>) -> Self {
+    pub fn context_identifier(mut self, id: impl Into<StringPrimitive>) -> Self {
         self.context_identifier = id.into().into();
         self
     }
 
-    pub fn context_type(mut self, context_type: impl Into<Label>) -> Self {
+    pub fn context_type(mut self, context_type: impl Into<StringPrimitive>) -> Self {
         self.context_type = context_type.into().into();
         self
     }
 
     pub fn precision(mut self, precision: f64) -> Self {
-        self.precision = IfcFloat(precision).into();
+        self.precision = RealPrimitive(precision).into();
         self
     }
 

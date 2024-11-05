@@ -7,7 +7,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr},
-    parser::{label::Label, list::IfcList, optional::OptionalParameter},
+    parser::{list::IfcList, optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -49,12 +49,12 @@ pub struct ShapeRepresentation {
     #[ifc_types(GeometricRepresentationSubContext, GeometricRepresentationContext)]
     pub context_of_items: Id,
     /// The optional identifier of the representation as used within a project.
-    pub representation_identifier: OptionalParameter<Label>,
+    pub representation_identifier: OptionalParameter<StringPrimitive>,
     /// The description of the type of a representation context. The representation type defines
     /// the type of geometry or topology used for representing the product representation. More
     /// information is given at the subtypes IfcShapeRepresentation and IfcTopologyRepresentation.
     /// The supported values for context type are to be specified by implementers agreements.
-    pub representation_type: OptionalParameter<Label>,
+    pub representation_type: OptionalParameter<StringPrimitive>,
     /// Set of geometric representation items that are defined for this representation.
     #[ifc_types(ExtrudedAreaSolid, PolyLine, MappedItem)]
     pub items: IfcList<Id>,
@@ -70,12 +70,12 @@ impl ShapeRepresentation {
         }
     }
 
-    pub fn identifier(mut self, identifier: impl Into<Label>) -> Self {
+    pub fn identifier(mut self, identifier: impl Into<StringPrimitive>) -> Self {
         self.representation_identifier = identifier.into().into();
         self
     }
 
-    pub fn repr_type(mut self, repr_type: impl Into<Label>) -> Self {
+    pub fn repr_type(mut self, repr_type: impl Into<StringPrimitive>) -> Self {
         self.representation_type = repr_type.into().into();
         self
     }

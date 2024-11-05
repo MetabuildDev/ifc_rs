@@ -7,7 +7,7 @@ use crate::{
     units::{comma::Comma, p_space_or_comment_surrounded},
 };
 
-use super::{ifc_integer::IfcInteger, IFCParse, IFCParser};
+use super::{integer::IntegerPrimitive, IFCParse, IFCParser};
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcderivedunitelement.htm
 #[derive(IfcVerify)]
@@ -16,7 +16,7 @@ pub struct DerivedUnitElement {
     pub unit: TypedId<SiUnit>,
 
     /// The power that is applied to the unit attribute.
-    pub exponent: IfcInteger,
+    pub exponent: IntegerPrimitive,
 }
 
 impl IFCParse for DerivedUnitElement {
@@ -27,7 +27,7 @@ impl IFCParse for DerivedUnitElement {
 
                 unit: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
-                exponent: IfcInteger::parse(),
+                exponent: IntegerPrimitive::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{Id, IdOr, TypedId},
     parser::{
-        comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        real::RealPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -53,13 +53,13 @@ pub struct MaterialLayerSetUsage {
     /// of +z). A negative value means that the MlsBase is placed on the negative
     /// side, as established by LayerSetDirection (in case of AXIS2 into the
     /// direction of -y).
-    pub offset_from_reference_line: IfcFloat,
+    pub offset_from_reference_line: RealPrimitive,
 
     /// Extent of the extrusion of the elements body shape representation to
     /// which the IfcMaterialLayerSetUsage applies. It is used as the
     /// reference value for the upper OffsetValues[2] provided by the
     /// IfcMaterialLayerSetWithOffsets subtype for included material layers.
-    pub reference_extent: OptionalParameter<IfcFloat>,
+    pub reference_extent: OptionalParameter<RealPrimitive>,
 }
 
 impl MaterialLayerSetUsage {
@@ -80,7 +80,7 @@ impl MaterialLayerSetUsage {
     }
 
     pub fn reference_extent(mut self, extent: f64) -> Self {
-        self.reference_extent = IfcFloat(extent).into();
+        self.reference_extent = RealPrimitive(extent).into();
         self
     }
 }
@@ -97,7 +97,7 @@ impl IFCParse for MaterialLayerSetUsage {
                 _: Comma::parse(),
                 direction_sense: DirectionSenseEnum::parse(),
                 _: Comma::parse(),
-                offset_from_reference_line: IfcFloat::parse(),
+                offset_from_reference_line: RealPrimitive::parse(),
                 _: Comma::parse(),
                 reference_extent: OptionalParameter::parse(),
 

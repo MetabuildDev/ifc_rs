@@ -2,9 +2,8 @@ use std::fmt::Display;
 
 use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
 use optional::OptionalParameter;
-use value::IfcValue;
+use string::StringPrimitive;
 
 use crate::{parser::*, prelude::*};
 
@@ -36,7 +35,7 @@ pub struct PropertySingleValue {
 }
 
 impl PropertySingleValue {
-    pub fn new(name: Label, value: IfcValue, unit: Option<Id>) -> Self {
+    pub fn new(name: StringPrimitive, value: IfcValue, unit: Option<Id>) -> Self {
         Self {
             base: PropertyBase::new(name),
             value,

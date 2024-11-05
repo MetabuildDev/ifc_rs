@@ -3,7 +3,7 @@ use winnow::{combinator::delimited, Parser};
 use crate::{
     id::Id,
     objects::application::Application,
-    parser::{comma::Comma, label::Label, IFCParse, IFCParser},
+    parser::{comma::Comma, string::StringPrimitive, IFCParse, IFCParser},
 };
 
 impl IFCParse for Application {
@@ -13,11 +13,11 @@ impl IFCParse for Application {
             (
                 Id::parse(),
                 Comma::parse(),
-                Label::parse(),
+                StringPrimitive::parse(),
                 Comma::parse(),
-                Label::parse(),
+                StringPrimitive::parse(),
                 Comma::parse(),
-                Label::parse(),
+                StringPrimitive::parse(),
             ),
             ");",
         )

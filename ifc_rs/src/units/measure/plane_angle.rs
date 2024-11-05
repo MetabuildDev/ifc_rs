@@ -4,7 +4,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     prelude::*,
-    units::{ifc_float::IfcFloat, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    units::{p_space_or_comment_surrounded, real::RealPrimitive, IFCParse, IFCParser},
 };
 
 /// An IfcPlaneAngleMeasure is the value of an angle in a plane.
@@ -12,7 +12,7 @@ use crate::{
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcplaneanglemeasure.htm
 #[derive(IfcVerify)]
 pub struct PlaneAngleMeasure {
-    pub value: IfcFloat,
+    pub value: RealPrimitive,
 }
 
 impl IFCParse for PlaneAngleMeasure {
@@ -21,7 +21,7 @@ impl IFCParse for PlaneAngleMeasure {
             Self {
                 _: p_space_or_comment_surrounded("IFCPLANEANGLEMEASURE("),
 
-                value: IfcFloat::parse(),
+                value: RealPrimitive::parse(),
 
                 _: p_space_or_comment_surrounded(")"),
             }

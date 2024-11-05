@@ -5,8 +5,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::IdOr,
     parser::{
-        comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        real::RealPrimitive, IFCParse,
     },
     prelude::*,
 };
@@ -45,10 +45,10 @@ pub struct CartesianTransformationOperator3DnonUniform {
     base: Transform3DBase,
     /// The scaling value specified for the transformation along the axis 2. This is normally the y
     /// scale factor.
-    pub scale_y: OptionalParameter<IfcFloat>,
+    pub scale_y: OptionalParameter<RealPrimitive>,
     /// The scaling value specified for the transformation along the axis 3. This is normally the z
     /// scale factor.
-    pub scale_z: OptionalParameter<IfcFloat>,
+    pub scale_z: OptionalParameter<RealPrimitive>,
 }
 
 impl CartesianTransformationOperator3DnonUniform {
@@ -64,8 +64,8 @@ impl CartesianTransformationOperator3DnonUniform {
     ) -> Self {
         Self {
             base: Transform3DBase::new(local_origin, (axis_x, axis_y, axis_z), scale, ifc),
-            scale_y: IfcFloat(scale_y).into(),
-            scale_z: IfcFloat(scale_z).into(),
+            scale_y: RealPrimitive(scale_y).into(),
+            scale_z: RealPrimitive(scale_z).into(),
         }
     }
 }

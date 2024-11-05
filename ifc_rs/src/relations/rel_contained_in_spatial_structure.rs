@@ -4,7 +4,8 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr};
 use crate::parser::{
-    comma::Comma, label::Label, list::IfcList, p_space_or_comment_surrounded, IFCParse, IFCParser,
+    comma::Comma, list::IfcList, p_space_or_comment_surrounded, string::StringPrimitive, IFCParse,
+    IFCParser,
 };
 use crate::prelude::*;
 
@@ -34,7 +35,7 @@ pub struct RelContainedInSpatialStructure {
 
 impl RelContainedInSpatialStructure {
     pub fn new<S: Structure>(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         relating_structure: impl Into<IdOr<S>>,
         ifc: &mut IFC,
     ) -> Self {

@@ -11,7 +11,7 @@ use super::shared::{
     root::{Root, RootBuilder},
 };
 use crate::{
-    parser::{ifc_float::IfcFloat, label::Label, optional::OptionalParameter},
+    parser::{optional::OptionalParameter, real::RealPrimitive, string::StringPrimitive},
     prelude::*,
 };
 
@@ -52,11 +52,11 @@ pub struct Space {
     /// Level of flooring of this space; the average shall be taken, if the
     /// space ground surface is sloping or if there are level differences
     /// within this space.
-    pub elevation_with_flooring: OptionalParameter<IfcFloat>,
+    pub elevation_with_flooring: OptionalParameter<RealPrimitive>,
 }
 
 impl Space {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
                 Product::new(Object::new(Root::new(name.into()))),
@@ -73,7 +73,7 @@ impl Space {
     }
 
     pub fn elevation_with_flooring(mut self, elevation_with_flooring: f64) -> Self {
-        self.elevation_with_flooring = IfcFloat(elevation_with_flooring).into();
+        self.elevation_with_flooring = RealPrimitive(elevation_with_flooring).into();
         self
     }
 }

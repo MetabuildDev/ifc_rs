@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
 use optional::OptionalParameter;
+use string::StringPrimitive;
 
 use crate::{parser::*, prelude::*, properties::base::comma::Comma};
 
@@ -12,13 +12,13 @@ use crate::{parser::*, prelude::*, properties::base::comma::Comma};
 #[derive(IfcVerify)]
 pub struct PropertyBase {
     /// Name for this property. This label is the significant name string that defines the semantic meaning for the property.
-    pub name: OptionalParameter<Label>,
+    pub name: OptionalParameter<StringPrimitive>,
     /// Informative text to explain the property.
-    pub description: OptionalParameter<Label>,
+    pub description: OptionalParameter<StringPrimitive>,
 }
 
 impl PropertyBase {
-    pub fn new(name: Label) -> Self {
+    pub fn new(name: StringPrimitive) -> Self {
         Self {
             name: name.into(),
             description: OptionalParameter::omitted(),
@@ -29,12 +29,12 @@ impl PropertyBase {
 pub trait PropertyBuilder: Sized {
     fn property_mut(&mut self) -> &mut PropertyBase;
 
-    fn name(mut self, name: impl Into<Label>) -> Self {
+    fn name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.property_mut().name = name.into().into();
         self
     }
 
-    fn description(mut self, description: impl Into<Label>) -> Self {
+    fn description(mut self, description: impl Into<StringPrimitive>) -> Self {
         self.property_mut().description = description.into().into();
         self
     }

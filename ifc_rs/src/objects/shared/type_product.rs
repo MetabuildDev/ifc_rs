@@ -8,7 +8,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::TypedId,
     parser::{
-        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser,
+        comma::Comma, list::IfcList, optional::OptionalParameter, string::StringPrimitive,
+        IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -37,7 +38,7 @@ pub struct TypeProduct {
     /// The tag (or label) identifier at the particular type of a
     /// product, e.g. the article number (like the EAN). It is the
     /// identifier at the specific level.
-    pub tag: OptionalParameter<Label>,
+    pub tag: OptionalParameter<StringPrimitive>,
 }
 
 impl TypeProduct {
@@ -59,7 +60,7 @@ pub trait TypeProductBuilder: Sized {
     //     self
     // }
 
-    fn tag(mut self, tag: impl Into<Label>) -> Self {
+    fn tag(mut self, tag: impl Into<StringPrimitive>) -> Self {
         self.type_product_mut().tag = tag.into().into();
         self
     }

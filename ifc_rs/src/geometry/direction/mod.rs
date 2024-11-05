@@ -5,7 +5,7 @@ use bevy_math::{DVec2, DVec3};
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::ifc_float::{IfcDVec2, IfcDVec3},
+    parser::real::{IfcDVec2, IfcDVec3},
     prelude::*,
 };
 

@@ -4,7 +4,7 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::{Id, IdOr};
-use crate::parser::label::Label;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 ///  IfcApplication holds the information about an IFC compliant application
@@ -18,19 +18,19 @@ pub struct Application {
     #[ifc_types(Person, Organization)]
     pub application_developer: Id,
     /// The version number of this software as specified by the developer of the application.
-    pub version: Label,
+    pub version: StringPrimitive,
     /// The full name of the application as specified by the application developer.
-    pub application_full_name: Label,
+    pub application_full_name: StringPrimitive,
     /// Short identifying name for the application.
-    pub application_identifier: Label,
+    pub application_identifier: StringPrimitive,
 }
 
 impl Application {
     pub fn new<T: PersonOrOrg>(
         application_developer: impl Into<IdOr<T>>,
-        version: impl Into<Label>,
-        application_full_name: impl Into<Label>,
-        application_identifier: impl Into<Label>,
+        version: impl Into<StringPrimitive>,
+        application_full_name: impl Into<StringPrimitive>,
+        application_identifier: impl Into<StringPrimitive>,
         ifc: &mut IFC,
     ) -> Self {
         Self {

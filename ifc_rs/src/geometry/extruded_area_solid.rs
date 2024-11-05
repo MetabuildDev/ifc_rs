@@ -2,9 +2,9 @@ use crate::id::{IdOr, TypedId};
 use crate::prelude::*;
 use crate::{id::Id, parser::*};
 use comma::Comma;
-use ifc_float::IfcFloat;
 use ifc_rs_verify_derive::IfcVerify;
 use optional::OptionalParameter;
+use real::RealPrimitive;
 
 use std::fmt::Display;
 
@@ -46,7 +46,7 @@ pub struct ExtrudedAreaSolid {
     pub extruded_direction: TypedId<Direction3D>,
 
     /// The distance the surface is to be swept along the ExtrudedDirection.
-    pub depth: IfcFloat,
+    pub depth: RealPrimitive,
 }
 
 impl ExtrudedAreaSolid {
@@ -113,7 +113,7 @@ impl IFCParse for ExtrudedAreaSolid {
                 _: Comma::parse(),
                 extruded_direction: Id::parse().map(TypedId::new),
                 _: Comma::parse(),
-                depth: IfcFloat::parse(),
+                depth: RealPrimitive::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

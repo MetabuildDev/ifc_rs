@@ -5,9 +5,9 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::id::Id;
 use crate::id::IdOr;
 use crate::parser::comma::Comma;
-use crate::parser::label::Label;
 use crate::parser::list::IfcList;
 use crate::parser::p_space_or_comment_surrounded;
+use crate::parser::string::StringPrimitive;
 use crate::parser::IFCParse;
 use crate::parser::IFCParser;
 use crate::prelude::*;
@@ -32,7 +32,7 @@ pub struct RelDefinesByType {
 
 impl RelDefinesByType {
     pub fn new<OBJ: IfcType>(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         relating_type: impl Into<IdOr<OBJ>>,
         ifc: &mut IFC,
     ) -> Self {

@@ -7,7 +7,9 @@ use crate::{
     units::{comma::Comma, p_space_or_comment_surrounded},
 };
 
-use super::{label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser};
+use super::{
+    list::IfcList, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+};
 
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/link/ifcderivedunit.htm
 #[derive(IfcVerify)]
@@ -19,7 +21,7 @@ pub struct DerivedUnit {
     pub unit_type: DerivedUnitEnum,
 
     /// Name of the derived unit chosen from an enumeration of derived unit types for use in IFC models.
-    pub user_defined_type: OptionalParameter<Label>,
+    pub user_defined_type: OptionalParameter<StringPrimitive>,
 }
 
 impl IFCParse for DerivedUnit {

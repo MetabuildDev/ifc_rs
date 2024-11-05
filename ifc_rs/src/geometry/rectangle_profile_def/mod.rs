@@ -4,8 +4,8 @@ mod serialize;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::id::IdOr;
-use crate::parser::ifc_float::IfcFloat;
-use crate::parser::label::Label;
+use crate::parser::real::RealPrimitive;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 use crate::{id::Id, parser::optional::OptionalParameter};
 
@@ -33,15 +33,15 @@ pub struct RectangleProfileDef {
     /// Human-readable name of the profile, for example according to a standard profile table. As
     /// noted above, machine-readable standardized profile designations should be provided in
     /// IfcExternalReference.ItemReference.
-    pub profile_name: OptionalParameter<Label>,
+    pub profile_name: OptionalParameter<StringPrimitive>,
     /// Position coordinate system of the parameterized profile definition. If unspecified, no
     /// translation and no rotation is applied.
     #[ifc_types(Axis2D, Axis3D)]
     pub position: OptionalParameter<Id>,
     /// The extent of the rectangle in the direction of the x-axis.
-    pub x_dim: IfcFloat,
+    pub x_dim: RealPrimitive,
     /// The extent of the rectangle in the direction of the y-axis.
-    pub y_dim: IfcFloat,
+    pub y_dim: RealPrimitive,
 }
 
 impl RectangleProfileDef {
@@ -55,7 +55,7 @@ impl RectangleProfileDef {
         }
     }
 
-    pub fn profile_name(mut self, name: impl Into<Label>) -> Self {
+    pub fn profile_name(mut self, name: impl Into<StringPrimitive>) -> Self {
         self.profile_name = name.into().into();
         self
     }

@@ -6,7 +6,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        comma::Comma, label::Label, list::IfcList, optional::OptionalParameter, IFCParse, IFCParser,
+        comma::Comma, list::IfcList, optional::OptionalParameter, string::StringPrimitive,
+        IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -29,14 +30,14 @@ pub struct Context {
 
     /// The type denotes a particular type that indicates the object further.
     /// The use has to be established at the level of instantiable subtypes.
-    pub object_type: OptionalParameter<Label>,
+    pub object_type: OptionalParameter<StringPrimitive>,
 
     /// Long name for the context as used for reference purposes.
-    pub long_name: OptionalParameter<Label>,
+    pub long_name: OptionalParameter<StringPrimitive>,
 
     /// Current project phase, or life-cycle phase of this project. Applicable
     /// values have to be agreed upon by view definitions or implementer agreements.
-    pub phase: OptionalParameter<Label>,
+    pub phase: OptionalParameter<StringPrimitive>,
 
     /// Context of the representations used within the context. When the
     /// context is a project and it includes shape representations for its
@@ -65,17 +66,17 @@ impl Context {
 pub trait ContextBuilder: Sized {
     fn context_mut(&mut self) -> &mut Context;
 
-    fn object_type(mut self, object_type: impl Into<Label>) -> Self {
+    fn object_type(mut self, object_type: impl Into<StringPrimitive>) -> Self {
         self.context_mut().object_type = object_type.into().into();
         self
     }
 
-    fn long_name(mut self, long_name: impl Into<Label>) -> Self {
+    fn long_name(mut self, long_name: impl Into<StringPrimitive>) -> Self {
         self.context_mut().long_name = long_name.into().into();
         self
     }
 
-    fn phase(mut self, phase: impl Into<Label>) -> Self {
+    fn phase(mut self, phase: impl Into<StringPrimitive>) -> Self {
         self.context_mut().phase = phase.into().into();
         self
     }

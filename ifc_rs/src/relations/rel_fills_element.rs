@@ -4,7 +4,9 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr, TypedId},
-    parser::{comma::Comma, label::Label, p_space_or_comment_surrounded, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, p_space_or_comment_surrounded, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -26,7 +28,7 @@ pub struct RelFillsElement {
 
 impl RelFillsElement {
     pub fn new<S: Structure>(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         relating_opening_element: impl Into<IdOr<OpeningElement>>,
         relating_building_element: impl Into<IdOr<S>>,
         ifc: &mut IFC,

@@ -5,7 +5,7 @@ use door_type_enum::DoorTypeEnum;
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{bool::IfcBool, label::Label, optional::OptionalParameter},
+    parser::{bool::BoolPrimitive, optional::OptionalParameter, string::StringPrimitive},
     prelude::*,
 };
 
@@ -53,16 +53,16 @@ pub struct DoorType {
     /// whether the attached style shape take precedence (FALSE). In the last
     /// case the parameter have only informative value. If not provided, no
     /// such information can be infered.
-    pub parameter_takes_precedence: OptionalParameter<IfcBool>,
+    pub parameter_takes_precedence: OptionalParameter<BoolPrimitive>,
 
     /// Designator for the user defined partitioning type, shall only be
     /// provided, if the value of PartitioningType is set to USERDEFINED.
-    pub user_defined_partitioning_type: OptionalParameter<Label>,
+    pub user_defined_partitioning_type: OptionalParameter<StringPrimitive>,
 }
 
 impl DoorType {
     pub fn new(
-        name: impl Into<Label>,
+        name: impl Into<StringPrimitive>,
         predefined_type: DoorTypeEnum,
         operation_type: DoorOperationTypeEnum,
     ) -> Self {

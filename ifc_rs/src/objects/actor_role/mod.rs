@@ -1,8 +1,8 @@
 mod deserialize;
 mod serialize;
 
-use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::string::StringPrimitive;
 use crate::parser::{p_space_or_comment, IFCParse, IFCParser};
 use crate::prelude::*;
 use std::str::FromStr;
@@ -25,9 +25,9 @@ pub struct ActorRole {
     /// enumeration values provided by Role attribute of type IfcRoleEnum.
     /// When a value is provided for attribute UserDefinedRole in parallel
     /// the attribute Role shall have enumeration value USERDEFINED.
-    pub user_defined_role: OptionalParameter<Label>,
+    pub user_defined_role: OptionalParameter<StringPrimitive>,
     /// A textual description relating the nature of the role played by an actor.
-    pub description: OptionalParameter<Label>, // TODO: Text
+    pub description: OptionalParameter<StringPrimitive>, // TODO: Text
 }
 
 /// Roles which may be played by an actor.

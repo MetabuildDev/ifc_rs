@@ -4,7 +4,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::IdOr,
-    parser::{comma::Comma, ifc_float::IfcFloat, optional::OptionalParameter, IFCParse},
+    parser::{comma::Comma, optional::OptionalParameter, real::RealPrimitive, IFCParse},
     prelude::*,
 };
 
@@ -29,7 +29,7 @@ pub struct Transform3DBase {
     /// in the transformation is from the geometric origin to the local origin.
     pub local_origin: OptionalParameter<IdOr<Point3D>>,
     /// The scaling value specified for the transformation.
-    pub scale: OptionalParameter<IfcFloat>,
+    pub scale: OptionalParameter<RealPrimitive>,
     /// The exact direction of U[3], the derived Z axis direction.
     pub axis_z: OptionalParameter<IdOr<Direction3D>>,
 }
@@ -49,7 +49,7 @@ impl Transform3DBase {
             axis_x: IdOr::Id(axis_x.into().or_insert(ifc)).into(),
             axis_y: IdOr::Id(axis_y.into().or_insert(ifc)).into(),
             local_origin: IdOr::Id(local_origin.into().or_insert(ifc)).into(),
-            scale: IfcFloat(scale).into(),
+            scale: RealPrimitive(scale).into(),
             axis_z: IdOr::Id(axis_z.into().or_insert(ifc)).into(),
         }
     }

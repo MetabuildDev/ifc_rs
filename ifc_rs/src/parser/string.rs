@@ -9,15 +9,15 @@ use crate::parser::{p_quote_word, IFCParse, IFCParser};
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcmeasureresource/lexical/ifclabel.htm
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Label(pub String);
+pub struct StringPrimitive(pub String);
 
-impl<S: AsRef<str>> From<S> for Label {
+impl<S: AsRef<str>> From<S> for StringPrimitive {
     fn from(value: S) -> Self {
         Self(value.as_ref().to_string())
     }
 }
 
-impl IFCParse for Label {
+impl IFCParse for StringPrimitive {
     fn parse<'a>() -> impl IFCParser<'a, Self>
     where
         Self: Sized,
@@ -26,7 +26,7 @@ impl IFCParse for Label {
     }
 }
 
-impl Display for Label {
+impl Display for StringPrimitive {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "'{label}'", label = self.0)
     }

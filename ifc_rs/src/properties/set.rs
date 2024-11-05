@@ -2,8 +2,8 @@ use std::{fmt::Display, ops::Deref};
 
 use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
-use label::Label;
 use list::IfcList;
+use string::StringPrimitive;
 
 use crate::{parser::*, prelude::*};
 
@@ -41,7 +41,7 @@ pub struct PropertySet {
 }
 
 impl PropertySet {
-    pub fn new(name: impl Into<Label>, children: impl IntoIterator<Item = Id>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, children: impl IntoIterator<Item = Id>) -> Self {
         Self {
             root: Root::new(name.into()),
             properties: IfcList(children.into_iter().collect()),

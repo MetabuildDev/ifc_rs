@@ -8,8 +8,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::{IdOr, TypedId},
     parser::{
-        comma::Comma, ifc_float::IfcFloat, label::Label, optional::OptionalParameter,
-        p_space_or_comment_surrounded, IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        real::RealPrimitive, string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -28,18 +28,18 @@ pub struct Building {
     /// Elevation above sea level of the reference height used for all storey
     /// elevation measures, equals to height 0.0. It is usually the ground
     /// floor level.
-    pub elevation_of_ref_height: OptionalParameter<IfcFloat>,
+    pub elevation_of_ref_height: OptionalParameter<RealPrimitive>,
 
     /// Elevation above the minimal terrain level around the foot print of
     /// the building, given in elevation above sea level.
-    pub elevation_of_terrain: OptionalParameter<IfcFloat>,
+    pub elevation_of_terrain: OptionalParameter<RealPrimitive>,
 
     /// Address given to the building for postal purposes.
     pub building_address: OptionalParameter<TypedId<PostalAddress>>,
 }
 
 impl Building {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             spatial_element_structure: SpatialStructureElement::new(SpatialElement::new(
                 Product::new(Object::new(Root::new(name.into()))),
@@ -51,12 +51,12 @@ impl Building {
     }
 
     pub fn elevation_of_ref_height(mut self, elevation_of_ref_height: f64) -> Self {
-        self.elevation_of_ref_height = IfcFloat(elevation_of_ref_height).into();
+        self.elevation_of_ref_height = RealPrimitive(elevation_of_ref_height).into();
         self
     }
 
     pub fn elevation_of_terrain(mut self, elevation_of_terrain: f64) -> Self {
-        self.elevation_of_terrain = IfcFloat(elevation_of_terrain).into();
+        self.elevation_of_terrain = RealPrimitive(elevation_of_terrain).into();
         self
     }
 

@@ -6,7 +6,9 @@ use std::{
 use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
-    parser::{comma::Comma, label::Label, optional::OptionalParameter, IFCParse, IFCParser},
+    parser::{
+        comma::Comma, optional::OptionalParameter, string::StringPrimitive, IFCParse, IFCParser,
+    },
     prelude::*,
 };
 
@@ -23,7 +25,7 @@ pub struct Element {
     /// The tag (or label) identifier at the particular instance of a product,
     /// e.g. the serial number, or the position number. It is the identifier
     /// at the occurrence level.
-    pub tag: OptionalParameter<Label>,
+    pub tag: OptionalParameter<StringPrimitive>,
 }
 
 impl Element {
@@ -38,7 +40,7 @@ impl Element {
 pub trait ElementBuilder: Sized {
     fn element_mut(&mut self) -> &mut Element;
 
-    fn tag(mut self, tag: impl Into<Label>) -> Self {
+    fn tag(mut self, tag: impl Into<StringPrimitive>) -> Self {
         self.element_mut().tag = tag.into().into();
         self
     }

@@ -8,8 +8,8 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::{
     id::TypedId,
     parser::{
-        comma::Comma, label::Label, optional::OptionalParameter, p_space_or_comment_surrounded,
-        IFCParse, IFCParser,
+        comma::Comma, optional::OptionalParameter, p_space_or_comment_surrounded,
+        string::StringPrimitive, IFCParse, IFCParser,
     },
     prelude::*,
 };
@@ -31,7 +31,7 @@ pub struct ShadingDevice {
 }
 
 impl ShadingDevice {
-    pub fn new(name: impl Into<Label>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
             element: Element::new(Product::new(Object::new(Root::new(name.into())))),
 

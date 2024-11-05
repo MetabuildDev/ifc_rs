@@ -6,9 +6,9 @@ use ifc_rs_verify_derive::IfcVerify;
 use crate::geometry::dimension_count::DimensionCount;
 use crate::geometry::geometric_projection::GeometricProjection;
 use crate::id::{Id, IdOr, TypedId};
-use crate::parser::ifc_float::IfcFloat;
-use crate::parser::label::Label;
 use crate::parser::optional::OptionalParameter;
+use crate::parser::real::RealPrimitive;
+use crate::parser::string::StringPrimitive;
 use crate::prelude::*;
 
 use super::representation_context::GeometricRepresentationContext;
@@ -37,10 +37,10 @@ pub struct GeometricRepresentationSubContext {
     // first six fields inherited from IfcGeometricRepresentationContext
     //
     /// The optional identifier of the representation context as used within a project.
-    pub context_identifier: OptionalParameter<Label>,
+    pub context_identifier: OptionalParameter<StringPrimitive>,
     /// The description of the type of a representation context. The supported values for context
     /// type are to be specified by implementers agreements.
-    pub context_type: OptionalParameter<Label>,
+    pub context_type: OptionalParameter<StringPrimitive>,
     /// The integer dimension count of the coordinate space modeled in a geometric representation
     /// context.
     pub coord_space_dimension: OptionalParameter<DimensionCount>,
@@ -48,7 +48,7 @@ pub struct GeometricRepresentationSubContext {
     /// in 1E-5 to 1E-8 range, that indicates the tolerance under which two given points are still
     /// assumed to be identical. The value can be used e.g. to sets the maximum distance from an
     /// edge curve to the underlying face surface in brep models.
-    pub precision: OptionalParameter<IfcFloat>,
+    pub precision: OptionalParameter<RealPrimitive>,
     /// Establishment of the engineering coordinate system (often referred to as the world
     /// coordinate system in CAD) for all representation contexts used by the project.
     ///
@@ -86,12 +86,12 @@ pub struct GeometricRepresentationSubContext {
     ///
     /// *Note: Scale 1:100 (given as 0.01 within TargetScale) is bigger then 1:200
     /// (given as 0.005 within TargetScale).*
-    pub target_scale: OptionalParameter<IfcFloat>, // TODO: IfcPositiveRatioMeasure
+    pub target_scale: OptionalParameter<RealPrimitive>, // TODO: IfcPositiveRatioMeasure
     /// Target view of the representation to which this representation context applies.
     pub target_view: GeometricProjection,
     /// User defined target view, this attribute value shall be given,
     /// if the TargetView attribute is set to USERDEFINED.
-    pub user_defined_target_view: OptionalParameter<Label>,
+    pub user_defined_target_view: OptionalParameter<StringPrimitive>,
 }
 
 impl GeometricRepresentationSubContext {
@@ -116,11 +116,14 @@ impl GeometricRepresentationSubContext {
     }
 
     pub fn target_scale(mut self, scale: f64) -> Self {
-        self.target_scale = IfcFloat(scale).into();
+        self.target_scale = RealPrimitive(scale).into();
         self
     }
 
-    pub fn user_defined_target_view(mut self, user_defined_target_view: impl Into<Label>) -> Self {
+    pub fn user_defined_target_view(
+        mut self,
+        user_defined_target_view: impl Into<StringPrimitive>,
+    ) -> Self {
         self.user_defined_target_view = user_defined_target_view.into().into();
         self
     }
