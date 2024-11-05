@@ -9,6 +9,7 @@ pub(crate) mod list;
 pub(crate) mod optional;
 pub(crate) mod place_holder;
 pub(crate) mod timestamp;
+pub(crate) mod value;
 
 use std::fmt::Display;
 

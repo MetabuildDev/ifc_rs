@@ -41,6 +41,9 @@ pub mod objects;
 pub mod parser;
 /// common prelude module for the whole crate
 pub mod prelude;
+/// module containing property set definition and properties which can be used to enhance elements
+/// with extra data
+pub mod properties;
 /// module containing definitions of so called IFC relation objects which link one-or-more IFC
 /// objects to one-or-more other IFC objects or properties
 pub mod relations;

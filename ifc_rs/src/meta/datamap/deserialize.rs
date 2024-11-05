@@ -13,6 +13,7 @@ use crate::{
     objects::Objects,
     parser::{dummy::Dummy, p_space_or_comment_surrounded, IFCParse, IFCParser},
     prelude::*,
+    properties::Properties,
     relations::Relation,
     units::Units,
 };
@@ -20,11 +21,15 @@ use crate::{
 impl IFCParse for DataMap {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         let p_obj = p_space_or_comment_surrounded(alt((
-            Objects::parse(),
-            Geometry::parse(),
-            Relation::parse(),
-            Units::parse(),
-            Materials::parse(),
+            alt((
+                Objects::parse(),
+                Geometry::parse(),
+                Relation::parse(),
+                Units::parse(),
+                Materials::parse(),
+                Properties::parse(),
+            )),
+            // catch all fallback
             Dummy::parse_any(),
         )));
         let p_line = separated_pair(Id::parse(), p_space_or_comment_surrounded("="), p_obj);
@@ -177,6 +182,9 @@ fn parse_data_from_example_file() {
 #35= IFCRELDEFINESBYTYPE('1$EkFElNT8TB_VUVG1FtMe',#2,$,$,(#11),#37);
 #37= IFCWALLTYPE('2aG1gZj7PD2PztLOx2$IVX',#2,'Double Brick - 270',$,$,$,$,$,$,.NOTDEFINED.);
 #43= IFCRELASSOCIATESMATERIAL('36U74BIPDD89cYkx9bkV$Y',#2,'MatAssoc','Material Associates',(#37),#39);
+#50= IFCMATERIALPROPERTIES('Material','Cool Material',(#110,#111,#112,#113,#114,#115,#116,#117,#118,#119),#499);
+#51= IFCPROPERTYSET('3nMqHLyZHAegWs5Yyxh1ry',#2,'Pset_WallCommon',$,(#110,#111,#112,#113,#114,#115,#116,#117,#118,#119));
+#52= IFCPROPERTYSINGLEVALUE('Reference','Reference',IfcIdentifier(''),$);
 ENDSEC;"#;
 
     DataMap::parse().parse(data).unwrap();
