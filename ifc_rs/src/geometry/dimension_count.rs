@@ -11,9 +11,9 @@ use crate::parser::*;
 
 /// The IfcDimensionCount is restricted to have the dimensionality of either 1, 2, or 3
 /// - the WR1 had been added as an addition to the STEP P42 entity dimension_count.
-/// In contrary to the STEP P42 constraint, that all geometric representation items
-/// within a geometric representation context are forced to have the same dimension count,
-/// the IFC geometry allows mixed dimensions, particularly when defining the boundary of planar surfaces.
+///   In contrary to the STEP P42 constraint, that all geometric representation items
+///   within a geometric representation context are forced to have the same dimension count,
+///   the IFC geometry allows mixed dimensions, particularly when defining the boundary of planar surfaces.
 ///
 /// https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcgeometryresource/lexical/ifcdimensioncount.htm
 #[derive(

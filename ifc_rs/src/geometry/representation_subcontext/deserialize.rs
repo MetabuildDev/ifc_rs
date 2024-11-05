@@ -89,8 +89,9 @@ fn parse_geometric_representation_subcontext_works() {
         .unwrap();
     assert_eq!(data, parsed.to_string());
 
-    "IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Axis','Model',0,$,$,$,#12,$,.MODEL_VIEW.,$);";
-    GeometricRepresentationSubContext::parse()
+    let data = "IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Axis','Model',1,$,$,$,#12,$,.MODEL_VIEW.,$);";
+    let parsed = GeometricRepresentationSubContext::parse()
         .parse(data)
         .unwrap();
+    assert_eq!(data, parsed.to_string());
 }

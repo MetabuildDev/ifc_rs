@@ -69,20 +69,15 @@ impl IfcExtractor {
             .unwrap()
     }
 
-    pub fn related_voids<'a, S>(
-        &'a self,
-        id: TypedId<S>,
-    ) -> impl Iterator<Item = &'a OpeningElement>
+    pub fn related_voids<S>(&self, id: TypedId<S>) -> impl Iterator<Item = &'_ OpeningElement>
     where
         S: Structure,
     {
         self.ifc
             .data
             .find_all_of_type::<RelVoidsElement>()
-            .filter_map(move |(_, rel_voids)| {
-                (rel_voids.relating_building_element == id.id())
-                    .then(|| self.ifc.data.get(rel_voids.related_opening_element))
-            })
+            .filter(move |&(_, rel_voids)| (rel_voids.relating_building_element == id.id()))
+            .map(|(_, rel_voids)| self.ifc.data.get(rel_voids.related_opening_element))
     }
 
     pub fn related_materials<S>(&self, id: TypedId<S>) -> impl Iterator<Item = &MaterialLayer>

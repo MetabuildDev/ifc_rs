@@ -30,9 +30,9 @@ use crate::{
 /// There are two different types of opening elements:
 ///
 /// * an opening, where the thickness of the opening is greater or equal to
-/// the thickness of the element;
+///   the thickness of the element;
 /// * a recess or niche, where the thickness of the recess is smaller than the
-/// thickness of the element.
+///   thickness of the element.
 ///
 /// The attribute PredefinedType should be used to capture the differences,
 ///
@@ -50,11 +50,11 @@ use crate::{
 /// IfcOpeningElement the voiding relationship implies:
 ///
 /// * if the IfcShapeRepresentation. = 'Body', then the Body shape
-/// represntation of the opening has to be subtracted from the body shape
-/// representation of the voided element - implicit Boolean difference operation.
+///   represntation of the opening has to be subtracted from the body shape
+///   representation of the voided element - implicit Boolean difference operation.
 /// * if the IfcShapeRepresentation. = 'Reference', then the Reference shape
-/// representation of the opening is not subtracted, it is provided in
-/// addition to the hole in the Body shape representation of the voided element.
+///   representation of the opening is not subtracted, it is provided in
+///   addition to the hole in the Body shape representation of the voided element.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcopeningelement.htm
 #[derive(IfcVerify)]

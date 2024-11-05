@@ -26,9 +26,9 @@ use crate::{
 /// The IfcRoof shall either be represented:
 ///
 /// * as a roof assembly that aggregates all parts (slabs, rafters and purlins,
-/// or other included roofs, such as dormers) with own shape representaion, or
+///   or other included roofs, such as dormers) with own shape representaion, or
 /// * as a single roof without decomposition including all shape representations
-/// directly at the roof entity.
+///   directly at the roof entity.
 ///
 /// Note: In case of an IfcRoof being the assembly of all parts of the roof the
 /// aggregation is handled by the IfcRelAggregates relationship, relating an

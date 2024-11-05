@@ -28,11 +28,13 @@
           runtimeInputs = [
             self'.packages.rust
             pkgs.cargo-machete
+            pkgs.cargo-deny
             pkgs.clang
           ];
           text = ''
             cargo machete --version
             cargo machete
+            cargo deny check advisories
             echo SUCCESS
           '';
         };

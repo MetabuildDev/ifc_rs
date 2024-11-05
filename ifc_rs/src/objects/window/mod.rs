@@ -30,11 +30,11 @@ use crate::{
 /// spatial context of a project. A window can:
 ///
 /// * be inserted into an IfcOpeningElement using the IfcRelFillsElement
-/// relationship, then the IfcWindow has an inverse attribute FillsVoids provided,
+///   relationship, then the IfcWindow has an inverse attribute FillsVoids provided,
 /// * be part of an element assembly, often an IfcCurtainWall, using the
-/// IfcRelAggregates relationship, then the inverse attribute Decomposes is provided.
+///   IfcRelAggregates relationship, then the inverse attribute Decomposes is provided.
 /// * or be a "free standing" window, then the IfcWindow has no inverse
-/// attributes FillsVoids or Decomposes provided.
+///   attributes FillsVoids or Decomposes provided.
 ///
 /// Note: View definitions or implementer agreements may restrict the
 /// relationship to only include one window (or door) into one opening.
@@ -42,13 +42,13 @@ use crate::{
 /// There are two entities for window occurrences:
 ///
 /// * IfcWindowStandardCase used for all occurrences of windows, that have a
-/// 'Profile' shape representation defined to which a set of shape parameters
-/// for lining and framing properties apply. Additionally it requires the
-/// provision of an IfcWindowType that references one IfcWindowLiningProperties
-/// and on to many IfcWindowPanelProperties.
+///   'Profile' shape representation defined to which a set of shape parameters
+///   for lining and framing properties apply. Additionally it requires the
+///   provision of an IfcWindowType that references one IfcWindowLiningProperties
+///   and on to many IfcWindowPanelProperties.
 /// * IfcWindow used for all other occurrences of windows, particularly for
-/// windows having only 'Brep', or 'SurfaceModel' geometry without applying
-/// shape parameters.
+///   windows having only 'Brep', or 'SurfaceModel' geometry without applying
+///   shape parameters.
 ///
 /// The actual parameter of the window and/or its shape is defined at the
 /// IfcWindow as the occurrence definition (or project instance), or by the
@@ -56,13 +56,13 @@ use crate::{
 /// parameters are given:
 ///
 /// * at the IfcWindow or IfcWindowStandardCase for occurrence specific
-/// parameters. The IfcWindow specifies:
+///   parameters. The IfcWindow specifies:
 ///   * the window width and height
 ///   * the window opening direction (by the y-axis of the ObjectPlacement)
 ///
 /// * at the IfcWindowType to which the IfcWindow is related by the inverse
-/// relationship IsDefinedBy pointing to IfcRelDefinesByType, for type
-/// parameters common to all occurrences of the same type.
+///   relationship IsDefinedBy pointing to IfcRelDefinesByType, for type
+///   parameters common to all occurrences of the same type.
 ///   * the partitioning type (single panel, double panel, tripel panel, more panels)
 ///   * the operation type (swing, tilt and turn, pivot revolve, fixed case ment, etc.)
 ///   * the window panel hinge side (by using two different styles for right and left opening windows)

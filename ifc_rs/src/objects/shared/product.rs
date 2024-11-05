@@ -104,7 +104,7 @@ impl Product {
     pub(crate) fn local_placement<'a>(&self, ifc: &'a IFC) -> Option<&'a Point3D> {
         self.object_placement
             .custom()
-            .map(|object_placement_id| {
+            .and_then(|object_placement_id| {
                 let local_placement = ifc
                     .data
                     .get(TypedId::<LocalPlacement>::new(*object_placement_id));
@@ -114,7 +114,6 @@ impl Product {
                     .downcast_ref::<Axis3D>()
                     .map(|axis| ifc.data.get(axis.location))
             })
-            .flatten()
     }
 }
 

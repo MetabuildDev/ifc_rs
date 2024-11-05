@@ -20,7 +20,7 @@ use crate::{
 ///
 /// * first dimension is an unbounded list representing each 2D Cartesian point;
 /// * second dimension is a fixed list of two list members, where [1] is the
-/// x-coordinate, and [2] the y-coordinate of the Cartesian point.
+///   x-coordinate, and [2] the y-coordinate of the Cartesian point.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcgeometricmodelresource/lexical/ifccartesianpointlist2d.htm
 #[derive(Debug, Clone, IfcVerify)]
@@ -48,7 +48,7 @@ impl PointList for PointList2D {}
 ///
 /// * first dimension is an unbounded list representing each 3D Cartesian point;
 /// * second dimension is a fixed list of two list members, where [1] is the
-/// x-coordinate, [2] is the y-coord, and [3] the z-coordinate of the Cartesian point.
+///   x-coordinate, [2] is the y-coord, and [3] the z-coordinate of the Cartesian point.
 ///
 /// https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcgeometricmodelresource/lexical/ifccartesianpointlist3d.htm
 #[derive(Debug, Clone, IfcVerify)]

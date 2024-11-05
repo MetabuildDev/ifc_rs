@@ -24,7 +24,7 @@ mod serialize;
 /// * common properties within shared property sets
 /// * common material information
 /// * common operation type definitions
-/// *common shape representations
+/// * common shape representations
 ///
 /// A door type defines the particular parameter of the lining and one
 /// (or several) panels through the IfcDoorLiningProperties and the

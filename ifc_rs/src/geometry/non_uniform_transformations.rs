@@ -34,7 +34,7 @@ impl<'a> Deref for NonUniformTransformMapping<'a> {
 /// Non uniform scaling is given by three different scaling factors:
 ///
 /// - Scale: the x axis scale factor - Scale2: the y axis scale factor - Scale3: the z axis scale
-/// factor
+///   factor
 ///
 /// If the Scale factor (at supertype IfcCartesianTransformationOperator) is omitted, it defaults
 /// to 1.0. If the Scale2 or the Scale3 factor is omitted, it defaults to the value of Scale (the x

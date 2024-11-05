@@ -78,10 +78,10 @@ impl<T: IfcType> Display for TypedId<T> {
     }
 }
 
-pub struct FIXMETYPE;
-impl IfcVerify for FIXMETYPE {}
-impl IfcType for FIXMETYPE {}
-impl Display for FIXMETYPE {
+pub struct FixMeType;
+impl IfcVerify for FixMeType {}
+impl IfcType for FixMeType {}
+impl Display for FixMeType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "AHHHHH")
     }

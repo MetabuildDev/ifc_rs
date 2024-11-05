@@ -29,26 +29,26 @@ use crate::{
 /// context of a project. A door can:
 ///
 /// * be inserted as a filler in an opening using the IfcRelFillsElement
-/// relationship, then the IfcDoor has an inverse attribute FillsVoids provided;
+///   relationship, then the IfcDoor has an inverse attribute FillsVoids provided;
 /// * be part of an element assembly, in general an IfcCurtainWall, using the
-/// IfcRelAggregates relationship, then the IfcDoor has an inverse attribute
-/// Decomposes is provided;
+///   IfcRelAggregates relationship, then the IfcDoor has an inverse attribute
+///   Decomposes is provided;
 /// * be a "free standing" door, then the IfcDoor has no inverse attributes
-/// FillsVoids or Decomposes provided.
+///   FillsVoids or Decomposes provided.
 ///
 /// There are two main representations for door occurrences:
 ///
 /// * IfcDoor with a shape representation having
-/// RepresentationIdenfifier='Profile' is used for all occurrences of doors,
-/// that have a 'Profile' shape representation defined to which a set of shape
-/// parameters for lining and framing properties apply. Additionally it requires
-/// the provision of an IfcDoorType that references one IfcDoorLiningProperties
-/// and one to many IfcDoorPanelProperties;
+///   RepresentationIdenfifier='Profile' is used for all occurrences of doors,
+///   that have a 'Profile' shape representation defined to which a set of shape
+///   parameters for lining and framing properties apply. Additionally it requires
+///   the provision of an IfcDoorType that references one IfcDoorLiningProperties
+///   and one to many IfcDoorPanelProperties;
 ///
 /// * IfcDoor with other shape representations an no assiged
-/// IfcDoorLiningProperties and IfcDoorPanelProperties is used for all other
-/// occurrences of doors, particularly for doors having only 'Brep', or
-/// 'SurfaceModel' geometry without applying shape parameters.
+///   IfcDoorLiningProperties and IfcDoorPanelProperties is used for all other
+///   occurrences of doors, particularly for doors having only 'Brep', or
+///   'SurfaceModel' geometry without applying shape parameters.
 ///
 /// The actual parameters of the door and/or its shape are defined by the
 /// IfcDoor as the object occurrence definition, or by the IfcDoorType as the
@@ -58,11 +58,11 @@ use crate::{
 ///   * the door width and height
 ///   * the door opening direction (by the y-axis of the ObjectPlacement)
 /// * at the IfcDoorType, to which the IfcDoor is related by the inverse
-/// relationship IsTypedBy pointing to IfcRelDefinesByType, for type parameters
-/// common to all occurrences of the same type.
+///   relationship IsTypedBy pointing to IfcRelDefinesByType, for type parameters
+///   common to all occurrences of the same type.
 ///    * the operation type (single swing, double swing, revolving, etc.)
 ///    * the door hinge side (by using two different styles for right and left
-///    opening doors)
+///      opening doors)
 ///    * the construction material type
 ///    * the particular attributes for the lining by the IfcDoorLiningProperties
 ///    * the particular attributes for the panels by the IfcDoorPanelProperties
@@ -78,13 +78,13 @@ use crate::{
 /// IfcProductDefinitionShape:
 ///
 /// * Profile: A 'Curve3D' consisting of a single losed curve defining the
-/// outer boundary of the door (lining). The door parametric representation
-/// uses this profile in order to apply the door lining and panel parameter.
-/// If not provided, the profile of the IfcOpeningElement is taken.
+///   outer boundary of the door (lining). The door parametric representation
+///   uses this profile in order to apply the door lining and panel parameter.
+///   If not provided, the profile of the IfcOpeningElement is taken.
 /// * FootPrint: A 'GeometricCurveSet', or 'Annotation2D' representation
-/// defining the 2D shape of the door
+///   defining the 2D shape of the door
 /// * Body: A 'SweptSolid', 'SurfaceModel', or 'Brep' representation defining
-/// the 3D shape of the door.
+///   the 3D shape of the door.
 ///
 /// In addition the parametric representation of a (limited) door shape is
 /// available by applying the parameters from IfcDoorType referencing
