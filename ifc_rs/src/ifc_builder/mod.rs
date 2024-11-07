@@ -3,6 +3,7 @@ pub(crate) mod materials;
 pub(crate) mod openings;
 pub(crate) mod prelude;
 pub(crate) mod project;
+pub(crate) mod properties;
 pub(crate) mod roofs;
 pub(crate) mod shading_devices;
 pub(crate) mod site;
@@ -14,6 +15,11 @@ pub(crate) mod walls;
 pub(crate) mod windows;
 
 use crate::prelude::*;
+
+pub trait IfcObjectBuilder<T: IfcType> {
+    fn get_ifc(&mut self) -> &mut IFC;
+    fn get_id(&self) -> TypedId<T>;
+}
 
 pub struct ApplicationInfo<'a> {
     pub developer: Person,

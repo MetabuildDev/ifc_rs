@@ -9,6 +9,7 @@ use crate::{
 
 use super::TypedId;
 
+/// Type erased version of [`TypedId`]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Id(pub usize);
 

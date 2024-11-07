@@ -26,7 +26,7 @@ impl Display for BoolValue {
 mod test {
     use winnow::Parser;
 
-    use super::{BoolValue, IFCParse};
+    use super::*;
 
     #[test]
     fn ifc_value_bool_round_trip() {

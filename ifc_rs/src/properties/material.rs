@@ -19,18 +19,18 @@ pub struct MaterialProperties {
     base: ExtendedPropertyBase,
 
     /// Reference to the material definition to which the set of properties is assigned.
-    pub material: Id,
+    pub material: TypedId<Material>,
 }
 
 impl MaterialProperties {
     pub fn new(
         name: impl Into<StringPrimitive>,
-        id: impl Into<Id>,
-        children: impl IntoIterator<Item = Id>,
+        material: TypedId<Material>,
+        properties: impl IntoIterator<Item = Id>,
     ) -> Self {
         Self {
-            base: ExtendedPropertyBase::new(name.into(), children),
-            material: id.into(),
+            base: ExtendedPropertyBase::new(name.into(), properties),
+            material,
         }
     }
 }
@@ -57,7 +57,7 @@ impl IFCParse for MaterialProperties {
 
                 base: ExtendedPropertyBase::parse(),
                 _: Comma::parse(),
-                material: Id::parse(),
+                material: TypedId::parse(),
 
                 _: p_space_or_comment_surrounded(");"),
             }

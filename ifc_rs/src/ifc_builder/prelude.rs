@@ -19,4 +19,5 @@ pub use super::walls::{
 pub use super::windows::{
     ArbitraryWindowParameter, HorizontalArbitraryWindowParameter, WindowParameter,
 };
+pub use super::IfcObjectBuilder;
 pub use super::{ApplicationInfo, OwnerInfo};

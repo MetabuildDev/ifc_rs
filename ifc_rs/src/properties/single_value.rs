@@ -35,7 +35,7 @@ pub struct PropertySingleValue {
 }
 
 impl PropertySingleValue {
-    pub fn new(name: StringPrimitive, value: IfcValue, unit: Option<Id>) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>, value: IfcValue, unit: Option<Id>) -> Self {
         Self {
             base: PropertyBase::new(name),
             value,

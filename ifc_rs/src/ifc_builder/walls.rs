@@ -11,6 +11,15 @@ pub struct IfcWallBuilder<'a, 'b> {
     transform: Option<TransformParameter>,
 }
 
+impl IfcObjectBuilder<Wall> for IfcWallBuilder<'_, '_> {
+    fn get_ifc(&mut self) -> &mut IFC {
+        &mut self.storey.project.ifc
+    }
+    fn get_id(&self) -> TypedId<Wall> {
+        self.wall_id
+    }
+}
+
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
     pub fn transform(&mut self, transform: TransformParameter) {
         self.transform = Some(transform);

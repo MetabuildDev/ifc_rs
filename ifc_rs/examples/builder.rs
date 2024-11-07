@@ -73,7 +73,17 @@ fn main() {
             let material_constituent_set =
                 storey_builder.material_constituent_set([material_constituent]);
 
-            {
+            let window_properties = {
+                let mut property_builder = storey_builder.add_properties("ExampleWindowProperties");
+                property_builder.single_property(
+                    "U-Value",
+                    IfcValue::ThermalTransmittance(0.24.into()),
+                    None,
+                );
+                property_builder.finish()
+            };
+
+            let windows = {
                 let mut wall = storey_builder.vertical_wall(
                     material_layer_set_usage,
                     wall_type,
@@ -85,11 +95,20 @@ fn main() {
                     },
                 );
 
+                {
+                    let mut wall_properties = wall.add_properties("ExampleWallProperties");
+                    wall_properties.single_property(
+                        "U-Value",
+                        IfcValue::ThermalTransmittance(0.24.into()),
+                        None,
+                    );
+                }
+
                 wall.transform(
                     TransformParameter::default().translation(DVec3::new(1.0, 0.0, 0.0)),
                 );
 
-                wall.window_with_opening(
+                let window = wall.window_with_opening(
                     material_constituent_set,
                     window_type,
                     "ExampleWindow",
@@ -100,6 +119,12 @@ fn main() {
                     },
                     Direction3D::from(DVec3::Z),
                 );
+
+                [window]
+            };
+
+            for window in windows {
+                storey_builder.relate_properties_object(window_properties, window);
             }
 
             let slab_type = storey_builder.slab_type(

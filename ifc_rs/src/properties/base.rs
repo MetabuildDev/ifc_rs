@@ -18,9 +18,9 @@ pub struct PropertyBase {
 }
 
 impl PropertyBase {
-    pub fn new(name: StringPrimitive) -> Self {
+    pub fn new(name: impl Into<StringPrimitive>) -> Self {
         Self {
-            name: name.into(),
+            name: name.into().into(),
             description: OptionalParameter::omitted(),
         }
     }

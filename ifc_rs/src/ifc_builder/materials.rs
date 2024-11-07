@@ -70,8 +70,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         constituent_name: &str,
     ) -> TypedId<MaterialConstituent> {
         let material = self.material(material_name);
-        let material_constituent =
-            MaterialConstituent::new(material, &mut self.project.ifc).name(constituent_name);
+        let material_constituent = MaterialConstituent::new(material).name(constituent_name);
         self.project.ifc.data.insert_new(material_constituent)
     }
 

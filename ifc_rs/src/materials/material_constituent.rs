@@ -43,11 +43,11 @@ pub struct MaterialConstituent {
 }
 
 impl MaterialConstituent {
-    pub fn new(material: impl Into<IdOr<Material>>, ifc: &mut IFC) -> Self {
+    pub fn new(material: TypedId<Material>) -> Self {
         Self {
             name: OptionalParameter::omitted(),
             description: OptionalParameter::omitted(),
-            material: material.into().or_insert(ifc).id().into(),
+            material,
             category: OptionalParameter::omitted(),
             fraction: OptionalParameter::omitted(),
         }

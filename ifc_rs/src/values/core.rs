@@ -18,6 +18,7 @@ pub enum IfcValue {
     Bool(BoolValue),
     Label(LabelValue),
     Identifier(IdentifierValue),
+    ThermalTransmittance(ThermalTransmittanceValue),
 }
 
 impl IFCParse for IfcValue {
@@ -29,6 +30,7 @@ impl IFCParse for IfcValue {
             BoolValue::parse().map(Self::Bool),
             LabelValue::parse().map(Self::Label),
             IdentifierValue::parse().map(Self::Identifier),
+            ThermalTransmittanceValue::parse().map(Self::ThermalTransmittance),
         ))
     }
 }
@@ -39,6 +41,7 @@ impl Display for IfcValue {
             IfcValue::Bool(v) => write!(f, "{v}"),
             IfcValue::Label(v) => write!(f, "{v}"),
             IfcValue::Identifier(v) => write!(f, "{v}"),
+            IfcValue::ThermalTransmittance(v) => write!(f, "{v}"),
         }
     }
 }
@@ -72,6 +75,16 @@ mod test {
     #[test]
     fn ifc_value_id_round_trip() {
         let example = "IfcIdentifier('')";
+
+        let value = IfcValue::parse().parse(example).unwrap();
+        let str_value = value.to_string();
+
+        assert_eq!(example, str_value);
+    }
+
+    #[test]
+    fn ifc_value_thermal_transmittance_round_trip() {
+        let example = "IfcThermalTransmittanceMeasure(0.24)";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

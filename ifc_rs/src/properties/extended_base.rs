@@ -24,11 +24,11 @@ pub struct ExtendedPropertyBase {
 }
 
 impl ExtendedPropertyBase {
-    pub fn new(name: StringPrimitive, children: impl IntoIterator<Item = Id>) -> Self {
+    pub fn new(name: StringPrimitive, properties: impl IntoIterator<Item = Id>) -> Self {
         Self {
             name: name.into(),
             description: OptionalParameter::omitted(),
-            properties: IfcList(children.into_iter().collect()),
+            properties: IfcList(properties.into_iter().collect()),
         }
     }
 }

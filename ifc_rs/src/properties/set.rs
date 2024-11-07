@@ -37,14 +37,17 @@ pub struct PropertySet {
     /// property objects within a property set are defined as part of the standard. If a property
     /// is not contained within the set of predefined properties, its value has not been set at
     /// this time.
-    pub properties: IfcList<Id>,
+    pub properties: IfcList<TypedId<PropertySingleValue>>,
 }
 
 impl PropertySet {
-    pub fn new(name: impl Into<StringPrimitive>, children: impl IntoIterator<Item = Id>) -> Self {
+    pub fn new(
+        name: impl Into<StringPrimitive>,
+        properties: impl IntoIterator<Item = TypedId<PropertySingleValue>>,
+    ) -> Self {
         Self {
             root: Root::new(name.into()),
-            properties: IfcList(children.into_iter().collect()),
+            properties: IfcList(properties.into_iter().collect()),
         }
     }
 }
