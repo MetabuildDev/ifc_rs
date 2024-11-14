@@ -44,6 +44,7 @@ pub struct IfcStoreyBuilder<'a> {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub(crate) fn new(
         project: &'a mut IfcProjectBuilder,
         storey: TypedId<Storey>,

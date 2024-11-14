@@ -11,6 +11,7 @@ pub struct VerticalShadingDeviceParameter {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub fn shading_device_type(
         &mut self,
         material: TypedId<MaterialLayerSet>,
@@ -41,6 +42,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         shading_device_type_id
     }
 
+    #[must_use]
     pub fn vertical_shading_device(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
@@ -75,6 +77,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.shading_device(material, shading_device_type, shading_device)
     }
 
+    #[must_use]
     fn shading_device(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,

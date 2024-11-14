@@ -15,6 +15,7 @@ pub struct IfcBuildingBuilder<'a> {
 }
 
 impl<'a> IfcBuildingBuilder<'a> {
+    #[must_use]
     pub(crate) fn new(
         project: &'a mut IfcProjectBuilder,
         building: TypedId<Building>,
@@ -36,6 +37,7 @@ impl<'a> IfcBuildingBuilder<'a> {
         }
     }
 
+    #[must_use]
     pub fn new_storey<'b>(&'b mut self, name: &str, elevation: f64) -> IfcStoreyBuilder<'b> {
         let position = Axis3D::new(Point3D::from(DVec3::Z * elevation), &mut self.project.ifc);
         let local_placement =

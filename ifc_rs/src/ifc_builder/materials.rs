@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub fn material_layer(
         &mut self,
         material_name: &str,
@@ -11,6 +12,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project.ifc.data.insert_new(material_layer)
     }
 
+    #[must_use]
     pub fn material_layer_set(
         &mut self,
         layer: impl IntoIterator<Item = TypedId<MaterialLayer>>,
@@ -24,6 +26,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project.ifc.data.insert_new(material_layer_set)
     }
 
+    #[must_use]
     pub fn material_layer_set_usage(
         &mut self,
         material_layer_set: TypedId<MaterialLayerSet>,
@@ -42,6 +45,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project.ifc.data.insert_new(material_layer_set_usage)
     }
 
+    #[must_use]
     pub(super) fn calculate_material_layer_set_thickness(
         &self,
         material: TypedId<MaterialLayerSetUsage>,
@@ -64,6 +68,7 @@ impl<'a> IfcStoreyBuilder<'a> {
             .sum()
     }
 
+    #[must_use]
     pub fn material_constituent(
         &mut self,
         material_name: &str,
@@ -74,6 +79,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project.ifc.data.insert_new(material_constituent)
     }
 
+    #[must_use]
     pub fn material_constituent_set(
         &mut self,
         constituents: impl IntoIterator<Item = TypedId<MaterialConstituent>>,
@@ -88,6 +94,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         self.project.ifc.data.insert_new(material_constituent_set)
     }
 
+    #[must_use]
     pub fn material(&mut self, name: &str) -> TypedId<Material> {
         let material = Material::new(name);
         self.project.ifc.data.insert_new(material)
@@ -118,7 +125,7 @@ mod test {
                 MaterialLayer::new(0.02, false).name("ExampleMaterialLayer"),
             );
             let material_layer_set = storey_builder.material_layer_set([material_layer]);
-            storey_builder.material_layer_set_usage(
+            let _material_set = storey_builder.material_layer_set_usage(
                 material_layer_set,
                 LayerSetDirectionEnum::Axis2,
                 DirectionSenseEnum::Positive,

@@ -26,6 +26,7 @@ pub struct ArbitraryOpeningParameter {
 }
 
 impl<'a, 'b> IfcWallBuilder<'a, 'b> {
+    #[must_use]
     pub fn vertical_opening(
         &mut self,
         name: &str,
@@ -42,6 +43,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
         )
     }
 
+    #[must_use]
     pub fn opening(
         &mut self,
         name: &str,
@@ -80,6 +82,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
         opening_element_id
     }
 
+    #[must_use]
     fn opening_thickness(&self) -> f64 {
         let wall_material_set_usage = self
             .storey
@@ -96,6 +99,7 @@ impl<'a, 'b> IfcWallBuilder<'a, 'b> {
 }
 
 impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
+    #[must_use]
     pub fn rect_opening(
         &mut self,
         name: &str,
@@ -120,6 +124,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         self.opening(name, product_shape, opening_information.placement)
     }
 
+    #[must_use]
     pub fn horizontal_arbitrary_opening(
         &mut self,
         name: &str,
@@ -137,6 +142,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         self.opening(name, product_shape, DVec3::new(0.0, 0.0, 0.0))
     }
 
+    #[must_use]
     pub fn arbitrary_opening(
         &mut self,
         name: &str,
@@ -160,6 +166,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         self.opening(name, product_shape, DVec3::new(0.0, 0.0, 0.0))
     }
 
+    #[must_use]
     fn opening(
         &mut self,
         name: &str,
@@ -185,6 +192,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
         opening_element_id
     }
 
+    #[must_use]
     fn opening_thickness(&self) -> f64 {
         let slab_material_set_usage = self
             .storey
@@ -248,7 +256,7 @@ mod test {
                 },
             );
 
-            wall.vertical_opening(
+            let _wall = wall.vertical_opening(
                 "ExampleOpeningElement",
                 OpeningParameter {
                     height: 0.5,

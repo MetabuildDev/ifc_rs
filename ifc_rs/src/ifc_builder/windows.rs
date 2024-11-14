@@ -262,6 +262,7 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub fn window_type(
         &mut self,
         name: &str,
@@ -280,6 +281,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         window_type_id
     }
 
+    #[must_use]
     fn rect_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
@@ -309,6 +311,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         )
     }
 
+    #[must_use]
     fn horizontal_arbitrary_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
@@ -336,6 +339,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         )
     }
 
+    #[must_use]
     fn arbitrary_window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,
@@ -365,6 +369,7 @@ impl<'a> IfcStoreyBuilder<'a> {
         )
     }
 
+    #[must_use]
     fn window(
         &mut self,
         material: TypedId<MaterialConstituentSet>,

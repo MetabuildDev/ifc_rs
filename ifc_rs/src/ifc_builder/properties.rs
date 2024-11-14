@@ -39,6 +39,7 @@ where
     BuilderT: IfcObjectBuilder<ObjectT>,
 {
     /// Add a [`PropertySingleValue`] to the [`PropertySet`] of a wall
+    #[must_use]
     pub fn single_property(
         &mut self,
         name: &str,
@@ -54,6 +55,7 @@ where
 
 impl IfcWallBuilder<'_, '_> {
     /// Add a [`PropertySet`] to the [`Wall`] which is currently build.
+    #[must_use]
     pub fn add_properties(&mut self, name: &str) -> IfcWallPropertiesBuilder<Wall, Self> {
         IfcWallPropertiesBuilder {
             object: self,
@@ -76,6 +78,7 @@ pub struct IfcPropertySetBuilder<'a> {
 
 impl IfcStoreyBuilder<'_> {
     /// creates an [`IfcPropertySetBuilder`] to prepare an arbitrary [`PropertySet`]
+    #[must_use]
     pub fn add_properties(&mut self, name: &str) -> IfcPropertySetBuilder {
         IfcPropertySetBuilder {
             ifc: &mut self.project.ifc,
@@ -100,6 +103,7 @@ impl IfcStoreyBuilder<'_> {
 
 impl<'a> IfcPropertySetBuilder<'a> {
     /// Add a [`PropertySingleValue`] to this [`PropertySet`]
+    #[must_use]
     pub fn single_property(
         &mut self,
         name: &str,
@@ -111,6 +115,7 @@ impl<'a> IfcPropertySetBuilder<'a> {
     }
 
     /// Finish and build the [`PropertySet`]
+    #[must_use]
     pub fn finish(self) -> TypedId<PropertySet> {
         let set = PropertySet::new(self.name.as_str(), self.properties.clone());
         self.ifc.data.insert_new(set)

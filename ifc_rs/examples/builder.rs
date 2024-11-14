@@ -47,7 +47,7 @@ fn main() {
             ];
 
             let space_type = storey_builder.space_type("ExampleWallType", SpaceTypeEnum::Space);
-            storey_builder.space(
+            let _space = storey_builder.space(
                 space_type,
                 "ExampleSpaceDefault",
                 SpaceParameter {
@@ -75,7 +75,7 @@ fn main() {
 
             let window_properties = {
                 let mut property_builder = storey_builder.add_properties("ExampleWindowProperties");
-                property_builder.single_property(
+                let _u_value = property_builder.single_property(
                     "U-Value",
                     IfcValue::ThermalTransmittance(0.24.into()),
                     None,
@@ -97,7 +97,7 @@ fn main() {
 
                 {
                     let mut wall_properties = wall.add_properties("ExampleWallProperties");
-                    wall_properties.single_property(
+                    let _u_value = wall_properties.single_property(
                         "U-Value",
                         IfcValue::ThermalTransmittance(0.24.into()),
                         None,
@@ -193,7 +193,7 @@ fn main() {
                 RoofTypeEnum::FlatRoof,
             );
 
-            storey_builder.horizontal_arbitrary_roof(
+            let _roof = storey_builder.horizontal_arbitrary_roof(
                 material_layer_set_usage,
                 roof_type,
                 "ExampleRoof",

@@ -10,13 +10,14 @@ pub struct HorizontalArbitraryRoofParameter {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub fn horizontal_arbitrary_roof(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
         roof_type: TypedId<RoofType>,
         name: &str,
         roof_information: HorizontalArbitraryRoofParameter,
-    ) {
+    ) -> TypedId<Roof> {
         let roof_thickness = self.calculate_material_layer_set_thickness(material);
 
         let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
@@ -39,9 +40,10 @@ impl<'a> IfcStoreyBuilder<'a> {
             .object_placement(local_placement, &mut self.project.ifc)
             .representation(product_shape, &mut self.project.ifc);
 
-        self.roof(material, roof_type, roof);
+        self.roof(material, roof_type, roof)
     }
 
+    #[must_use]
     pub fn roof_type(
         &mut self,
         material: TypedId<MaterialLayerSet>,
@@ -71,12 +73,13 @@ impl<'a> IfcStoreyBuilder<'a> {
         roof_type_id
     }
 
+    #[must_use]
     fn roof(
         &mut self,
         material: TypedId<MaterialLayerSetUsage>,
         roof_type: TypedId<RoofType>,
         roof: Roof,
-    ) {
+    ) -> TypedId<Roof> {
         let roof_id = self.project.ifc.data.insert_new(roof);
 
         self.roofs.insert(roof_id);
@@ -96,6 +99,8 @@ impl<'a> IfcStoreyBuilder<'a> {
                 .owner_history(self.owner_history, &mut self.project.ifc)
             })
             .relate_push(roof_id, &mut self.project.ifc);
+
+        roof_id
     }
 }
 
@@ -136,7 +141,7 @@ mod test {
                 RoofTypeEnum::FlatRoof,
             );
 
-            storey_builder.horizontal_arbitrary_roof(
+            let _roof = storey_builder.horizontal_arbitrary_roof(
                 material_layer_set_usage,
                 roof_type,
                 "ExampleRoof",

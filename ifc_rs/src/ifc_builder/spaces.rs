@@ -11,12 +11,13 @@ pub struct SpaceParameter {
 }
 
 impl<'a> IfcStoreyBuilder<'a> {
+    #[must_use]
     pub fn space(
         &mut self,
         space_type: TypedId<SpaceType>,
         name: &str,
         space_information: SpaceParameter,
-    ) {
+    ) -> TypedId<Space> {
         // TODO: add the footprint curve as an additional shaperepresentation to the space's
         // `ProductDefinitionShape.representations` vec
         let product_shape = ProductDefinitionShape::new_horizontal_arbitrary_shape(
@@ -45,8 +46,11 @@ impl<'a> IfcStoreyBuilder<'a> {
             .entry(space_type)
             .or_default()
             .insert(space_id);
+
+        space_id
     }
 
+    #[must_use]
     pub fn space_type(&mut self, name: &str, space_type: SpaceTypeEnum) -> TypedId<SpaceType> {
         let space_type = SpaceType::new(name, space_type)
             .owner_history(self.owner_history, &mut self.project.ifc)
@@ -91,7 +95,7 @@ mod test {
             ];
 
             let space_type = storey_builder.space_type("ExampleWallType", SpaceTypeEnum::Space);
-            storey_builder.space(
+            let _space = storey_builder.space(
                 space_type,
                 "ExampleSpaceDefault",
                 SpaceParameter {

@@ -20,7 +20,13 @@ impl IfcObjectBuilder<Wall> for IfcWallBuilder<'_, '_> {
     }
 }
 
-impl<'a, 'b> IfcWallBuilder<'a, 'b> {
+impl IfcWallBuilder<'_, '_> {
+    /// This finishes the builder and returns the id
+    #[must_use]
+    pub fn finish(self) -> TypedId<Wall> {
+        self.wall_id
+    }
+
     pub fn transform(&mut self, transform: TransformParameter) {
         self.transform = Some(transform);
     }

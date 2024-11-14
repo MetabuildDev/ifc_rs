@@ -29,6 +29,7 @@ pub struct IfcProjectBuilder {
 }
 
 impl IfcProjectBuilder {
+    #[must_use]
     pub fn new(
         application_info: ApplicationInfo<'_>,
         owner_info: OwnerInfo<'_>,
@@ -114,6 +115,7 @@ impl IfcProjectBuilder {
         }
     }
 
+    #[must_use]
     pub fn new_site<'a>(&'a mut self, name: &str, position: DVec3) -> IfcSiteBuilder<'a> {
         let position = Axis3D::new(Point3D::from(position), &mut self.ifc);
         let local_placement = LocalPlacement::new(position, &mut self.ifc);
@@ -127,6 +129,7 @@ impl IfcProjectBuilder {
         IfcSiteBuilder::new(self, site_id, self.owner_history)
     }
 
+    #[must_use]
     pub fn build(mut self) -> String {
         self.material_to_wall
             .into_values()

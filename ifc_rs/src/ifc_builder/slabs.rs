@@ -19,6 +19,14 @@ impl<'a, 'b> IfcSlabBuilder<'a, 'b> {
     }
 }
 
+impl IfcSlabBuilder<'_, '_> {
+    /// This finishes the builder and returns the id
+    #[must_use]
+    pub fn finish(self) -> TypedId<Slab> {
+        self.slab_id
+    }
+}
+
 impl<'a, 'b> IfcBuilderTransform for IfcSlabBuilder<'a, 'b> {
     fn ifc(&mut self) -> &mut IFC {
         &mut self.storey.project.ifc

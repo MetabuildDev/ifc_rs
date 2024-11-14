@@ -47,7 +47,7 @@ fn main() {
     ];
 
     let space_type = storey_builder.space_type("ExampleWallType", SpaceTypeEnum::Space);
-    storey_builder.space(
+    let _space = storey_builder.space(
         space_type,
         "ExampleSpaceDefault",
         SpaceParameter {
