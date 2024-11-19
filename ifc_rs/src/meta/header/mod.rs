@@ -51,8 +51,8 @@ pub(crate) mod details {
     pub struct FileDetails {
         pub name: FileName,
         pub timestamp: TimeStamp,
-        pub author: Vec<Author>,
-        pub organization: Vec<Organization>,
+        pub author: AuthorList,
+        pub organization: OrganizationList,
         pub preprocessor_version: PreprocessorVersion,
         pub originating_system: OriginatingSystem,
         pub authorization: Authorization,
@@ -66,6 +66,50 @@ pub(crate) mod details {
     impl Default for TimeStamp {
         fn default() -> Self {
             Self(Utc::now())
+        }
+    }
+
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    pub struct AuthorList(pub Vec<Author>);
+
+    impl Default for AuthorList {
+        fn default() -> Self {
+            Self(vec![Author(String::from("''"))])
+        }
+    }
+
+    impl std::ops::Deref for AuthorList {
+        type Target = Vec<Author>;
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    impl std::ops::DerefMut for AuthorList {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    pub struct OrganizationList(pub Vec<Organization>);
+
+    impl Default for OrganizationList {
+        fn default() -> Self {
+            Self(vec![Organization(String::from("''"))])
+        }
+    }
+
+    impl std::ops::Deref for OrganizationList {
+        type Target = Vec<Organization>;
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    impl std::ops::DerefMut for OrganizationList {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
         }
     }
 

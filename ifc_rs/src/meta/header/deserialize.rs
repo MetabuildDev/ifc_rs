@@ -8,7 +8,8 @@ use winnow::token::none_of;
 
 use super::description::{FileDescription, ImplementationLevel, ViewDefinition};
 use super::details::{
-    Author, Authorization, Organization, OriginatingSystem, PreprocessorVersion, TimeStamp,
+    Author, AuthorList, Authorization, Organization, OrganizationList, OriginatingSystem,
+    PreprocessorVersion, TimeStamp,
 };
 use super::details::{FileDetails, FileName};
 use super::schema::{FileSchema, FileSchemas};
@@ -127,7 +128,8 @@ impl Header {
                 ..,
                 p_space_or_comment_surrounded(p_quote_word()).map(Author),
                 ",",
-            ),
+            )
+            .map(|v: Vec<_>| AuthorList(v)),
             ")",
         );
         let mut p_org = delimited(
@@ -136,7 +138,8 @@ impl Header {
                 ..,
                 p_space_or_comment_surrounded(p_quote_word()).map(Organization),
                 ",",
-            ),
+            )
+            .map(|v: Vec<_>| OrganizationList(v)),
             ")",
         );
         winnow::seq! {
