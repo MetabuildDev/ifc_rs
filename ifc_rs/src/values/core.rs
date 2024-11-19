@@ -84,7 +84,14 @@ mod test {
 
     #[test]
     fn ifc_value_thermal_transmittance_round_trip() {
-        let example = "IfcThermalTransmittanceMeasure(0.24)";
+        let example = "IFCTHERMALTRANSMITTANCEMEASURE(0.24)";
+
+        let value = IfcValue::parse().parse(example).unwrap();
+        let str_value = value.to_string();
+
+        assert_eq!(example, str_value);
+
+        let example = "IFCTHERMALTRANSMITTANCEMEASURE(0.333)";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

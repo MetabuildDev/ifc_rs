@@ -38,7 +38,7 @@ impl From<RealPrimitive> for f64 {
 
 impl Display for RealPrimitive {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format_double(self.0))
+        write!(f, "{}", format_real_primitive(self.0))
     }
 }
 
@@ -59,8 +59,8 @@ impl Display for IfcDVec2 {
         write!(
             f,
             "({x},{y})",
-            x = format_double(self.0.x),
-            y = format_double(self.0.y),
+            x = format_real_primitive(self.0.x),
+            y = format_real_primitive(self.0.y),
         )
     }
 }
@@ -95,9 +95,9 @@ impl Display for IfcDVec3 {
         write!(
             f,
             "({x},{y},{z})",
-            x = format_double(self.0.x),
-            y = format_double(self.0.y),
-            z = format_double(self.0.z),
+            x = format_real_primitive(self.0.x),
+            y = format_real_primitive(self.0.y),
+            z = format_real_primitive(self.0.z),
         )
     }
 }
@@ -115,7 +115,7 @@ impl From<DVec3> for IfcDVec3 {
     }
 }
 
-pub fn format_double(d: f64) -> String {
+pub(crate) fn format_real_primitive(d: f64) -> String {
     // might need tuning 10 decimals allowed
     let is_scientific = d
         .fract()
@@ -125,12 +125,22 @@ pub fn format_double(d: f64) -> String {
         .count()
         > 10;
 
-    if is_scientific {
-        format!("{0:.1$E}", d, 14)
+    let fmt = if is_scientific {
+        format_sci_double
     } else {
-        format!(
-            "{d}{opt_p}",
-            opt_p = (d.fract() == 0.0).then_some(".").unwrap_or_default()
-        )
-    }
+        format_non_sci_double
+    };
+
+    fmt(d)
+}
+
+pub(crate) fn format_sci_double(d: f64) -> String {
+    format!("{0:.1$E}", d, 14)
+}
+
+pub(crate) fn format_non_sci_double(d: f64) -> String {
+    format!(
+        "{d}{opt_p}",
+        opt_p = (d.fract() == 0.0).then_some(".").unwrap_or_default()
+    )
 }

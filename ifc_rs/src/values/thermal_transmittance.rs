@@ -1,3 +1,4 @@
+use real::format_non_sci_double;
 use std::fmt::Display;
 use winnow::{combinator::delimited, Parser};
 
@@ -12,7 +13,7 @@ impl IFCParse for ThermalTransmittanceValue {
         Self: Sized,
     {
         delimited(
-            "IfcThermalTransmittanceMeasure(",
+            "IFCTHERMALTRANSMITTANCEMEASURE(",
             RealPrimitive::parse(),
             ")",
         )
@@ -22,7 +23,11 @@ impl IFCParse for ThermalTransmittanceValue {
 
 impl Display for ThermalTransmittanceValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IfcThermalTransmittanceMeasure({})", self.0)
+        write!(
+            f,
+            "IFCTHERMALTRANSMITTANCEMEASURE({})",
+            format_non_sci_double(self.0 .0)
+        )
     }
 }
 
@@ -40,7 +45,7 @@ mod test {
 
     #[test]
     fn ifc_value_bool_round_trip() {
-        let example = "IfcThermalTransmittanceMeasure(0.24)";
+        let example = "IFCTHERMALTRANSMITTANCEMEASURE(0.24)";
 
         let value = ThermalTransmittanceValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
