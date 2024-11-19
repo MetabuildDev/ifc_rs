@@ -185,9 +185,10 @@ impl Header {
     fn p_schema_inner<'a>() -> impl IFCParser<'a, FileSchema> {
         let p_prefix_any_case = alt(("IFC", "Ifc", "ifc"));
         let p_version_any_case = alt((
+            alt(("4X3_ADD2", "4x3_ADD2")).value(FileSchema::IFC4X3_ADD2),
             alt(("2x3", "2X3")).value(FileSchema::IFC2X3),
-            alt(("4x2", "4X2")).value(FileSchema::IFC4X2),
-            alt(("4x3", "4X3")).value(FileSchema::IFC4X3),
+            alt(("4x2", "4X2")).value(FileSchema::IFC4),
+            alt(("4x3", "4X3")).value(FileSchema::IFC4X3_ADD2),
             "4".value(FileSchema::IFC4),
         ));
         preceded(p_prefix_any_case, p_version_any_case)

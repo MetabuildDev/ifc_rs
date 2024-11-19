@@ -88,14 +88,26 @@ pub(crate) mod schema {
     #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     pub struct FileSchemas(pub Vec<FileSchema>);
 
+    #[allow(non_camel_case_types)]
+    /// Don't ask me what ADD2 is supposed to be, I used the official ifc validator
+    ///
+    /// https://validate.buildingsmart.org/
+    ///
+    /// and got this as an error message:
+    ///
+    /// "
+    /// Description: Only official IFC versions allowed ,
+    /// Expected: {"oneOf": ["IFC4X3_ADD2", "IFC4", "IFC2X3"]}
+    /// "
+    ///
+    /// after which I adjusted this enum here
     #[derive(
         Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Display, EnumString, VariantNames,
     )]
     pub enum FileSchema {
-        IFC2X3,
-        IFC4X2,
-        IFC4X3,
+        IFC4X3_ADD2,
         IFC4,
+        IFC2X3,
     }
 }
 

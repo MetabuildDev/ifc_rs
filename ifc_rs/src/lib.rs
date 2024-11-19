@@ -110,7 +110,7 @@ impl Default for IFC {
                     implementation_level: ImplementationLevel::_2_1,
                 },
                 name: FileDetails::default(),
-                schema: FileSchemas(vec![FileSchema::IFC4X3]),
+                schema: FileSchemas(vec![FileSchema::IFC4X3_ADD2]),
             },
             data: Default::default(),
             footer: Footer {
