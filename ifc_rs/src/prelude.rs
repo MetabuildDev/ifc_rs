@@ -10,7 +10,7 @@ pub use super::values::prelude::*;
 pub use winnow::Parser;
 
 pub use super::{
-    id::{Id, IdOr, TypedId},
+    id::{Id, IdOr, IfcGloballyUniqueId, TypedId},
     ifc_builder::prelude::*,
     ifc_extractor::prelude::*,
     IFC,

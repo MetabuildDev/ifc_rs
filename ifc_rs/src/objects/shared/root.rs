@@ -4,7 +4,6 @@ use comma::Comma;
 use ifc_rs_verify_derive::IfcVerify;
 use optional::OptionalParameter;
 use string::StringPrimitive;
-use uuid::Uuid;
 
 use crate::{
     id::{IdOr, TypedId},
@@ -23,7 +22,7 @@ use crate::{
 #[derive(IfcVerify)]
 pub struct Root {
     /// Assignment of a globally unique identifier within the entire software world.
-    pub global_id: StringPrimitive,
+    pub global_id: IfcGloballyUniqueId,
 
     /// Assignment of the information about the current ownership of that object,
     /// including owning actor, application, local identification and information
@@ -42,7 +41,7 @@ pub struct Root {
 impl Root {
     pub fn new(name: StringPrimitive) -> Self {
         Self {
-            global_id: Uuid::new_v4().to_string().into(),
+            global_id: IfcGloballyUniqueId::new_v4(),
             owner_history: OptionalParameter::omitted(),
             name: name.into(),
             description: OptionalParameter::omitted(),
@@ -77,7 +76,7 @@ impl IFCParse for Root {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
             Self {
-                global_id: StringPrimitive::parse(),
+                global_id: IfcGloballyUniqueId::parse(),
                 _: Comma::parse(),
                 owner_history: OptionalParameter::parse(),
                 _: Comma::parse(),
