@@ -35,7 +35,7 @@ pub struct OwnerHistory {
     /// Date and Time at which the last modification occurred.
     pub last_modified_date: OptionalParameter<IfcTimestamp>,
     /// User who carried out the last modification.
-    pub last_modifying_user: OptionalParameter<TypedId<Person>>,
+    pub last_modifying_user: OptionalParameter<TypedId<PersonAndOrganization>>,
     /// Application used to carry out the last modification.
     pub last_modifying_application: OptionalParameter<TypedId<Application>>,
     /// Time and date of creation.
@@ -86,7 +86,7 @@ impl OwnerHistory {
 
     pub fn last_modifying_user(
         mut self,
-        last_modifying_user: impl Into<IdOr<Person>>,
+        last_modifying_user: impl Into<IdOr<PersonAndOrganization>>,
         ifc: &mut IFC,
     ) -> Self {
         self.last_modifying_user = last_modifying_user.into().or_insert(ifc).into();

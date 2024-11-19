@@ -171,10 +171,10 @@ fn create_owner_history(
     );
 
     let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
-        .owning_user(person_and_org, ifc)
+        .owning_user(person_and_org.clone(), ifc)
         .owning_application(application.id_or(), ifc)
         .last_modified_date(IfcTimestamp::now())
-        .last_modifying_user(person, ifc)
+        .last_modifying_user(person_and_org, ifc)
         .last_modifying_application(application, ifc);
 
     ifc.data.insert_new(owner_history)

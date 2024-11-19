@@ -49,7 +49,6 @@ pub(crate) mod test {
                 owner: Person::empty().given_name("Luigi"),
                 organization_name: "Metabuild",
             },
-            Person::empty().given_name("Bowser"),
             "IfcBuider Example Project",
         )
     }

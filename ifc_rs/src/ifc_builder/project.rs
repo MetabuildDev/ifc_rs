@@ -33,7 +33,6 @@ impl IfcProjectBuilder {
     pub fn new(
         application_info: ApplicationInfo<'_>,
         owner_info: OwnerInfo<'_>,
-        modifying_user: Person,
         project_name: &str,
     ) -> Self {
         let mut ifc = IFC::default();
@@ -54,10 +53,10 @@ impl IfcProjectBuilder {
         );
 
         let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
-            .owning_user(owner, &mut ifc)
+            .owning_user(owner.clone(), &mut ifc)
             .owning_application(application_id, &mut ifc)
             .last_modified_date(IfcTimestamp::now())
-            .last_modifying_user(modifying_user, &mut ifc)
+            .last_modifying_user(owner, &mut ifc)
             .last_modifying_application(application_id, &mut ifc);
 
         let owner_history_id = ifc.data.insert_new(owner_history);
