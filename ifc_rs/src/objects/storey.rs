@@ -59,6 +59,12 @@ pub struct Storey {
     /// Elevation of the base of this storey, relative to the 0,00 internal reference height of the
     /// building. The 0.00 level is given by the absolute above sea level height by the
     /// ElevationOfRefHeight attribute given at IfcBuilding.
+    ///
+    /// # IFC4.3.0.0-DEPRECATION
+    /// This attribute is deprecated and shall no longer be used. Within Pset_BuildingStoreyCommon
+    /// use ElevationOfSSLRelative or ElevationOfFFLRelative instead.
+    ///
+    /// Hence this will always be set to omit and not accessible by this rust library
     pub elevation: OptionalParameter<RealPrimitive>,
 }
 
@@ -70,11 +76,6 @@ impl Storey {
             )),
             elevation: OptionalParameter::omitted(),
         }
-    }
-
-    pub fn elevation(mut self, elevation: f64) -> Self {
-        self.elevation = RealPrimitive(elevation).into();
-        self
     }
 }
 

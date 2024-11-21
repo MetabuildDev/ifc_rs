@@ -43,14 +43,23 @@ impl<'a> IfcBuildingBuilder<'a> {
         let local_placement =
             LocalPlacement::new_relative(position, self.building, &mut self.project.ifc);
         let storey = Storey::new(name)
-            .elevation(elevation)
             .owner_history(self.owner_history, &mut self.project.ifc)
             .object_placement(local_placement, &mut self.project.ifc);
         let storey_id = self.project.ifc.data.insert_new(storey);
 
         self.storeys.insert(storey_id);
 
-        IfcStoreyBuilder::new(self.project, storey_id, self.owner_history)
+        let mut storey_builder = IfcStoreyBuilder::new(self.project, storey_id, self.owner_history);
+
+        let mut property_builder = storey_builder.add_properties("StoreyProperties");
+        _ = property_builder.single_property(
+            "Storey Height",
+            IfcValue::Real(elevation.into()),
+            None,
+        );
+        _ = property_builder.finish();
+
+        storey_builder
     }
 }
 

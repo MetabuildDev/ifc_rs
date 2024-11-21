@@ -4,7 +4,7 @@ use winnow::combinator::alt;
 use winnow::Parser;
 
 use super::prelude::*;
-use crate::parser::{IFCParse, IFCParser};
+use crate::parser::{real::RealPrimitive, IFCParse, IFCParser};
 
 /// IfcValue is a select type for selecting between more specialised select types IfcSimpleValue,
 /// IfcMeasureValue and IfcDerivedMeasureValue.
@@ -17,6 +17,7 @@ use crate::parser::{IFCParse, IFCParser};
 pub enum IfcValue {
     Bool(BoolValue),
     Label(LabelValue),
+    Real(RealPrimitive),
     Identifier(IdentifierValue),
     ThermalTransmittance(ThermalTransmittanceValue),
 }
@@ -29,6 +30,7 @@ impl IFCParse for IfcValue {
         alt((
             BoolValue::parse().map(Self::Bool),
             LabelValue::parse().map(Self::Label),
+            RealPrimitive::parse().map(Self::Real),
             IdentifierValue::parse().map(Self::Identifier),
             ThermalTransmittanceValue::parse().map(Self::ThermalTransmittance),
         ))
@@ -40,6 +42,7 @@ impl Display for IfcValue {
         match self {
             IfcValue::Bool(v) => write!(f, "{v}"),
             IfcValue::Label(v) => write!(f, "{v}"),
+            IfcValue::Real(v) => write!(f, "{v}"),
             IfcValue::Identifier(v) => write!(f, "{v}"),
             IfcValue::ThermalTransmittance(v) => write!(f, "{v}"),
         }
@@ -75,6 +78,16 @@ mod test {
     #[test]
     fn ifc_value_id_round_trip() {
         let example = "IfcIdentifier('')";
+
+        let value = IfcValue::parse().parse(example).unwrap();
+        let str_value = value.to_string();
+
+        assert_eq!(example, str_value);
+    }
+
+    #[test]
+    fn ifc_value_real_round_trip() {
+        let example = "IfcReal(0.12)";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
