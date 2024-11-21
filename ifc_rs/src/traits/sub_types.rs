@@ -22,8 +22,6 @@ pub trait Structure: IfcType {
 
 pub trait Address: IfcType {}
 
-pub trait PersonOrOrg: IfcType {}
-
 pub trait TransformableType: IfcType {
     fn shape(&self) -> Option<TypedId<ProductDefinitionShape>>;
 }

@@ -23,14 +23,10 @@ pub struct PersonAndOrganization {
 }
 
 impl PersonAndOrganization {
-    pub fn new(
-        the_person: impl Into<IdOr<Person>>,
-        the_organization: impl Into<IdOr<Organization>>,
-        ifc: &mut IFC,
-    ) -> Self {
+    pub fn new(the_person: TypedId<Person>, the_organization: TypedId<Organization>) -> Self {
         Self {
-            the_person: the_person.into().or_insert(ifc),
-            the_organization: the_organization.into().or_insert(ifc),
+            the_person,
+            the_organization,
             roles: OptionalParameter::omitted(),
         }
     }

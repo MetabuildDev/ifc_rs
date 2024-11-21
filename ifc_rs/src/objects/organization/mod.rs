@@ -72,4 +72,3 @@ impl Organization {
 }
 
 impl IfcType for Organization {}
-impl PersonOrOrg for Organization {}

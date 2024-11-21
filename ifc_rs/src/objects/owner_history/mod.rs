@@ -72,7 +72,9 @@ impl OwnerHistory {
         owning_application: impl Into<IdOr<Application>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_application = owning_application.into().or_insert(ifc).into();
+        let id = owning_application.into().or_insert(ifc);
+        self.owning_application = id.into();
+        self.last_modifying_application = id.into();
         self
     }
 

@@ -22,7 +22,7 @@ pub trait IfcObjectBuilder<T: IfcType> {
 }
 
 pub struct ApplicationInfo<'a> {
-    pub developer: Person,
+    pub developer: Organization,
     pub version: &'a str,
     pub name: &'a str,
     pub short_name: &'a str,
@@ -40,7 +40,7 @@ pub(crate) mod test {
     pub fn create_builder() -> IfcProjectBuilder {
         IfcProjectBuilder::new(
             ApplicationInfo {
-                developer: Person::empty().given_name("Mario"),
+                developer: Organization::new(None, "ExampleOrganization", None),
                 version: "0.0.1",
                 name: "IfcBuilderApplication",
                 short_name: "builder",

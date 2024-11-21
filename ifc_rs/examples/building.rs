@@ -13,11 +13,16 @@ fn main() {
     let mut ifc = IFC::default();
 
     // create person and application info
-    let (person, application) =
-        create_person_and_applicaton(&mut ifc, "Max", "BuildingExample", "BuildingExample");
+    let (person_and_organization, application) = create_person_and_org_and_applicaton(
+        &mut ifc,
+        "Max",
+        "ExampleOrganization",
+        "BuildingExample",
+        "BuildingExample",
+    );
 
     // create owner_history info
-    let owner_history = create_owner_history(&mut ifc, "ExampleOrganization", person, application);
+    let owner_history = create_owner_history(&mut ifc, person_and_organization, application);
 
     // create measurement units used for this project
     let length = SiUnit::new(IfcUnitEnum::LengthUnit, None, IfcUnitName::Metre);
@@ -143,38 +148,38 @@ fn main() {
     write("examples/building_example.ifc", ifc.to_string()).unwrap();
 }
 
-fn create_person_and_applicaton(
+fn create_person_and_org_and_applicaton(
     ifc: &mut IFC,
     person_name: &str,
+    organization_name: &str,
     application_name: &str,
     application_id: &str,
-) -> (TypedId<Person>, TypedId<Application>) {
+) -> (TypedId<PersonAndOrganization>, TypedId<Application>) {
     let person = Person::empty().id(person_name).given_name(person_name);
     let person_id = ifc.data.insert_new(person);
 
-    let application = Application::new(person_id, "0.0.1", application_name, application_id, ifc);
+    let organization = Organization::new(None, organization_name, None);
+    let organization_id = ifc.data.insert_new(organization);
+
+    let person_and_organization = ifc
+        .data
+        .insert_new(PersonAndOrganization::new(person_id, organization_id));
+
+    let application = Application::new(organization_id, "0.0.1", application_name, application_id);
     let application_id = ifc.data.insert_new(application);
 
-    (person_id, application_id)
+    (person_and_organization, application_id)
 }
 
 fn create_owner_history(
     ifc: &mut IFC,
-    organization_name: &str,
-    person: TypedId<Person>,
+    person_and_organization: TypedId<PersonAndOrganization>,
     application: TypedId<Application>,
 ) -> TypedId<OwnerHistory> {
-    let owner_and_org = PersonAndOrganization::new(
-        person,
-        Organization::new(None, organization_name, None),
-        ifc,
-    );
-
     let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
-        .owning_user(owner_and_org, ifc)
+        .owning_user(person_and_organization, ifc)
         .owning_application(application.id_or(), ifc)
-        .last_modified_date(IfcTimestamp::now())
-        .last_modifying_application(application, ifc);
+        .last_modified_date(IfcTimestamp::now());
 
     ifc.data.insert_new(owner_history)
 }

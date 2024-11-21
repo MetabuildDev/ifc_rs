@@ -4,7 +4,7 @@ use ifc_rs::prelude::*;
 fn main() {
     let mut builder = IfcProjectBuilder::new(
         ApplicationInfo {
-            developer: Person::empty().given_name("Mario"),
+            developer: Organization::new(None, "ExampleOrganization", None),
             version: "0.0.1",
             name: "IfcBuilderApplication",
             short_name: "builder",

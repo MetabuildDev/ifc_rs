@@ -211,16 +211,15 @@ pub mod test {
     fn create_wall() {
         let mut ifc = IFC::default();
 
-        let person_id = ifc.data.insert_new(Person::empty());
-        let application =
-            Application::new(person_id, "0.0.1", "create_wall_test", "IFC4", &mut ifc);
+        let person = ifc.data.insert_new(Person::empty());
+        let organization = ifc
+            .data
+            .insert_new(Organization::new(None, "organization_name", None));
+        let person_and_org = ifc
+            .data
+            .insert_new(PersonAndOrganization::new(person, organization));
+        let application = Application::new(organization, "0.0.1", "create_wall_test", "IFC4");
         let application_id = ifc.data.insert_new(application);
-
-        let person_and_org = PersonAndOrganization::new(
-            person_id,
-            Organization::new(None, "organization_name", None),
-            &mut ifc,
-        );
 
         let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
             .owning_user(person_and_org, &mut ifc)
