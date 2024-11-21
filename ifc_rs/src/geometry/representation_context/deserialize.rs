@@ -35,7 +35,7 @@ fn parse_geometric_representation_context_works() {
     let parsed = GeometricRepresentationContext::parse().parse(data).unwrap();
     assert_eq!(data, parsed.to_string());
 
-    let data = "IFCGEOMETRICREPRESENTATIONCONTEXT('TestIdentifier',$,3,$,#99,$);";
+    let data = "IFCGEOMETRICREPRESENTATIONCONTEXT('Body',$,3,$,#99,$);";
     let parsed = GeometricRepresentationContext::parse().parse(data).unwrap();
     assert_eq!(data, parsed.to_string());
 

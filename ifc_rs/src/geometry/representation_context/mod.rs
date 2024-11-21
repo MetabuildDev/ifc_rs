@@ -23,7 +23,7 @@ pub struct GeometricRepresentationContext {
     // NOTE: from IfcRepresentationContext
     //
     /// The optional identifier of the representation context as used within a project.
-    pub context_identifier: OptionalParameter<StringPrimitive>,
+    pub context_identifier: OptionalParameter<RepresentationIdentifier>,
     /// The description of the type of a representation context.
     /// The supported values for context type are to be specified by implementers agreements.
     pub context_type: OptionalParameter<StringPrimitive>,
@@ -56,23 +56,13 @@ impl GeometricRepresentationContext {
         let id = world_coord_system.into().or_insert(ifc);
 
         Self {
-            context_identifier: OptionalParameter::omitted(),
-            context_type: OptionalParameter::omitted(),
+            context_identifier: RepresentationIdentifier::Body.into(),
+            context_type: StringPrimitive::from("Model").into(),
             coord_space_dimension,
             precision: OptionalParameter::omitted(),
             world_coord_system: id.id(),
             true_north: OptionalParameter::omitted(),
         }
-    }
-
-    pub fn context_identifier(mut self, id: impl Into<StringPrimitive>) -> Self {
-        self.context_identifier = id.into().into();
-        self
-    }
-
-    pub fn context_type(mut self, context_type: impl Into<StringPrimitive>) -> Self {
-        self.context_type = context_type.into().into();
-        self
     }
 
     pub fn precision(mut self, precision: f64) -> Self {

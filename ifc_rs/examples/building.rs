@@ -38,8 +38,7 @@ fn main() {
 
     // create geometry context
     let context =
-        GeometricRepresentationContext::new(DimensionCount::Three, world_root_id.id_or(), &mut ifc)
-            .context_identifier("ExampleContext");
+        GeometricRepresentationContext::new(DimensionCount::Three, world_root_id.id_or(), &mut ifc);
     let context_id = ifc.data.insert_new(context);
 
     // create project

@@ -37,7 +37,7 @@ pub struct GeometricRepresentationSubContext {
     // first six fields inherited from IfcGeometricRepresentationContext
     //
     /// The optional identifier of the representation context as used within a project.
-    pub context_identifier: OptionalParameter<StringPrimitive>,
+    pub context_identifier: OptionalParameter<RepresentationIdentifier>,
     /// The description of the type of a representation context. The supported values for context
     /// type are to be specified by implementers agreements.
     ///
@@ -104,8 +104,8 @@ impl GeometricRepresentationSubContext {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            context_identifier: OptionalParameter::omitted(),
-            context_type: OptionalParameter::omitted(),
+            context_identifier: RepresentationIdentifier::Body.into(),
+            context_type: StringPrimitive::from("Model").into(),
             coord_space_dimension: OptionalParameter::inherited(),
             precision: OptionalParameter::inherited(),
             world_coord_system: OptionalParameter::inherited(),
