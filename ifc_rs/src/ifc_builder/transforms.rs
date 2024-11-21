@@ -105,12 +105,16 @@ pub(crate) trait IfcBuilderTransform {
                         self.ifc(),
                     );
 
-                    let r = ShapeRepresentation::new(self.sub_context(), self.ifc())
-                        .repr_type("MappedRepresentation")
-                        .add_item(
-                            MappedItem::new(representation_map, transform_id, self.ifc()),
-                            self.ifc(),
-                        );
+                    let r = ShapeRepresentation::new(
+                        self.sub_context(),
+                        RepresentationIdentifier::Body,
+                        RepresentationType::MappedRepresentation,
+                        self.ifc(),
+                    )
+                    .add_item(
+                        MappedItem::new(representation_map, transform_id, self.ifc()),
+                        self.ifc(),
+                    );
 
                     self.ifc().data.insert_new(r)
                 })
@@ -160,16 +164,16 @@ impl<'a> IfcStoreyBuilder<'a> {
                         shape_repr,
                         &mut self.project.ifc,
                     );
-                    let r = ShapeRepresentation::new(self.sub_context, &mut self.project.ifc)
-                        .repr_type("MappedRepresentation")
-                        .add_item(
-                            MappedItem::new(
-                                representation_map,
-                                transform_id,
-                                &mut self.project.ifc,
-                            ),
-                            &mut self.project.ifc,
-                        );
+                    let r = ShapeRepresentation::new(
+                        self.sub_context,
+                        RepresentationIdentifier::Body,
+                        RepresentationType::MappedRepresentation,
+                        &mut self.project.ifc,
+                    )
+                    .add_item(
+                        MappedItem::new(representation_map, transform_id, &mut self.project.ifc),
+                        &mut self.project.ifc,
+                    );
                     self.project.ifc.data.insert_new(r)
                 })
                 .collect();

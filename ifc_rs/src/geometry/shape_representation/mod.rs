@@ -1,5 +1,10 @@
 mod deserialize;
+mod repr_identifier;
+mod repr_type;
 mod serialize;
+
+pub use repr_identifier::RepresentationIdentifier;
+pub use repr_type::RepresentationType;
 
 use std::fmt::Display;
 
@@ -7,7 +12,7 @@ use ifc_rs_verify_derive::IfcVerify;
 
 use crate::{
     id::{Id, IdOr},
-    parser::{list::IfcList, optional::OptionalParameter, string::StringPrimitive},
+    parser::{list::IfcList, optional::OptionalParameter},
     prelude::*,
 };
 
@@ -49,35 +54,30 @@ pub struct ShapeRepresentation {
     #[ifc_types(GeometricRepresentationSubContext, GeometricRepresentationContext)]
     pub context_of_items: Id,
     /// The optional identifier of the representation as used within a project.
-    pub representation_identifier: OptionalParameter<StringPrimitive>,
+    pub representation_identifier: OptionalParameter<RepresentationIdentifier>,
     /// The description of the type of a representation context. The representation type defines
     /// the type of geometry or topology used for representing the product representation. More
     /// information is given at the subtypes IfcShapeRepresentation and IfcTopologyRepresentation.
     /// The supported values for context type are to be specified by implementers agreements.
-    pub representation_type: OptionalParameter<StringPrimitive>,
+    pub representation_type: OptionalParameter<RepresentationType>,
     /// Set of geometric representation items that are defined for this representation.
     #[ifc_types(ExtrudedAreaSolid, PolyLine, MappedItem)]
     pub items: IfcList<Id>,
 }
 
 impl ShapeRepresentation {
-    pub fn new(context: impl Into<IdOr<GeometricRepresentationSubContext>>, ifc: &mut IFC) -> Self {
+    pub fn new(
+        context: impl Into<IdOr<GeometricRepresentationSubContext>>,
+        identifier: RepresentationIdentifier,
+        repr_type: RepresentationType,
+        ifc: &mut IFC,
+    ) -> Self {
         Self {
             context_of_items: context.into().or_insert(ifc).id(),
-            representation_identifier: OptionalParameter::omitted(),
-            representation_type: OptionalParameter::omitted(),
+            representation_identifier: identifier.into(),
+            representation_type: repr_type.into(),
             items: IfcList::empty(),
         }
-    }
-
-    pub fn identifier(mut self, identifier: impl Into<StringPrimitive>) -> Self {
-        self.representation_identifier = identifier.into().into();
-        self
-    }
-
-    pub fn repr_type(mut self, repr_type: impl Into<StringPrimitive>) -> Self {
-        self.representation_type = repr_type.into().into();
-        self
     }
 
     pub fn add_item<ITEM: ShapeItem>(mut self, item: ITEM, ifc: &mut IFC) -> Self {

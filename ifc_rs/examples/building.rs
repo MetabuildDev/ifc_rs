@@ -192,7 +192,13 @@ fn create_wall(
     placement: IdOr<Axis3D>,
     sub_context: TypedId<GeometricRepresentationSubContext>,
 ) -> Wall {
-    let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+    let shape_repr = ShapeRepresentation::new(
+        sub_context,
+        RepresentationIdentifier::Body,
+        RepresentationType::SweptSolid,
+        ifc,
+    )
+    .add_item(
         ExtrudedAreaSolid::new(
             RectangleProfileDef::new(
                 ProfileType::Area,
@@ -245,7 +251,13 @@ fn create_wall(
         ifc,
     );
 
-    let transformation_shape = ShapeRepresentation::new(sub_context, ifc).add_item(
+    let transformation_shape = ShapeRepresentation::new(
+        sub_context,
+        RepresentationIdentifier::Body,
+        RepresentationType::MappedRepresentation,
+        ifc,
+    )
+    .add_item(
         MappedItem::new(representation_map, transformation, ifc),
         ifc,
     );

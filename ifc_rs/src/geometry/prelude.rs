@@ -21,5 +21,7 @@ pub use super::profile_type::ProfileType;
 pub use super::rectangle_profile_def::{MappedRectangleProfileDef, RectangleProfileDef};
 pub use super::representation_context::GeometricRepresentationContext;
 pub use super::representation_subcontext::GeometricRepresentationSubContext;
-pub use super::shape_representation::{ShapeItemEnum, ShapeRepresentation};
+pub use super::shape_representation::{
+    RepresentationIdentifier, RepresentationType, ShapeItemEnum, ShapeRepresentation,
+};
 pub use super::uniform_transformations::{CartesianTransformationOperator3D, TransformMapping};

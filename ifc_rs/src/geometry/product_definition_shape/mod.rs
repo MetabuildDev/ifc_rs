@@ -64,7 +64,13 @@ impl ProductDefinitionShape {
         sub_context: TypedId<GeometricRepresentationSubContext>,
         ifc: &mut IFC,
     ) -> Self {
-        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+        let shape_repr = ShapeRepresentation::new(
+            sub_context,
+            RepresentationIdentifier::Body,
+            RepresentationType::SweptSolid,
+            ifc,
+        )
+        .add_item(
             ExtrudedAreaSolid::new(
                 RectangleProfileDef::new(ProfileType::Area, length, thickness)
                     // center of the rectangle
@@ -91,7 +97,13 @@ impl ProductDefinitionShape {
         sub_context: TypedId<GeometricRepresentationSubContext>,
         ifc: &mut IFC,
     ) -> Self {
-        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+        let shape_repr = ShapeRepresentation::new(
+            sub_context,
+            RepresentationIdentifier::Body,
+            RepresentationType::SweptSolid,
+            ifc,
+        )
+        .add_item(
             ExtrudedAreaSolid::new(
                 ArbitraryClosedProfileDef::new(
                     ProfileType::Area,
@@ -114,7 +126,13 @@ impl ProductDefinitionShape {
         sub_context: TypedId<GeometricRepresentationSubContext>,
         ifc: &mut IFC,
     ) -> Self {
-        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+        let shape_repr = ShapeRepresentation::new(
+            sub_context,
+            RepresentationIdentifier::Body,
+            RepresentationType::SweptSolid,
+            ifc,
+        )
+        .add_item(
             ExtrudedAreaSolid::new(
                 ArbitraryClosedProfileDef::new(
                     ProfileType::Area,
@@ -144,7 +162,13 @@ impl ProductDefinitionShape {
         sub_context: TypedId<GeometricRepresentationSubContext>,
         ifc: &mut IFC,
     ) -> Self {
-        let shape_repr = ShapeRepresentation::new(sub_context, ifc).add_item(
+        let shape_repr = ShapeRepresentation::new(
+            sub_context,
+            RepresentationIdentifier::Body,
+            RepresentationType::SweptSolid,
+            ifc,
+        )
+        .add_item(
             ExtrudedAreaSolid::new(
                 ArbitraryClosedProfileDef::new(
                     ProfileType::Area,
@@ -202,7 +226,7 @@ pub mod test {
         IFC,
     };
 
-    use super::ProductDefinitionShape;
+    use super::{ProductDefinitionShape, RepresentationIdentifier, RepresentationType};
 
     pub fn new_product_definition_shape(
         ifc: &mut IFC,
@@ -214,7 +238,13 @@ pub mod test {
         let sub_context =
             GeometricRepresentationSubContext::derive(context, GeometricProjection::ModelView, ifc);
 
-        let shape = ShapeRepresentation::new(sub_context, ifc).add_item(
+        let shape = ShapeRepresentation::new(
+            sub_context,
+            RepresentationIdentifier::Surface,
+            RepresentationType::Surface,
+            ifc,
+        )
+        .add_item(
             PolyLine::from(
                 [
                     Point3D::from(DVec3::new(0.0, 0.0, 0.0)),
