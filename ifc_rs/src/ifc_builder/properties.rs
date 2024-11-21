@@ -111,7 +111,9 @@ impl<'a> IfcPropertySetBuilder<'a> {
         unit: Option<Id>,
     ) -> TypedId<PropertySingleValue> {
         let prop = PropertySingleValue::new(name, value, unit);
-        self.ifc.data.insert_new(prop)
+        let id = self.ifc.data.insert_new(prop);
+        self.properties.push(id);
+        id
     }
 
     /// Finish and build the [`PropertySet`]
