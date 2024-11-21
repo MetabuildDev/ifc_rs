@@ -4,7 +4,7 @@ use winnow::combinator::alt;
 use winnow::Parser;
 
 use super::prelude::*;
-use crate::parser::{real::RealPrimitive, IFCParse, IFCParser};
+use crate::parser::{IFCParse, IFCParser};
 
 /// IfcValue is a select type for selecting between more specialised select types IfcSimpleValue,
 /// IfcMeasureValue and IfcDerivedMeasureValue.
@@ -17,7 +17,7 @@ use crate::parser::{real::RealPrimitive, IFCParse, IFCParser};
 pub enum IfcValue {
     Bool(BoolValue),
     Label(LabelValue),
-    Real(RealPrimitive),
+    Real(RealValue),
     Identifier(IdentifierValue),
     ThermalTransmittance(ThermalTransmittanceValue),
 }
@@ -30,7 +30,7 @@ impl IFCParse for IfcValue {
         alt((
             BoolValue::parse().map(Self::Bool),
             LabelValue::parse().map(Self::Label),
-            RealPrimitive::parse().map(Self::Real),
+            RealValue::parse().map(Self::Real),
             IdentifierValue::parse().map(Self::Identifier),
             ThermalTransmittanceValue::parse().map(Self::ThermalTransmittance),
         ))
