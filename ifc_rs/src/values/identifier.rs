@@ -12,13 +12,13 @@ impl IFCParse for IdentifierValue {
     where
         Self: Sized,
     {
-        delimited("IfcIdentifier(", StringPrimitive::parse(), ")").map(Self)
+        delimited("IFCIDENTIFIER(", StringPrimitive::parse(), ")").map(Self)
     }
 }
 
 impl Display for IdentifierValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IfcIdentifier({})", self.0)
+        write!(f, "IFCIDENTIFIER({})", self.0)
     }
 }
 
@@ -30,7 +30,7 @@ mod test {
 
     #[test]
     fn ifc_value_id_round_trip() {
-        let example = "IfcIdentifier('')";
+        let example = "IFCIDENTIFIER('')";
 
         let value = IdentifierValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

@@ -13,13 +13,13 @@ impl IFCParse for RealValue {
     where
         Self: Sized,
     {
-        delimited("IfcReal(", RealPrimitive::parse(), ")").map(Self)
+        delimited("IFCREAL(", RealPrimitive::parse(), ")").map(Self)
     }
 }
 
 impl Display for RealValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IfcReal({})", self.0)
+        write!(f, "IFCREAL({})", self.0)
     }
 }
 
@@ -37,7 +37,7 @@ mod test {
 
     #[test]
     fn ifc_value_id_round_trip() {
-        let example = "IfcReal(0.123)";
+        let example = "IFCREAL(0.123)";
 
         let value = RealValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

@@ -12,13 +12,13 @@ impl IFCParse for LabelValue {
     where
         Self: Sized,
     {
-        delimited("IfcLabel(", StringPrimitive::parse(), ")").map(Self)
+        delimited("IFCLABEL(", StringPrimitive::parse(), ")").map(Self)
     }
 }
 
 impl Display for LabelValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IfcLabel({})", self.0)
+        write!(f, "IFCLABEL({})", self.0)
     }
 }
 
@@ -30,7 +30,7 @@ mod test {
 
     #[test]
     fn ifc_value_label_round_trip() {
-        let example = "IfcLabel('Foobar')";
+        let example = "IFCLABEL('Foobar')";
 
         let value = LabelValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

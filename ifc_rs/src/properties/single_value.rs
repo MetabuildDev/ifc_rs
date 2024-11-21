@@ -91,7 +91,7 @@ mod test {
 
     #[test]
     fn property_single_value_bool_round_trip() {
-        let example = "IFCPROPERTYSINGLEVALUE('Combustible','Combustible',IfcBoolean(.FALSE.),$);";
+        let example = "IFCPROPERTYSINGLEVALUE('Combustible','Combustible',IFCBOOLEAN(.FALSE.),$);";
 
         let single_value = PropertySingleValue::parse().parse(example).unwrap();
         let str_single_value = single_value.to_string();
@@ -101,7 +101,7 @@ mod test {
 
     #[test]
     fn property_single_value_label_round_trip() {
-        let example = "IFCPROPERTYSINGLEVALUE('AcousticRating','AcousticRating',IfcLabel(''),$);";
+        let example = "IFCPROPERTYSINGLEVALUE('AcousticRating','AcousticRating',IFCLABEL(''),$);";
 
         let single_value = PropertySingleValue::parse().parse(example).unwrap();
         let str_single_value = single_value.to_string();
@@ -111,7 +111,7 @@ mod test {
 
     #[test]
     fn property_single_value_id_round_trip() {
-        let example = "IFCPROPERTYSINGLEVALUE('Reference','Reference',IfcIdentifier(''),$);";
+        let example = "IFCPROPERTYSINGLEVALUE('Reference','Reference',IFCIDENTIFIER(''),$);";
 
         let single_value = PropertySingleValue::parse().parse(example).unwrap();
         let str_single_value = single_value.to_string();

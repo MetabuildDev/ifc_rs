@@ -57,7 +57,7 @@ mod test {
 
     #[test]
     fn ifc_value_bool_round_trip() {
-        let example = "IfcBoolean(.FALSE.)";
+        let example = "IFCBOOLEAN(.FALSE.)";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
@@ -67,7 +67,7 @@ mod test {
 
     #[test]
     fn ifc_value_label_round_trip() {
-        let example = "IfcLabel('Foobar')";
+        let example = "IFCLABEL('Foobar')";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
@@ -77,7 +77,7 @@ mod test {
 
     #[test]
     fn ifc_value_id_round_trip() {
-        let example = "IfcIdentifier('')";
+        let example = "IFCIDENTIFIER('')";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
@@ -87,7 +87,7 @@ mod test {
 
     #[test]
     fn ifc_value_real_round_trip() {
-        let example = "IfcReal(0.12)";
+        let example = "IFCREAL(0.12)";
 
         let value = IfcValue::parse().parse(example).unwrap();
         let str_value = value.to_string();

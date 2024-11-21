@@ -12,13 +12,13 @@ impl IFCParse for BoolValue {
     where
         Self: Sized,
     {
-        delimited("IfcBoolean(", BoolPrimitive::parse(), ")").map(Self)
+        delimited("IFCBOOLEAN(", BoolPrimitive::parse(), ")").map(Self)
     }
 }
 
 impl Display for BoolValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IfcBoolean({})", self.0)
+        write!(f, "IFCBOOLEAN({})", self.0)
     }
 }
 
@@ -30,7 +30,7 @@ mod test {
 
     #[test]
     fn ifc_value_bool_round_trip() {
-        let example = "IfcBoolean(.FALSE.)";
+        let example = "IFCBOOLEAN(.FALSE.)";
 
         let value = BoolValue::parse().parse(example).unwrap();
         let str_value = value.to_string();
