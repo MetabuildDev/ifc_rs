@@ -1,4 +1,4 @@
-use winnow::{combinator::delimited, Parser};
+use winnow::Parser;
 
 use crate::{
     geometry::{
@@ -11,65 +11,31 @@ use crate::{
 
 impl IFCParse for GeometricRepresentationSubContext {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
-        delimited(
-            "IFCGEOMETRICREPRESENTATIONSUBCONTEXT(",
-            (
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                Id::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                GeometricProjection::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-            ),
-            ");",
-        )
-        .map(
-            |(
-                context_identifier,
-                _,
-                context_type,
-                _,
-                coord_space_dimension,
-                _,
-                precision,
-                _,
-                world_coord_system,
-                _,
-                true_north,
-                _,
-                parent_context,
-                _,
-                target_scale,
-                _,
-                target_view,
-                _,
-                user_defined_target_view,
-            )| Self {
-                context_identifier,
-                context_type,
-                coord_space_dimension,
-                precision,
-                world_coord_system,
-                true_north,
-                parent_context: TypedId::new(parent_context),
-                target_scale,
-                target_view,
-                user_defined_target_view,
-            },
-        )
+        winnow::seq! {
+            Self {
+                _: "IFCGEOMETRICREPRESENTATIONSUBCONTEXT(",
+                context_identifier: OptionalParameter::parse(),
+                _: Comma::parse(),
+                context_type: OptionalParameter::parse(),
+                _: Comma::parse(),
+                coord_space_dimension: OptionalParameter::parse(),
+                _: Comma::parse(),
+                precision: OptionalParameter::parse(),
+                _: Comma::parse(),
+                world_coord_system: OptionalParameter::parse(),
+                _: Comma::parse(),
+                true_north: OptionalParameter::parse(),
+                _: Comma::parse(),
+                parent_context: Id::parse().map(TypedId::new),
+                _: Comma::parse(),
+                target_scale: OptionalParameter::parse(),
+                _: Comma::parse(),
+                target_view: GeometricProjection::parse(),
+                _: Comma::parse(),
+                user_defined_target_view: OptionalParameter::parse(),
+                _: ");"
+            }
+        }
     }
 }
 

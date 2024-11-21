@@ -40,6 +40,9 @@ pub struct GeometricRepresentationSubContext {
     pub context_identifier: OptionalParameter<StringPrimitive>,
     /// The description of the type of a representation context. The supported values for context
     /// type are to be specified by implementers agreements.
+    ///
+    /// implementer note: https://validate.buildingsmart.org treats it as an error if this isn't a
+    /// string so I'm going to remove the optionality
     pub context_type: OptionalParameter<StringPrimitive>,
     /// The integer dimension count of the coordinate space modeled in a geometric representation
     /// context.
@@ -101,8 +104,8 @@ impl GeometricRepresentationSubContext {
         ifc: &mut IFC,
     ) -> Self {
         Self {
-            context_identifier: OptionalParameter::inherited(),
-            context_type: OptionalParameter::inherited(),
+            context_identifier: OptionalParameter::omitted(),
+            context_type: OptionalParameter::omitted(),
             coord_space_dimension: OptionalParameter::inherited(),
             precision: OptionalParameter::inherited(),
             world_coord_system: OptionalParameter::inherited(),

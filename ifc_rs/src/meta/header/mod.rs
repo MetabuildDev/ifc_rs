@@ -74,7 +74,7 @@ pub(crate) mod details {
 
     impl Default for AuthorList {
         fn default() -> Self {
-            Self(vec![Author(String::from("''"))])
+            Self(vec![Author(String::from(""))])
         }
     }
 
@@ -96,7 +96,7 @@ pub(crate) mod details {
 
     impl Default for OrganizationList {
         fn default() -> Self {
-            Self(vec![Organization(String::from("''"))])
+            Self(vec![Organization(String::from(""))])
         }
     }
 
@@ -165,8 +165,8 @@ mod header_tests {
     use super::{
         description::{FileDescription, ImplementationLevel, ViewDefinition},
         details::{
-            Author, Authorization, FileDetails, FileName, Organization, OriginatingSystem,
-            PreprocessorVersion, TimeStamp,
+            Author, AuthorList, Authorization, FileDetails, FileName, Organization,
+            OrganizationList, OriginatingSystem, PreprocessorVersion, TimeStamp,
         },
         schema::{FileSchema, FileSchemas},
         Header,
@@ -186,8 +186,8 @@ mod header_tests {
         FileDetails {
             name: FileName(String::from("Test filename")),
             timestamp: TimeStamp(DateTime::default()),
-            author: vec![Author(String::from("Test author"))],
-            organization: vec![Organization(String::from("Test organization"))],
+            author: AuthorList(vec![Author(String::from("Test author"))]),
+            organization: OrganizationList(vec![Organization(String::from("Test organization"))]),
             preprocessor_version: PreprocessorVersion(String::from("Test preprocessor version")),
             originating_system: OriginatingSystem(String::from("Test originating system")),
             authorization: Authorization(String::from("Test authorization")),

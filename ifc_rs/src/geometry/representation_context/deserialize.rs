@@ -1,5 +1,3 @@
-use winnow::{combinator::delimited, Parser};
-
 use super::GeometricRepresentationContext;
 use crate::{
     geometry::dimension_count::DimensionCount,
@@ -9,50 +7,30 @@ use crate::{
 
 impl IFCParse for GeometricRepresentationContext {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
-        delimited(
-            "IFCGEOMETRICREPRESENTATIONCONTEXT(",
-            (
-                OptionalParameter::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                DimensionCount::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-                Comma::parse(),
-                Id::parse(),
-                Comma::parse(),
-                OptionalParameter::parse(),
-            ),
-            ");",
-        )
-        .map(
-            |(
-                context_identifier,
-                _,
-                context_type,
-                _,
-                coord_space_dimension,
-                _,
-                precision,
-                _,
-                world_coord_system,
-                _,
-                true_north,
-            )| Self {
-                context_identifier,
-                context_type,
-                coord_space_dimension,
-                precision,
-                world_coord_system,
-                true_north,
-            },
-        )
+        winnow::seq! {
+            Self {
+                _: "IFCGEOMETRICREPRESENTATIONCONTEXT(",
+                context_identifier: OptionalParameter::parse(),
+                _: Comma::parse(),
+                context_type: OptionalParameter::parse(),
+                _: Comma::parse(),
+                coord_space_dimension: DimensionCount::parse(),
+                _: Comma::parse(),
+                precision: OptionalParameter::parse(),
+                _: Comma::parse(),
+                world_coord_system: Id::parse(),
+                _: Comma::parse(),
+                true_north: OptionalParameter::parse(),
+                _: ");",
+            }
+        }
     }
 }
 
 #[test]
 fn parse_geometric_representation_context_works() {
+    use winnow::Parser;
+
     let data = "IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',3,0.00001,#99,#100);";
     let parsed = GeometricRepresentationContext::parse().parse(data).unwrap();
     assert_eq!(data, parsed.to_string());
