@@ -61,7 +61,9 @@ impl OwnerHistory {
         owning_user: impl Into<IdOr<PersonAndOrganization>>,
         ifc: &mut IFC,
     ) -> Self {
-        self.owning_user = owning_user.into().or_insert(ifc).into();
+        let id = owning_user.into().or_insert(ifc);
+        self.owning_user = id.into();
+        self.last_modifying_user = id.into();
         self
     }
 

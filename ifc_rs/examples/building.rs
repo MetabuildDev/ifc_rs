@@ -164,17 +164,16 @@ fn create_owner_history(
     person: TypedId<Person>,
     application: TypedId<Application>,
 ) -> TypedId<OwnerHistory> {
-    let person_and_org = PersonAndOrganization::new(
+    let owner_and_org = PersonAndOrganization::new(
         person,
         Organization::new(None, organization_name, None),
         ifc,
     );
 
     let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
-        .owning_user(person_and_org.clone(), ifc)
+        .owning_user(owner_and_org, ifc)
         .owning_application(application.id_or(), ifc)
         .last_modified_date(IfcTimestamp::now())
-        .last_modifying_user(person_and_org, ifc)
         .last_modifying_application(application, ifc);
 
     ifc.data.insert_new(owner_history)

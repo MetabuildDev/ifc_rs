@@ -46,17 +46,16 @@ impl IfcProjectBuilder {
         );
         let application_id = ifc.data.insert_new(application);
 
-        let owner = PersonAndOrganization::new(
+        let owner_and_org = PersonAndOrganization::new(
             owner_info.owner,
             Organization::new(None, owner_info.organization_name, None),
             &mut ifc,
         );
 
         let owner_history = OwnerHistory::new(ChangeAction::Added, IfcTimestamp::now())
-            .owning_user(owner.clone(), &mut ifc)
+            .owning_user(owner_and_org, &mut ifc)
             .owning_application(application_id, &mut ifc)
             .last_modified_date(IfcTimestamp::now())
-            .last_modifying_user(owner, &mut ifc)
             .last_modifying_application(application_id, &mut ifc);
 
         let owner_history_id = ifc.data.insert_new(owner_history);
