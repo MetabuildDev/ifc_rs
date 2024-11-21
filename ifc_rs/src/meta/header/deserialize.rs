@@ -120,7 +120,11 @@ impl Header {
                 .or_else(|_| DateTime::parse_from_rfc3339(format!("{s}Z").as_str()));
             date_res.unwrap().into()
         }
-        let mut p_name = p_quote_word().map(FileName);
+        // filename can be $ or an actual filename, see #1, AutoCAD related
+        let mut p_name = alt((
+            "$".map(|_| FileName::default()),
+            p_quote_word().map(FileName),
+        ));
         let mut p_time = p_quote_word().map(time_from_string).map(TimeStamp);
         let mut p_author = delimited(
             "(",
@@ -256,6 +260,49 @@ fn parse_header_from_example_file() {
     ENDSEC;"#;
 
     Header::parse().parse(data).unwrap();
+}
+
+#[test]
+/// according to AutoCAD Architecture, `$` is a valid file name
+fn parse_header_with_autocad_formatted_file_name() {
+    let header= Header::p_name().parse("FILE_NAME($,'2024-11-14T14:59:54',('USER'),('',''),'The EXPRESS Data Manager Version 5.02.0110.07 : 20 Jan 2016','AutoCAD Architecture 2020 - Deutsch (German) Build 8.2.47.0','');").unwrap();
+
+    insta::assert_debug_snapshot!(header, @r###"
+    FileDetails {
+        name: FileName(
+            "",
+        ),
+        timestamp: TimeStamp(
+            2024-11-14T14:59:54Z,
+        ),
+        author: AuthorList(
+            [
+                Author(
+                    "USER",
+                ),
+            ],
+        ),
+        organization: OrganizationList(
+            [
+                Organization(
+                    "",
+                ),
+                Organization(
+                    "",
+                ),
+            ],
+        ),
+        preprocessor_version: PreprocessorVersion(
+            "The EXPRESS Data Manager Version 5.02.0110.07 : 20 Jan 2016",
+        ),
+        originating_system: OriginatingSystem(
+            "AutoCAD Architecture 2020 - Deutsch (German) Build 8.2.47.0",
+        ),
+        authorization: Authorization(
+            "",
+        ),
+    }
+    "###)
 }
 
 #[test]
