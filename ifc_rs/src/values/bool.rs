@@ -1,6 +1,9 @@
 use std::fmt::Display;
 
-use winnow::{combinator::delimited, Parser};
+use winnow::{
+    combinator::{alt, delimited},
+    Parser,
+};
 
 use crate::parser::{bool::BoolPrimitive, *};
 
@@ -12,7 +15,12 @@ impl IFCParse for BoolValue {
     where
         Self: Sized,
     {
-        delimited("IFCBOOLEAN(", BoolPrimitive::parse(), ")").map(Self)
+        delimited(
+            (alt(("IFCBOOLEAN", "IfcBoolean")), "("),
+            BoolPrimitive::parse(),
+            ")",
+        )
+        .map(Self)
     }
 }
 

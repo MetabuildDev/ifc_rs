@@ -1,6 +1,9 @@
 use real::format_non_sci_double;
 use std::fmt::Display;
-use winnow::{combinator::delimited, Parser};
+use winnow::{
+    combinator::{alt, delimited},
+    Parser,
+};
 
 use crate::parser::{real::RealPrimitive, *};
 
@@ -13,7 +16,13 @@ impl IFCParse for ThermalTransmittanceValue {
         Self: Sized,
     {
         delimited(
-            "IFCTHERMALTRANSMITTANCEMEASURE(",
+            (
+                alt((
+                    "IFCTHERMALTRANSMITTANCEMEASURE",
+                    "IfcThermaltransmittancemeasure",
+                )),
+                "(",
+            ),
             RealPrimitive::parse(),
             ")",
         )

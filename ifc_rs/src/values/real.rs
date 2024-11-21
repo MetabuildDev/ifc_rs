@@ -1,7 +1,10 @@
 use std::fmt::Display;
 
 use real::RealPrimitive;
-use winnow::{combinator::delimited, Parser};
+use winnow::{
+    combinator::{alt, delimited},
+    Parser,
+};
 
 use crate::parser::*;
 
@@ -13,7 +16,12 @@ impl IFCParse for RealValue {
     where
         Self: Sized,
     {
-        delimited("IFCREAL(", RealPrimitive::parse(), ")").map(Self)
+        delimited(
+            (alt(("IFCREAL", "IfcReal")), "("),
+            RealPrimitive::parse(),
+            ")",
+        )
+        .map(Self)
     }
 }
 

@@ -1,6 +1,9 @@
 use std::fmt::Display;
 
-use winnow::{combinator::delimited, Parser};
+use winnow::{
+    combinator::{alt, delimited},
+    Parser,
+};
 
 use crate::parser::{string::StringPrimitive, *};
 
@@ -12,7 +15,12 @@ impl IFCParse for IdentifierValue {
     where
         Self: Sized,
     {
-        delimited("IFCIDENTIFIER(", StringPrimitive::parse(), ")").map(Self)
+        delimited(
+            (alt(("IFCIDENTIFIER", "IfcIdentifier")), "("),
+            StringPrimitive::parse(),
+            ")",
+        )
+        .map(Self)
     }
 }
 
