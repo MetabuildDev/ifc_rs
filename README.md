@@ -25,6 +25,7 @@ rust --> |std::fmt::Display| ifc
 
 - [IFC4.3 (most recent)](https://ifc43-docs.standards.buildingsmart.org/)
 - [IFC4.2](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/)
+- [IFC Checker](https://validate.buildingsmart.org/)
 
 ## Other
 
