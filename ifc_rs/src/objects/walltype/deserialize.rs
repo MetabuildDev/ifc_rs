@@ -10,7 +10,7 @@ use super::WallType;
 impl IFCParse for WallType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            WallType {
                 _: p_space_or_comment_surrounded("IFCWALLTYPE("),
 
                 element_type: ElementType::parse(),

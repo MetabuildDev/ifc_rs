@@ -8,7 +8,7 @@ use super::OpeningElement;
 impl IFCParse for OpeningElement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            OpeningElement {
                 _: p_space_or_comment_surrounded("IFCOPENINGELEMENT("),
 
                 element: Element::parse(),

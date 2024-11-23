@@ -7,7 +7,7 @@ use crate::{
 impl IFCParse for Application {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Application {
                 _ : "IFCAPPLICATION(",
                 application_developer: TypedId::parse(),
                 _: Comma::parse(),

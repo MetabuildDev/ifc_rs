@@ -75,7 +75,7 @@ pub trait RootBuilder: Sized {
 impl IFCParse for Root {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Root {
                 global_id: IfcGloballyUniqueId::parse(),
                 _: Comma::parse(),
                 owner_history: OptionalParameter::parse(),

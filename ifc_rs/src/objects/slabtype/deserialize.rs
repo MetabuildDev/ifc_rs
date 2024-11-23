@@ -8,7 +8,7 @@ use super::SlabType;
 impl IFCParse for SlabType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            SlabType {
                 _: p_space_or_comment_surrounded("IFCSLABTYPE("),
 
                 element_type: ElementType::parse(),

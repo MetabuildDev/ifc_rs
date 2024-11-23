@@ -9,7 +9,7 @@ use super::Wall;
 impl IFCParse for Wall {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Wall {
                 _: alt((p_space_or_comment_surrounded("IFCWALL("), p_space_or_comment_surrounded("IFCWALLSTANDARDCASE("))),
 
                 element: Element::parse(),

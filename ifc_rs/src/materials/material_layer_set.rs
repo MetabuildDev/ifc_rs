@@ -63,7 +63,7 @@ impl MaterialLayerSet {
 impl IFCParse for MaterialLayerSet {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MaterialLayerSet {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYERSET("),
 
                 material_layers: IfcList::parse(),

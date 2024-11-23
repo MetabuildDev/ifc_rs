@@ -104,7 +104,7 @@ impl<'a> IfcMappedType<'a> for ExtrudedAreaSolid {
 impl IFCParse for ExtrudedAreaSolid {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            ExtrudedAreaSolid {
                 _: p_space_or_comment_surrounded("IFCEXTRUDEDAREASOLID("),
 
                 swept_area: Id::parse(),

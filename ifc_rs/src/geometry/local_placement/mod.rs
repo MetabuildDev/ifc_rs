@@ -54,7 +54,7 @@ impl LocalPlacement {
 impl IFCParse for LocalPlacement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            LocalPlacement {
                 _: p_space_or_comment_surrounded("IFCLOCALPLACEMENT("),
 
                 placement_rel_to: OptionalParameter::parse(),

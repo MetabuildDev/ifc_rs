@@ -83,7 +83,7 @@ impl DerefMut for TypeProduct {
 impl IFCParse for TypeProduct {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            TypeProduct {
                 type_object: TypeObject::parse(),
                 _: Comma::parse(),
                 representation_maps: OptionalParameter::parse(),

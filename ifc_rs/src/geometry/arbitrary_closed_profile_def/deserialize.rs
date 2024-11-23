@@ -8,7 +8,7 @@ use crate::parser::*;
 impl IFCParse for ArbitraryClosedProfileDef {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            ArbitraryClosedProfileDef {
                 _: p_space_or_comment_surrounded("IFCARBITRARYCLOSEDPROFILEDEF("),
 
                 profile_type: ProfileType::parse(),

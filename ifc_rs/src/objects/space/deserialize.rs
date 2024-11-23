@@ -9,7 +9,7 @@ use super::Space;
 impl IFCParse for Space {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Space {
                 _: p_space_or_comment_surrounded("IFCSPACE("),
 
                 spatial_element_structure: SpatialStructureElement::parse(),

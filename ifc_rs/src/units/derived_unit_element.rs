@@ -22,7 +22,7 @@ pub struct DerivedUnitElement {
 impl IFCParse for DerivedUnitElement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            DerivedUnitElement {
                 _: p_space_or_comment_surrounded("IFCDERIVEDUNITELEMENT("),
 
                 unit: Id::parse().map(TypedId::new),

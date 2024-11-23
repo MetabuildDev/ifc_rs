@@ -9,7 +9,7 @@ use super::Door;
 impl IFCParse for Door {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Door {
                 _: alt((p_space_or_comment_surrounded("IFCDOOR("), p_space_or_comment_surrounded("IFCDOORSTANDARDCASE("))),
 
                 element: Element::parse(),

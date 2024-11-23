@@ -124,7 +124,7 @@ impl IFCParse for MappedItem {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            MappedItem {
                 _: p_space_or_comment_surrounded("IFCMAPPEDITEM("),
                 source: IdOr::parse(),
                 _: Comma::parse(),

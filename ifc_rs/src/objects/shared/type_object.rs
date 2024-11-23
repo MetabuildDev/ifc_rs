@@ -79,7 +79,7 @@ impl DerefMut for TypeObject {
 impl IFCParse for TypeObject {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            TypeObject {
                 root: Root::parse(),
                 _: Comma::parse(),
                 applicable_occurence: OptionalParameter::parse(),

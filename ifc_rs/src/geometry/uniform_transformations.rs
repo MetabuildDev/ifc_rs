@@ -82,7 +82,7 @@ impl IFCParse for CartesianTransformationOperator3D {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            CartesianTransformationOperator3D {
                 _: p_space_or_comment_surrounded("IFCCARTESIANTRANSFORMATIONOPERATOR3D("),
                 base: Transform3DBase::parse(),
                 _: p_space_or_comment_surrounded(");"),

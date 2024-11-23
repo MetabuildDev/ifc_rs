@@ -43,7 +43,7 @@ impl Deref for ConversionBasedUnit {
 impl IFCParse for ConversionBasedUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            ConversionBasedUnit {
                 _: p_space_or_comment_surrounded("IFCCONVERSIONBASEDUNIT("),
 
                 named_unit: NamedUnit::parse(),

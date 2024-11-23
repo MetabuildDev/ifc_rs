@@ -20,7 +20,7 @@ impl IfcType for MonetaryUnit {}
 impl IFCParse for MonetaryUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MonetaryUnit {
                 _: p_space_or_comment_surrounded("IFCMONETARYUNIT("),
 
                 currency: StringPrimitive::parse(),

@@ -66,7 +66,7 @@ impl Deref for RelAggregates {
 impl IFCParse for RelAggregates {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelAggregates {
                 _: p_space_or_comment_surrounded("IFCRELAGGREGATES("),
 
                 root: Root::parse(),

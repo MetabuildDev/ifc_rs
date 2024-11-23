@@ -54,7 +54,7 @@ impl RootBuilder for RelVoidsElement {
 impl IFCParse for RelVoidsElement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelVoidsElement {
                 _: p_space_or_comment_surrounded("IFCRELVOIDSELEMENT("),
 
                 root: Root::parse(),

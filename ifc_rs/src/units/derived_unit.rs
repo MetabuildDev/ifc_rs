@@ -27,7 +27,7 @@ pub struct DerivedUnit {
 impl IFCParse for DerivedUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            DerivedUnit {
                 _: p_space_or_comment_surrounded("IFCDERIVEDUNIT("),
 
                 elements: IfcList::parse(),

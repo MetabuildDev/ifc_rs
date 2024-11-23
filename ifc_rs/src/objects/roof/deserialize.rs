@@ -8,7 +8,7 @@ use super::Roof;
 impl IFCParse for Roof {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Roof {
                 _: p_space_or_comment_surrounded("IFCROOF("),
 
                 element: Element::parse(),

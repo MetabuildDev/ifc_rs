@@ -70,7 +70,7 @@ impl MaterialConstituentSet {
 impl IFCParse for MaterialConstituentSet {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MaterialConstituentSet {
                 _: p_space_or_comment_surrounded("IFCMATERIALCONSTITUENTSET("),
 
                 name: OptionalParameter::parse(),

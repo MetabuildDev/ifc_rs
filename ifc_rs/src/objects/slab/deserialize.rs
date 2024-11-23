@@ -9,7 +9,7 @@ use super::Slab;
 impl IFCParse for Slab {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Slab {
                 _: alt((p_space_or_comment_surrounded("IFCSLAB("), p_space_or_comment_surrounded("IFCSLABSTANDARDCASE("))),
 
                 element: Element::parse(),

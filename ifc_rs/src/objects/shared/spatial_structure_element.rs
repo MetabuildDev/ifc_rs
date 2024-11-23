@@ -64,7 +64,7 @@ impl DerefMut for SpatialStructureElement {
 impl IFCParse for SpatialStructureElement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            SpatialStructureElement {
                 spatial_element: SpatialElement::parse(),
                 _: Comma::parse(),
                 composition_type: OptionalParameter::parse(),

@@ -111,7 +111,7 @@ impl MaterialLayer {
 impl IFCParse for MaterialLayer {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MaterialLayer {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYER("),
 
                 material: OptionalParameter::parse(),

@@ -33,7 +33,7 @@ impl UnitAssigment {
 impl IFCParse for UnitAssigment {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            UnitAssigment {
                 _: p_space_or_comment_surrounded("IFCUNITASSIGNMENT("),
 
                 units: IfcList::parse(),

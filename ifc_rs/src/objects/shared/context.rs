@@ -120,7 +120,7 @@ impl DerefMut for Context {
 impl IFCParse for Context {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Context {
                 root: Root::parse(),
                 _: Comma::parse(),
                 object_type: OptionalParameter::parse(),

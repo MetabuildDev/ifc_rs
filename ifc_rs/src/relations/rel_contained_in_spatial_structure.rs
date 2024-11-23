@@ -76,7 +76,7 @@ impl Deref for RelContainedInSpatialStructure {
 impl IFCParse for RelContainedInSpatialStructure {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelContainedInSpatialStructure {
                 _: p_space_or_comment_surrounded("IFCRELCONTAINEDINSPATIALSTRUCTURE("),
 
                 root: Root::parse(),

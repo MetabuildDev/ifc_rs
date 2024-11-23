@@ -51,7 +51,7 @@ impl Material {
 impl IFCParse for Material {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Material {
                 _: p_space_or_comment_surrounded("IFCMATERIAL("),
 
                 material: OptionalParameter::parse(),

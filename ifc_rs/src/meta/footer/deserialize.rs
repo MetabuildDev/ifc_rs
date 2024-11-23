@@ -11,7 +11,7 @@ use crate::parser::*;
 impl IFCParse for Footer {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Footer {
                 _: p_space_or_comment(),
                 version: p_footer_version(),
                 _: p_space_or_comment(),

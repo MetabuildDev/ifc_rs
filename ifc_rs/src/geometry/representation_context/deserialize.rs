@@ -8,7 +8,7 @@ use crate::{
 impl IFCParse for GeometricRepresentationContext {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            GeometricRepresentationContext {
                 _: "IFCGEOMETRICREPRESENTATIONCONTEXT(",
                 context_identifier: OptionalParameter::parse(),
                 _: Comma::parse(),

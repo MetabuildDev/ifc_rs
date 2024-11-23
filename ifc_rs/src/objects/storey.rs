@@ -126,7 +126,7 @@ impl DerefMut for Storey {
 impl IFCParse for Storey {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Storey {
                 _: p_space_or_comment_surrounded("IFCBUILDINGSTOREY("),
 
                 spatial_element_structure: SpatialStructureElement::parse(),

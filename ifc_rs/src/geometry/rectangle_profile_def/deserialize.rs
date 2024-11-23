@@ -9,7 +9,7 @@ use super::RectangleProfileDef;
 impl IFCParse for RectangleProfileDef {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RectangleProfileDef {
                 _: p_space_or_comment_surrounded("IFCRECTANGLEPROFILEDEF("),
 
                 profile_type: ProfileType::parse(),

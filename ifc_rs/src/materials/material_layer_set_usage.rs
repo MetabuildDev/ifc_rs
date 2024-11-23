@@ -88,7 +88,7 @@ impl MaterialLayerSetUsage {
 impl IFCParse for MaterialLayerSetUsage {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MaterialLayerSetUsage {
                 _: p_space_or_comment_surrounded("IFCMATERIALLAYERSETUSAGE("),
 
                 spatial_element_structure: Id::parse().map(TypedId::new),

@@ -91,7 +91,7 @@ impl IFCParse for Transform3DBase {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            Transform3DBase {
                 axis_x: OptionalParameter::parse(),
                 _: Comma::parse(),
                 axis_y: OptionalParameter::parse(),

@@ -62,7 +62,7 @@ impl DerefMut for Project {
 impl IFCParse for Project {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Project {
                 _: p_space_or_comment_surrounded("IFCPROJECT("),
 
                 context: Context::parse(),

@@ -68,7 +68,7 @@ impl Deref for RelDefinesByType {
 impl IFCParse for RelDefinesByType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelDefinesByType {
                 _: p_space_or_comment_surrounded("IFCRELDEFINESBYTYPE("),
 
                 root: Root::parse(),

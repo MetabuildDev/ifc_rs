@@ -58,7 +58,7 @@ impl IFCParse for ExtendedPropertyBase {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            ExtendedPropertyBase {
                 name: OptionalParameter::parse(),
                 _: Comma::parse(),
                 description: OptionalParameter::parse(),

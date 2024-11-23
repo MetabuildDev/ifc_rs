@@ -46,7 +46,7 @@ impl ShadingDeviceType {
 impl IFCParse for ShadingDeviceType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            ShadingDeviceType {
                 _: p_space_or_comment_surrounded("IFCSHADINGDEVICETYPE("),
 
                 element_type: ElementType::parse(),

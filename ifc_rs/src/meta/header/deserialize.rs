@@ -21,7 +21,7 @@ use crate::parser::*;
 impl IFCParse for Header {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Header {
                 _: p_space_or_comment(),
                 version: Self::p_version(),
                 _: p_space_or_comment_surrounded("HEADER;"),

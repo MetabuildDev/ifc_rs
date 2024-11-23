@@ -9,7 +9,7 @@ use super::Window;
 impl IFCParse for Window {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Window {
                 _: alt((p_space_or_comment_surrounded("IFCWINDOW("), p_space_or_comment_surrounded("IFCWINDOWSTANDARDCASE("))),
 
                 element: Element::parse(),
