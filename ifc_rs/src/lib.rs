@@ -4,6 +4,7 @@
 use anyhow::{anyhow, Context, Result};
 use parser::IFCParse;
 use std::{fmt::Display, fs, path::Path, str::FromStr};
+use winnow::Parser;
 
 use meta::{
     datamap::DataMap,
@@ -79,7 +80,6 @@ impl IFC {
     }
 }
 
-
 impl IFCParse for IFC {
     fn parse<'a>() -> impl parser::IFCParser<'a, Self> {
         winnow::seq! {
@@ -96,7 +96,8 @@ impl FromStr for IFC {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self> {
-        let me = s.parse::<IFC>()
+        let me = IFC::parse()
+            .parse(s)
             .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
 
         for (id, ifc_type) in me.data.0.iter() {
