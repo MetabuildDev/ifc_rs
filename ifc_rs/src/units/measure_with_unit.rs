@@ -27,7 +27,7 @@ pub struct MeasureWithUnit {
 impl IFCParse for MeasureWithUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MeasureWithUnit {
                 _: p_space_or_comment_surrounded("IFCMEASUREWITHUNIT("),
 
                 value: IdOr::parse(),

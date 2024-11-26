@@ -117,7 +117,7 @@ impl DerefMut for Building {
 impl IFCParse for Building {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Building {
                 _: p_space_or_comment_surrounded("IFCBUILDING("),
 
                 spatial_element_structure: SpatialStructureElement::parse(),

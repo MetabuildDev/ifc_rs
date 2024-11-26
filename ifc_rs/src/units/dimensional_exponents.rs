@@ -70,7 +70,7 @@ impl IFCParse for DimensionalExponents {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            DimensionalExponents {
                 _: p_space_or_comment_surrounded("IFCDIMENSIONALEXPONENTS("),
                 length: dec_int,
                 _: Comma::parse(),

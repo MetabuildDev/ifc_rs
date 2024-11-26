@@ -17,7 +17,7 @@ use super::WindowType;
 impl IFCParse for WindowType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            WindowType {
                 _: p_space_or_comment_surrounded("IFCWINDOWTYPE("),
 
                 element_type: ElementType::parse(),

@@ -110,7 +110,7 @@ impl IFCParse for CartesianTransformationOperator3DnonUniform {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            CartesianTransformationOperator3DnonUniform {
                 _: p_space_or_comment_surrounded("IFCCARTESIANTRANSFORMATIONOPERATOR3DNONUNIFORM("),
                 base: Transform3DBase::parse(),
                 _: Comma::parse(),

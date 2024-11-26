@@ -169,7 +169,7 @@ impl DerefMut for Site {
 impl IFCParse for Site {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Site {
                 _: p_space_or_comment_surrounded("IFCSITE("),
 
                 spatial_element_structure: SpatialStructureElement::parse(),

@@ -73,7 +73,7 @@ impl Deref for RelDefinesByProperties {
 impl IFCParse for RelDefinesByProperties {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelDefinesByProperties {
                 _: p_space_or_comment_surrounded("IFCRELDEFINESBYPROPERTIES("),
 
                 root: Root::parse(),

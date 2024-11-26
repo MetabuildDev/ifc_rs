@@ -18,7 +18,7 @@ pub struct PlaneAngleMeasure {
 impl IFCParse for PlaneAngleMeasure {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            PlaneAngleMeasure {
                 _: p_space_or_comment_surrounded("IFCPLANEANGLEMEASURE("),
 
                 value: RealPrimitive::parse(),

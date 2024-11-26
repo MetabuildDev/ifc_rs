@@ -156,7 +156,7 @@ impl DerefMut for Product {
 impl IFCParse for Product {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Product {
                 object: Object::parse(),
                 _: Comma::parse(),
                 object_placement: OptionalParameter::parse(),

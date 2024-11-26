@@ -63,7 +63,7 @@ impl DerefMut for Object {
 impl IFCParse for Object {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Object {
                 root: Root::parse(),
                 _: Comma::parse(),
                 object_type: OptionalParameter::parse(),

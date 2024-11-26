@@ -63,7 +63,7 @@ impl DerefMut for Element {
 impl IFCParse for Element {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            Element {
                 product: Product::parse(),
                 _: Comma::parse(),
                 tag: OptionalParameter::parse(),

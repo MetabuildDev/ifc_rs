@@ -71,7 +71,7 @@ impl Deref for RelDeclares {
 impl IFCParse for RelDeclares {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelDeclares {
                 _: p_space_or_comment_surrounded("IFCRELDECLARES("),
 
                 root: Root::parse(),

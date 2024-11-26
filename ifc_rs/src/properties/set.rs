@@ -69,7 +69,7 @@ impl Deref for PropertySet {
 impl IFCParse for PropertySet {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            PropertySet {
                 _: p_space_or_comment_surrounded("IFCPROPERTYSET("),
 
                 root: Root::parse(),

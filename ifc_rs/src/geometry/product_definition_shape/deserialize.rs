@@ -11,7 +11,7 @@ impl IFCParse for ProductDefinitionShape {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            ProductDefinitionShape {
                 _: p_space_or_comment_surrounded("IFCPRODUCTDEFINITIONSHAPE("),
                 name: OptionalParameter::parse(),
                 _: Comma::parse(),

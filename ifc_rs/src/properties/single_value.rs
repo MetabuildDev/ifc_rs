@@ -56,7 +56,7 @@ impl IFCParse for PropertySingleValue {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            PropertySingleValue {
                 _: p_space_or_comment_surrounded("IFCPROPERTYSINGLEVALUE("),
 
                 base: PropertyBase::parse(),

@@ -70,7 +70,7 @@ impl Deref for RelAssociatesMaterial {
 impl IFCParse for RelAssociatesMaterial {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelAssociatesMaterial {
                 _: p_space_or_comment_surrounded("IFCRELASSOCIATESMATERIAL("),
 
                 rel_associates: RelAssociates::parse(),

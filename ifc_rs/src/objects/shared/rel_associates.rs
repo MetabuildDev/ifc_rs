@@ -70,7 +70,7 @@ impl DerefMut for RelAssociates {
 impl IFCParse for RelAssociates {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelAssociates {
                 root: Root::parse(),
                 _: Comma::parse(),
                 related_objects: IfcList::parse(),

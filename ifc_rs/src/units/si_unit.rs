@@ -59,7 +59,7 @@ impl Deref for SiUnit {
 impl IFCParse for SiUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            SiUnit {
                 _: p_space_or_comment_surrounded("IFCSIUNIT("),
 
                 named_unit: NamedUnit::parse(),

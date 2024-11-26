@@ -13,7 +13,7 @@ use super::SpaceType;
 impl IFCParse for SpaceType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            SpaceType {
                 _: p_space_or_comment_surrounded("IFCSPACETYPE("),
 
                 element_type: ElementType::parse(),

@@ -52,7 +52,7 @@ impl Deref for MaterialProperties {
 impl IFCParse for MaterialProperties {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            MaterialProperties {
                 _: p_space_or_comment_surrounded("IFCMATERIALPROPERTIES("),
 
                 base: ExtendedPropertyBase::parse(),

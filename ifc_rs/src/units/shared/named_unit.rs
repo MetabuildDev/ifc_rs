@@ -19,7 +19,7 @@ pub struct NamedUnit {
 impl IFCParse for NamedUnit {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            NamedUnit {
                 dimensions: OptionalParameter::parse(),
                 _: Comma::parse(),
                 unit_type: OptionalParameter::parse(),

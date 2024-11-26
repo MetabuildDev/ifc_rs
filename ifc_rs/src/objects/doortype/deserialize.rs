@@ -16,7 +16,7 @@ use super::DoorType;
 impl IFCParse for DoorType {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            DoorType {
                 _: p_space_or_comment_surrounded("IFCDOORTYPE("),
 
                 element_type: ElementType::parse(),

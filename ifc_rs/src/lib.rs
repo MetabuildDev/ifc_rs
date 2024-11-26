@@ -4,7 +4,7 @@
 use anyhow::{anyhow, Context, Result};
 use parser::IFCParse;
 use std::{fmt::Display, fs, path::Path, str::FromStr};
-use winnow::{seq, Parser};
+use winnow::Parser;
 
 use meta::{
     datamap::DataMap,
@@ -80,17 +80,25 @@ impl IFC {
     }
 }
 
+impl IFCParse for IFC {
+    fn parse<'a>() -> impl parser::IFCParser<'a, Self> {
+        winnow::seq! {
+            IFC {
+                header: Header::parse(),
+                data: DataMap::parse(),
+                footer: Footer::parse(),
+            }
+        }
+    }
+}
+
 impl FromStr for IFC {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self> {
-        let me = seq!(Self {
-            header: Header::parse(),
-            data: DataMap::parse(),
-            footer: Footer::parse(),
-        })
-        .parse(s)
-        .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
+        let me = IFC::parse()
+            .parse(s)
+            .map_err(|err| anyhow!("parsing failed: {err:#?}"))?;
 
         for (id, ifc_type) in me.data.0.iter() {
             ifc_type.verify_id_types(&me).context(format!("ID: {id}"))?;

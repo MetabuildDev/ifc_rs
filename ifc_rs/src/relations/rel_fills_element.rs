@@ -50,7 +50,7 @@ impl RootBuilder for RelFillsElement {
 impl IFCParse for RelFillsElement {
     fn parse<'a>() -> impl IFCParser<'a, Self> {
         winnow::seq! {
-            Self {
+            RelFillsElement {
                 _: p_space_or_comment_surrounded("IFCRELFILLSELEMENT("),
 
                 root: Root::parse(),

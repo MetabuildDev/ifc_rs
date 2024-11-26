@@ -73,7 +73,7 @@ impl IFCParse for RepresentationMap {
         Self: Sized,
     {
         winnow::seq! {
-            Self {
+            RepresentationMap {
                 _: p_space_or_comment_surrounded("IFCREPRESENTATIONMAP("),
                 origin: IdOr::parse(),
                 _: Comma::parse(),
