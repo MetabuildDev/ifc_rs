@@ -28,6 +28,23 @@ impl IFCParse for StringPrimitive {
 
 impl Display for StringPrimitive {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "'{label}'", label = self.0)
+        // IFC doesn't support UTF8 in all versions and uses a special encoding for things like
+        // german umlaute. The easiest thing to use it `\X2\<unicode sequence>\X0\`
+        //
+        // https://technical.buildingsmart.org/resources/ifcimplementationguidance/string-encoding/
+        const UMLAUTE_MAP: [(&str, &str); 7] = [
+            ("Ä", r#"\X2\00C4\X0\"#),
+            ("ä", r#"\X2\00E4\X0\"#),
+            ("Ö", r#"\X2\00D6\X0\"#),
+            ("ö", r#"\X2\00F6\X0\"#),
+            ("Ü", r#"\X2\00DC\X0\"#),
+            ("ü", r#"\X2\00FC\X0\"#),
+            ("ß", r#"\X2\00DF\X0\"#),
+        ];
+        let mut label = self.0.to_owned();
+        for (from, to) in UMLAUTE_MAP {
+            label = label.replace(from, to);
+        }
+        write!(f, "'{label}'")
     }
 }
