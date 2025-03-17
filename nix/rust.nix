@@ -19,6 +19,7 @@
         pkgs.openssl
         pkgs.cargo-nextest
         pkgs.cargo-insta
+        pkgs.python3Minimal
       ];
     in
     {

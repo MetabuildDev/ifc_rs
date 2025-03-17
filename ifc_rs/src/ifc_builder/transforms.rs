@@ -98,16 +98,25 @@ pub(crate) trait IfcBuilderTransform {
                 .0
                 .clone()
                 .into_iter()
-                .map(|shape_repr| {
+                .map(|shape_repr_id| {
                     let representation_map = RepresentationMap::new(
                         Axis3D::new(Point3D::from(origin.into()), self.ifc()),
-                        shape_repr,
+                        shape_repr_id,
                         self.ifc(),
                     );
 
+                    let shape_repr_identifier = self
+                        .ifc()
+                        .data
+                        .get(shape_repr_id)
+                        .representation_identifier
+                        .custom()
+                        .copied()
+                        .unwrap_or_else(|| RepresentationIdentifier::Body);
+
                     let r = ShapeRepresentation::new(
                         self.sub_context(),
-                        RepresentationIdentifier::Body,
+                        shape_repr_identifier,
                         RepresentationType::MappedRepresentation,
                         self.ifc(),
                     )

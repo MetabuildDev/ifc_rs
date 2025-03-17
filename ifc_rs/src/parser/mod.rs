@@ -16,12 +16,12 @@ use optional::OptionalParameter;
 use winnow::ascii::*;
 use winnow::combinator::*;
 use winnow::token::*;
-use winnow::{error::ErrorKind, Parser};
+use winnow::{error::EmptyError, Parser};
 
 use crate::prelude::*;
 
-pub trait IFCParser<'a, T>: Parser<&'a str, T, ErrorKind> {}
-impl<'a, T, P: Parser<&'a str, T, ErrorKind>> IFCParser<'a, T> for P {}
+pub trait IFCParser<'a, T>: Parser<&'a str, T, EmptyError> {}
+impl<'a, T, P: Parser<&'a str, T, EmptyError>> IFCParser<'a, T> for P {}
 
 pub trait IFCParse: Display {
     fn parse<'a>() -> impl IFCParser<'a, Self>

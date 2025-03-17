@@ -126,6 +126,20 @@ impl<'a> IfcStoreyBuilder<'a> {
     ) -> IfcWallBuilder<'a, 'b> {
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
+        let curve_axis_representation = ShapeRepresentation::new(
+            self.sub_context,
+            RepresentationIdentifier::Axis,
+            RepresentationType::Curve2D,
+            &mut self.project.ifc,
+        )
+        .add_item(
+            PolyLine::from(
+                [Point3D::from(DVec3::ZERO), Point3D::from(DVec3::X)].into_iter(),
+                &mut self.project.ifc,
+            ),
+            &mut self.project.ifc,
+        );
+
         let product_shape = ProductDefinitionShape::new_rectangular_shape(
             wall_information.length,
             wall_information.height,
@@ -133,7 +147,8 @@ impl<'a> IfcStoreyBuilder<'a> {
             Direction3D::from(DVec3::Z),
             self.sub_context,
             &mut self.project.ifc,
-        );
+        )
+        .add_representation(curve_axis_representation, &mut self.project.ifc);
 
         let position = Axis3D::new(
             Point3D::from(wall_information.placement),
@@ -160,12 +175,27 @@ impl<'a> IfcStoreyBuilder<'a> {
     ) -> IfcWallBuilder<'a, 'b> {
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
+        let curve_axis_representation = ShapeRepresentation::new(
+            self.sub_context,
+            RepresentationIdentifier::Axis,
+            RepresentationType::Curve2D,
+            &mut self.project.ifc,
+        )
+        .add_item(
+            PolyLine::from(
+                [Point3D::from(DVec3::ZERO), Point3D::from(DVec3::X)].into_iter(),
+                &mut self.project.ifc,
+            ),
+            &mut self.project.ifc,
+        );
+
         let product_shape = ProductDefinitionShape::new_vertical_arbitrary_shape(
             wall_information.coords.into_iter(),
             wall_thickness,
             self.sub_context,
             &mut self.project.ifc,
-        );
+        )
+        .add_representation(curve_axis_representation, &mut self.project.ifc);
 
         let position = Axis3D::new(
             Point3D::from(wall_information.placement),
@@ -192,13 +222,29 @@ impl<'a> IfcStoreyBuilder<'a> {
     ) -> IfcWallBuilder<'a, 'b> {
         let wall_thickness = self.calculate_material_layer_set_thickness(material);
 
+        let curve_axis_dir = wall_information.direction.cross(DVec3::Z).normalize();
+        let curve_axis_representation = ShapeRepresentation::new(
+            self.sub_context,
+            RepresentationIdentifier::Axis,
+            RepresentationType::Curve2D,
+            &mut self.project.ifc,
+        )
+        .add_item(
+            PolyLine::from(
+                [Point3D::from(DVec3::ZERO), Point3D::from(curve_axis_dir)].into_iter(),
+                &mut self.project.ifc,
+            ),
+            &mut self.project.ifc,
+        );
+
         let product_shape = ProductDefinitionShape::new_arbitrary_shape(
             wall_information.coords.into_iter(),
             wall_thickness,
             wall_information.direction,
             self.sub_context,
             &mut self.project.ifc,
-        );
+        )
+        .add_representation(curve_axis_representation, &mut self.project.ifc);
 
         let position = Axis3D::new(
             Point3D::from(wall_information.placement),
