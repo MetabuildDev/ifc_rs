@@ -10,7 +10,7 @@ members = [
 anyhow = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 downcast-rs = "1.2"
-bevy_math = { version = "0.15", default-features = false }
+bevy_math = { version = "0.16", default-features = false }
 ifc_rs_verify_derive = { version = "0.1.0-alpha.9", path = "./ifc_rs_verify_derive" }
 itertools = "0.13"
 proc-macro2 = "1.0"
